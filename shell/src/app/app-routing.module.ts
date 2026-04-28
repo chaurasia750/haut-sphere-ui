@@ -2,12 +2,20 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './core/auth.guard';
 import { RoleGuard } from './core/role.guard';
+import { AdminRedirectComponent } from './modules/admin-redirect/admin-redirect.component';
+import { MemberRedirectComponent } from './modules/member-redirect/member-redirect.component';
+import { ManagementRedirectComponent } from './modules/management-redirect/management-redirect.component';
+import { LoginComponent } from './modules/login/login.component';
 
 const routes: Routes = [
   {
     path: '',
     redirectTo: 'dashboard',
     pathMatch: 'full',
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
   },
   {
     path: 'dashboard',
@@ -19,15 +27,15 @@ const routes: Routes = [
   },
   {
     path: 'admin',
-    loadChildren: () => import('admin/Module').then(m => m.AppModule),
+    component: AdminRedirectComponent,
   },
   {
     path: 'member',
-    loadChildren: () => import('member/Module').then(m => m.AppModule),
+    component: MemberRedirectComponent,
   },
   {
     path: 'management',
-    loadChildren: () => import('management/Module').then(m => m.AppModule),
+    component: ManagementRedirectComponent,
   },
 ];
 

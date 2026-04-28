@@ -8,12 +8,20 @@ import { AppRoutingModule } from './app-routing.module';
 import { LayoutComponent } from './layout/layout.component';
 import { HttpAuthInterceptor } from './core/http-interceptor';
 import { ErrorBoundaryComponent } from './components/error-boundary/error-boundary.component';
+import { AdminRedirectComponent } from './modules/admin-redirect/admin-redirect.component';
+import { MemberRedirectComponent } from './modules/member-redirect/member-redirect.component';
+import { ManagementRedirectComponent } from './modules/management-redirect/management-redirect.component';
+import { LoginComponent } from './modules/login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LayoutComponent,
     ErrorBoundaryComponent,
+    AdminRedirectComponent,
+    MemberRedirectComponent,
+    ManagementRedirectComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,

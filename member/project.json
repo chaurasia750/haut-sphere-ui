@@ -7,21 +7,36 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/webpack:webpack",
+      "executor": "@angular/build:application",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/member",
-        "main": "member/src/main.ts",
+        "browser": "member/src/main.ts",
         "tsConfig": "member/tsconfig.app.json",
-        "inlineStyleLanguage": "scss"
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "member/public"
+          }
+        ],
+        "styles": ["member/src/styles.scss"]
       },
       "configurations": {
         "production": {
-          "optimization": true,
-          "sourceMap": false,
-          "namedChunks": false,
-          "extractLicenses": true,
-          "vendorChunk": false
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all"
         },
         "development": {
           "optimization": false,
@@ -32,7 +47,7 @@
       "defaultConfiguration": "production"
     },
     "serve": {
-      "executor": "@nx/webpack:dev-server",
+      "executor": "@angular/build:dev-server",
       "options": {
         "port": 4202,
         "buildTarget": "member:build:development"

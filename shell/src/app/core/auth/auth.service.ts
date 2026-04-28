@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { map, tap, catchError, switchMap } from 'rxjs/operators';
@@ -8,12 +8,21 @@ import { User, AuthToken } from './user.model';
   providedIn: 'root',
 })
 export class AuthService {
+  private http = inject(HttpClient);
   private currentUser$ = new BehaviorSubject<User | null>(null);
   private token$ = new BehaviorSubject<string | null>(null);
   private isAuthenticated$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private http: HttpClient) {
-    this.initializeAuth();
+  constructor() {
+    // Defer initialization to avoid circular dependency during module setup
+    // Just restore the token from localStorage immediately
+    const storedToken = localStorage.getItem('auth_token');
+    if (storedToken) {
+      this.token$.next(storedToken);
+      this.isAuthenticated$.next(true);
+    }
+    // Schedule fetchCurrentUser for after the app is initialized
+    setTimeout(() => this.fetchCurrentUser().subscribe(), 0);
   }
 
   private initializeAuth() {
@@ -22,8 +31,6 @@ export class AuthService {
     if (storedToken) {
       this.token$.next(storedToken);
       this.isAuthenticated$.next(true);
-      // Optionally fetch current user
-      this.fetchCurrentUser().subscribe();
     }
   }
 
