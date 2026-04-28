@@ -1,12 +1,12 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan:
-**Implementation Plan**: [specs/001-microfrontend-style/plan.md](../specs/001-microfrontend-style/plan.md)
+**Implementation Plan**: [specs/002-module-federation-flow/plan.md](../specs/002-module-federation-flow/plan.md)
 
 Related artifacts:
-- **Specification**: [specs/001-microfrontend-style/spec.md](../specs/001-microfrontend-style/spec.md)
-- **Research**: [specs/001-microfrontend-style/research.md](../specs/001-microfrontend-style/research.md)
-- **Data Model**: [specs/001-microfrontend-style/data-model.md](../specs/001-microfrontend-style/data-model.md)
-- **Quickstart**: [specs/001-microfrontend-style/quickstart.md](../specs/001-microfrontend-style/quickstart.md)
-- **Contracts**: [specs/001-microfrontend-style/contracts/](../specs/001-microfrontend-style/contracts/)
+- **Specification**: [specs/002-module-federation-flow/spec.md](../specs/002-module-federation-flow/spec.md)
+- **Research**: [specs/002-module-federation-flow/research.md](../specs/002-module-federation-flow/research.md)
+- **Data Model**: [specs/002-module-federation-flow/data-model.md](../specs/002-module-federation-flow/data-model.md)
+- **Quickstart**: [specs/002-module-federation-flow/quickstart.md](../specs/002-module-federation-flow/quickstart.md)
+- **Contracts**: [specs/002-module-federation-flow/contracts/](../specs/002-module-federation-flow/contracts/)
 <!-- SPECKIT END -->
