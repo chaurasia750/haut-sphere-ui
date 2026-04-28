@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -13,11 +12,10 @@ import { LayoutComponent } from './layout/layout.component';
     LayoutComponent,
   ],
   imports: [
-    BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
   ],
-  bootstrap: [AppComponent],
+  exports: [AppComponent],
 })
 export class AppModule {}
