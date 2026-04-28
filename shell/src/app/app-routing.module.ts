@@ -1,42 +1,68 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from './core/auth.guard';
-import { RoleGuard } from './core/role.guard';
-import { AdminRedirectComponent } from './modules/admin-redirect/admin-redirect.component';
-import { MemberRedirectComponent } from './modules/member-redirect/member-redirect.component';
-import { ManagementRedirectComponent } from './modules/management-redirect/management-redirect.component';
-import { LoginComponent } from './modules/login/login.component';
+import { AuthGuard, RoleGuard } from '@shared';
+import { RemoteContainerComponent } from './components/remote-container.component';
+import { remoteConfig } from '../environments/remotes.dev.config';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: '/home',
     pathMatch: 'full',
   },
   {
-    path: 'login',
-    component: LoginComponent,
-  },
-  {
-    path: 'dashboard',
-    canActivate: [AuthGuard],
-    loadChildren: () =>
-      import('./modules/dashboard/dashboard.module').then(
-        (m) => m.DashboardModule
-      ),
+    path: 'home',
+    
+    component: RemoteContainerComponent,
+    data: {
+      remoteConfig: {
+        key: 'home',
+        route: '/home',
+        displayName: 'Home'
+      }
+    }
   },
   {
     path: 'admin',
-    component: AdminRedirectComponent,
+    
+    component: RemoteContainerComponent,
+    data: {
+      remoteConfig: remoteConfig.find((c: any) => c.key === 'admin'),
+      roles: ['admin']
+    }
   },
   {
     path: 'member',
-    component: MemberRedirectComponent,
+    
+    component: RemoteContainerComponent,
+    data: {
+      remoteConfig: remoteConfig.find((c: any) => c.key === 'member'),
+      roles: ['member']
+    }
   },
   {
     path: 'management',
-    component: ManagementRedirectComponent,
+    
+    component: RemoteContainerComponent,
+    data: {
+      remoteConfig: remoteConfig.find((c: any) => c.key === 'management'),
+      roles: ['management']
+    }
   },
+  {
+    path: 'unauthorized',
+    component: RemoteContainerComponent,
+    data: { error: 'unauthorized' }
+  },
+  {
+    path: '404',
+    component: RemoteContainerComponent,
+    data: { error: 'notfound' }
+  },
+  {
+    path: '**',
+    redirectTo: '/404'
+  }
 ];
 
 @NgModule({

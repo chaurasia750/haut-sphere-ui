@@ -1,10 +1,10 @@
 import { Component, Input, OnInit, OnDestroy, ViewContainerRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { RouterModule, ActivatedRoute } from '@angular/router';
 import { RemoteConfig, RemoteMetadata } from '@shared';
 import { RemoteLoaderService } from '../services/remote-loader.service';
 import { RemoteePlaceholderComponent } from './remote-placeholder.component';
-import { Subject } from 'rxjs';
+import { Subject, Observable, map } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 /**
@@ -15,18 +15,20 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-remote-container',
   standalone: true,
-  imports: [CommonModule, RemoteePlaceholderComponent],
+  imports: [CommonModule, RouterModule, RemoteePlaceholderComponent],
   template: `
     <div class="remote-container">
       <!-- Show placeholder while loading or on error -->
-      <app-remote-placeholder
-        *ngIf="(metadata$ | async) as metadata; else placeholder"
-        [metadata]="metadata"
-        [remoteKey]="remoteConfig?.key"
-        [displayName]="remoteConfig?.displayName || 'Remote'"
-        (retry)="retryLoad()"
-        [ngClass]="{ 'hidden': metadata.state === 'loaded' }">
-      </app-remote-placeholder>
+      <ng-container *ngIf="metadata$ | async as metadataMap">
+        <app-remote-placeholder
+          *ngIf="getRemoteMetadata(metadataMap) as metadata; else placeholder"
+          [metadata]="metadata"
+          [remoteKey]="remoteConfig?.key"
+          [displayName]="remoteConfig?.displayName || 'Remote'"
+          (retry)="retryLoad()"
+          [ngClass]="{ 'hidden': metadata.state === 'loaded' }">
+        </app-remote-placeholder>
+      </ng-container>
 
       <!-- Remote component renders here -->
       <div #remoteContent></div>
@@ -52,7 +54,7 @@ import { takeUntil } from 'rxjs/operators';
 export class RemoteContainerComponent implements OnInit, OnDestroy {
   @Input() remoteConfig?: RemoteConfig;
 
-  metadata$: any;
+  metadata$: Observable<any>;
   private loadedComponent: any;
   private destroy$ = new Subject<void>();
 
@@ -60,7 +62,9 @@ export class RemoteContainerComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private viewContainer: ViewContainerRef,
     private remoteLoader: RemoteLoaderService
-  ) {}
+  ) {
+    this.metadata$ = this.remoteLoader.getMetadata$();
+  }
 
   ngOnInit(): void {
     // Get config from route data if not provided as input
@@ -69,12 +73,14 @@ export class RemoteContainerComponent implements OnInit, OnDestroy {
     }
 
     if (this.remoteConfig) {
-      // Subscribe to metadata for this remote
-      this.metadata$ = this.remoteLoader.getMetadata$();
-
       // Load the remote
       this.loadRemote();
     }
+  }
+
+  getRemoteMetadata(metadataMap: any): RemoteMetadata | undefined {
+    if (!this.remoteConfig) return undefined;
+    return metadataMap[this.remoteConfig.key];
   }
 
   private async loadRemote(): Promise<void> {

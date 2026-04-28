@@ -44,12 +44,12 @@ export class RemoteLoaderService {
     this.remoteLoading$.next(config.key);
     this.isLoading$.next(true);
 
+    const now = Date.now();
     const metadata: RemoteMetadata = {
       key: config.key,
       state: 'loading',
-      loadTime: new Date().toISOString(),
-      bundleSize: 0,
-      errors: []
+      loadStartTime: now,
+      bundleSize: 0
     };
 
     try {
@@ -59,8 +59,10 @@ export class RemoteLoaderService {
       // Load remote using dynamic import and Module Federation
       const module = await this.loadRemoteModule(config);
 
+      const endTime = Date.now();
       metadata.state = 'loaded';
-      metadata.loadTime = new Date().toISOString();
+      metadata.loadEndTime = endTime;
+      metadata.loadDuration = endTime - now;
       this.updateMetadata(config.key, metadata);
 
       this.currentRemote$.next(config.key);
@@ -72,7 +74,9 @@ export class RemoteLoaderService {
     } catch (error) {
       const remoteError = this.handleLoadError(error, config);
       metadata.state = 'error';
-      metadata.errors = [remoteError];
+      metadata.error = remoteError.suggestedAction;
+      metadata.loadEndTime = Date.now();
+      metadata.loadDuration = (metadata.loadEndTime || Date.now()) - (metadata.loadStartTime || Date.now());
       this.updateMetadata(config.key, metadata);
 
       this.remoteError$.next({ remoteKey: config.key, error: remoteError });
@@ -95,12 +99,31 @@ export class RemoteLoaderService {
         
         // Create and initialize container
         const container = await this.initializeContainer(config, remoteScript);
-        
-        // Factory function for getting the exposed module
-        const factory = await window[config.key].init(__webpack_share_scope__);
-        const Module = factory.get(config.exposedModule);
-        
-        resolve(Module ? Module() : Module);
+
+        // Ensure webpack share scope is initialized (for ESM/advanced MF runtimes)
+        try {
+          if (typeof (window as any).__webpack_init_sharing__ === 'function') {
+            // init sharing with default scope
+            await (window as any).__webpack_init_sharing__('default');
+          }
+        } catch (e) {
+          // ignore if not available
+        }
+
+        // Initialize container sharing with current share scope if supported
+        if (container && typeof container.init === 'function') {
+          try {
+            await container.init((window as any).__webpack_share_scope__ || {});
+          } catch (e) {
+            // sometimes init can throw if already initialized; ignore
+          }
+        }
+
+        // Get the exposed module factory and execute it
+        const getter = await container.get(config.exposedModule);
+        const Module = await getter();
+
+        resolve(Module);
       } catch (error) {
         reject(error);
       }
@@ -116,7 +139,8 @@ export class RemoteLoaderService {
     return new Promise((resolve, reject) => {
       const script = document.createElement('script');
       script.src = entry;
-      script.type = 'text/javascript';
+      // Use module type for ESM remote entries (.mjs), otherwise classic script
+      script.type = entry.endsWith('.mjs') ? 'module' : 'text/javascript';
       script.async = true;
       script.onload = () => resolve(script);
       script.onerror = () => reject(new Error(`Failed to fetch remote entry: ${entry}`));
@@ -132,25 +156,43 @@ export class RemoteLoaderService {
   private initializeContainer(config: RemoteConfig, script: any): Promise<any> {
     return new Promise((resolve) => {
       // Initialize webpack share scope
-      if (!window.__webpack_share_scope__) {
-        window.__webpack_share_scope__ = {};
+      if (!(window as any).__webpack_share_scope__) {
+        (window as any).__webpack_share_scope__ = {};
       }
-      
-      // Wait for remote to be available
-      const checkInterval = setInterval(() => {
-        if (window[config.key]) {
-          clearInterval(checkInterval);
-          resolve(window[config.key]);
-        }
-      }, 10);
 
-      // Timeout check
-      setTimeout(() => {
-        clearInterval(checkInterval);
-        if (window[config.key]) {
-          resolve(window[config.key]);
+      const globalObj: any = typeof globalThis === 'object' ? globalThis : window;
+
+      const keysToCheck = [
+        config.key,
+        `__FEDERATION_${config.key}:custom__`,
+        // legacy: check module name on window/globalThis
+        `${config.key}`
+      ];
+
+      const intervalMs = 20;
+      const timeoutMs = config.loadTimeout || 15000;
+      const start = Date.now();
+
+      const check = () => {
+        for (const k of keysToCheck) {
+          if (globalObj[k]) {
+            return resolve(globalObj[k]);
+          }
         }
-      }, config.loadTimeout || 5000);
+
+        // Some runtimes register under globalThis.__MF or other indirections
+        // Try common fallback: module-federation SDK may attach container under
+        // a module export; if script has dataset or exports we already loaded, try nothing else here.
+
+        if (Date.now() - start > timeoutMs) {
+          return resolve(undefined);
+        }
+
+        setTimeout(check, intervalMs);
+      };
+
+      // Start checking
+      check();
     });
   }
 
@@ -213,7 +255,7 @@ export class RemoteLoaderService {
       originalError: error,
       recoverable,
       suggestedAction,
-      timestamp: new Date().toISOString(),
+      timestamp: Date.now(),
       context: {
         remoteEntry: config.entry,
         exposedModule: config.exposedModule

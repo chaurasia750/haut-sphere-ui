@@ -2,39 +2,38 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { RemoteContainerComponent } from './components/remote-container.component';
+import { ShellLayoutComponent } from './components/shell-layout.component';
 import { LayoutComponent } from './layout/layout.component';
-import { HttpAuthInterceptor } from './core/http-interceptor';
-import { ErrorBoundaryComponent } from './components/error-boundary/error-boundary.component';
-import { AdminRedirectComponent } from './modules/admin-redirect/admin-redirect.component';
-import { MemberRedirectComponent } from './modules/member-redirect/member-redirect.component';
-import { ManagementRedirectComponent } from './modules/management-redirect/management-redirect.component';
-import { LoginComponent } from './modules/login/login.component';
+import { RemoteLoaderService } from './services/remote-loader.service';
+
+// Shared library imports
+import { AuthService, ErrorHandlerService, LoggingService, AuthHttpInterceptor } from '@shared';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LayoutComponent,
-    ErrorBoundaryComponent,
-    AdminRedirectComponent,
-    MemberRedirectComponent,
-    ManagementRedirectComponent,
-    LoginComponent,
-  ],
+  declarations: [],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    CommonModule,
     HttpClientModule,
     AppRoutingModule,
+    // Import standalone components
+    AppComponent,
+    ShellLayoutComponent,
+    RemoteContainerComponent,
+    LayoutComponent,
   ],
   providers: [
+    AuthService,
+    ErrorHandlerService,
+    LoggingService,
+    RemoteLoaderService,
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: HttpAuthInterceptor,
+      useClass: AuthHttpInterceptor,
       multi: true,
     },
   ],

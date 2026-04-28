@@ -1,13 +1,11 @@
 import { Component } from '@angular/core';
+import { ShellLayoutComponent } from './components/shell-layout.component';
 
 @Component({
   selector: 'app-root',
-  standalone: false,
-  template: `
-    <app-error-boundary>
-      <app-layout></app-layout>
-    </app-error-boundary>
-  `,
+  standalone: true,
+  imports: [ShellLayoutComponent],
+  template: `<app-shell-layout></app-shell-layout>`,
 })
 export class AppComponent {
   title = 'shell';

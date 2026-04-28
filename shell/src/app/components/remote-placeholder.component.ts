@@ -23,7 +23,7 @@ import { RemoteMetadata, RemoteLoadState } from '@shared';
         <div class="error-icon">⚠️</div>
         <h3 class="error-title">Failed to Load</h3>
         <p class="error-message">
-          {{ metadata?.errors?.[0]?.suggestedAction || 'Unable to load remote application' }}
+          {{ metadata?.error || 'Unable to load remote application' }}
         </p>
         <button (click)="onRetry()" class="retry-button">
           Try Again

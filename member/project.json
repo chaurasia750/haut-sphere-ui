@@ -7,50 +7,52 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@angular/build:application",
+      "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
       "options": {
+        "target": "web",
+        "compiler": "tsc",
         "outputPath": "dist/member",
-        "browser": "member/src/main.ts",
+        "index": "member/src/index.html",
+        "baseHref": "/",
+        "main": "member/src/main.ts",
         "tsConfig": "member/tsconfig.app.json",
-        "inlineStyleLanguage": "scss",
         "assets": [
-          {
-            "glob": "**/*",
-            "input": "member/public"
-          }
+          "member/src/public"
         ],
-        "styles": ["member/src/styles.scss"]
+        "styles": [
+          "member/src/styles.scss"
+        ],
+        "scripts": []
+      ,
+        "webpackConfig": "member/webpack.config.ts"
       },
       "configurations": {
         "production": {
-          "budgets": [
-            {
-              "type": "initial",
-              "maximumWarning": "500kb",
-              "maximumError": "1mb"
-            },
-            {
-              "type": "anyComponentStyle",
-              "maximumWarning": "4kb",
-              "maximumError": "8kb"
-            }
-          ],
-          "outputHashing": "all"
+          "optimization": true,
+          "outputHashing": "all",
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": false
         },
         "development": {
           "optimization": false,
-          "extractLicenses": false,
+          "aot": false,
+          "vendorChunk": true,
           "sourceMap": true
         }
-      },
-      "defaultConfiguration": "production"
+      }
     },
     "serve": {
-      "executor": "@angular/build:dev-server",
+      "executor": "@nx/webpack:dev-server",
+      "defaultConfiguration": "development",
       "options": {
-        "port": 4202,
-        "buildTarget": "member:build:development"
+        "buildTarget": "member:build",
+        "host": "localhost",
+        "port": 4102,
+        "hmr": true
       },
       "configurations": {
         "production": {
@@ -59,8 +61,7 @@
         "development": {
           "buildTarget": "member:build:development"
         }
-      },
-      "defaultConfiguration": "development"
+      }
     },
     "lint": {
       "executor": "@nx/eslint:lint"

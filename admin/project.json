@@ -7,50 +7,52 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@angular/build:application",
+      "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "options": {
+        "target": "web",
+        "compiler": "tsc",
         "outputPath": "dist/admin",
-        "browser": "admin/src/main.ts",
+        "index": "admin/src/index.html",
+        "baseHref": "/",
+        "main": "admin/src/main.ts",
         "tsConfig": "admin/tsconfig.app.json",
-        "inlineStyleLanguage": "scss",
         "assets": [
-          {
-            "glob": "**/*",
-            "input": "admin/public"
-          }
+          "admin/src/public"
         ],
-        "styles": ["admin/src/styles.scss"]
+        "styles": [
+          "admin/src/styles.scss"
+        ],
+        "scripts": []
+      ,
+        "webpackConfig": "admin/webpack.config.ts"
       },
+      "defaultConfiguration": "production",
       "configurations": {
         "production": {
-          "budgets": [
-            {
-              "type": "initial",
-              "maximumWarning": "500kb",
-              "maximumError": "1mb"
-            },
-            {
-              "type": "anyComponentStyle",
-              "maximumWarning": "4kb",
-              "maximumError": "8kb"
-            }
-          ],
-          "outputHashing": "all"
+          "optimization": true,
+          "outputHashing": "all",
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": false
         },
         "development": {
           "optimization": false,
-          "extractLicenses": false,
+          "aot": false,
+          "vendorChunk": true,
           "sourceMap": true
         }
-      },
-      "defaultConfiguration": "production"
+      }
     },
     "serve": {
-      "executor": "@angular/build:dev-server",
+      "executor": "@nx/webpack:dev-server",
+      "defaultConfiguration": "development",
       "options": {
-        "port": 4201,
-        "buildTarget": "admin:build:development"
+        "buildTarget": "admin:build",
+        "host": "localhost",
+        "port": 4101,
+        "hmr": true
       },
       "configurations": {
         "production": {
@@ -59,8 +61,7 @@
         "development": {
           "buildTarget": "admin:build:development"
         }
-      },
-      "defaultConfiguration": "development"
+      }
     },
     "lint": {
       "executor": "@nx/eslint:lint"
