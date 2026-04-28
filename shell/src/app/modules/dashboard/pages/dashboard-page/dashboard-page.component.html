@@ -1,0 +1,23 @@
+<div class="dashboard-container">
+  <h2 class="text-3xl font-bold mb-4">{{ title }}</h2>
+  <div class="bg-blue-50 border-l-4 border-primary p-4 rounded">
+    <p class="text-gray-700">{{ message }}</p>
+  </div>
+  <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="bg-white p-6 rounded shadow hover:shadow-lg transition">
+      <h3 class="text-lg font-semibold text-primary mb-2">Admin Panel</h3>
+      <p class="text-gray-600 text-sm">Manage system settings, users, and reports.</p>
+      <a href="/admin" class="text-primary hover:underline mt-3 inline-block">Open Admin →</a>
+    </div>
+    <div class="bg-white p-6 rounded shadow hover:shadow-lg transition">
+      <h3 class="text-lg font-semibold text-primary mb-2">Member Area</h3>
+      <p class="text-gray-600 text-sm">View and update your profile and preferences.</p>
+      <a href="/member" class="text-primary hover:underline mt-3 inline-block">Open Member →</a>
+    </div>
+    <div class="bg-white p-6 rounded shadow hover:shadow-lg transition">
+      <h3 class="text-lg font-semibold text-primary mb-2">Management</h3>
+      <p class="text-gray-600 text-sm">Review operational metrics and analytics.</p>
+      <a href="/management" class="text-primary hover:underline mt-3 inline-block">Open Management →</a>
+    </div>
+  </div>
+</div>

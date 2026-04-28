@@ -1,0 +1,28 @@
+<div class="overview-page">
+  <h3 class="text-2xl font-bold mb-6">System Overview</h3>
+  
+  <div class="mb-8">
+    <h4 class="text-lg font-semibold mb-4">Key Metrics</h4>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div *ngFor="let metric of metrics" class="bg-white p-6 rounded shadow">
+        <p class="text-gray-600 text-sm mb-2">{{ metric.label }}</p>
+        <p class="text-2xl font-bold" [class.text-success]="metric.status === 'healthy'" [class.text-warning]="metric.status === 'warning'">
+          {{ metric.value }}
+        </p>
+        <p class="text-xs mt-2 text-gray-500 uppercase">{{ metric.status }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <h4 class="text-lg font-semibold mb-4">Service Status</h4>
+    <div class="bg-white rounded shadow">
+      <ul class="divide-y">
+        <li *ngFor="let service of services" class="p-4 flex items-center justify-between">
+          <span>{{ service.name }}</span>
+          <span class="inline-block w-3 h-3 rounded-full" [class.bg-success]="service.status === 'online'" [class.bg-danger]="service.status === 'offline'"></span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

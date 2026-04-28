@@ -1,0 +1,57 @@
+# Node.js
+node_modules/
+npm-debug.log
+npm-error.log
+yarn-debug.log
+yarn-error.log
+pnpm-lock.yaml
+
+# NX
+.nx/
+dist/
+build/
+
+# Angular
+.angular/
+out-tsc/
+bazel-out/
+
+# Build outputs
+*.js.map
+*.js
+!*.config.js
+!webpack.*.js
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+*.tmp
+
+# Testing
+coverage/
+.nyc_output/
+
+# Misc
+*.log
+*.tar.gz
+
+
+
+.nx/cache
+.nx/workspace-data
+.angular
+
+__screenshots__/

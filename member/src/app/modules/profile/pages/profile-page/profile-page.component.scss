@@ -1,0 +1,53 @@
+.profile-page {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.grid {
+  display: grid;
+
+  &.grid-cols-1 {
+    grid-template-columns: 1fr;
+  }
+
+  &.gap-4 {
+    gap: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    &.md\:grid-cols-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+.bg-white {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.space-y-3 > * + * {
+  margin-top: 0.75rem;
+}
+
+label {
+  cursor: pointer;
+}
+
+button {
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}

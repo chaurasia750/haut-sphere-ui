@@ -1,0 +1,39 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "ES2020",
+    "module": "ES2020",
+    "useDefineForClassFields": false,
+    "lib": ["ES2020", "dom"],
+    "skipLibCheck": true,
+    "paths": {
+      "@app/shell/*": ["apps/shell/src/*"],
+      "@admin/*": ["apps/admin/src/*"],
+      "@member/*": ["apps/member/src/*"],
+      "@management/*": ["apps/management/src/*"],
+      "@shared/*": ["libs/shared/src/*"],
+      "@ui/*": ["libs/ui/src/*"],
+      "@auth/*": ["libs/auth/src/*"]
+    }
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  }
+}

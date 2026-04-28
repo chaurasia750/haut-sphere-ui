@@ -1,0 +1,55 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build all apps
+        run: npx nx run-many --target=build --all --configuration production
+
+      - name: Start shell app
+        run: npx nx serve shell &
+        timeout-minutes: 1
+
+      - name: Start admin app
+        run: npx nx serve admin &
+        timeout-minutes: 1
+
+      - name: Start member app
+        run: npx nx serve member &
+        timeout-minutes: 1
+
+      - name: Start management app
+        run: npx nx serve management &
+        timeout-minutes: 1
+
+      - name: Wait for apps to start
+        run: sleep 10
+
+      - name: Run E2E tests
+        run: npx nx run-many --target=e2e --all
+        timeout-minutes: 10
+
+      - name: Upload E2E results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: e2e-results
+          path: '**/dist/apps/**/*.videos/**'

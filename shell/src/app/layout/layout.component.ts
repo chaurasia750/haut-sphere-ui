@@ -1,0 +1,17 @@
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+
+@Component({
+  selector: 'app-layout',
+  standalone: false,
+  templateUrl: './layout.component.html',
+  styleUrls: ['./layout.component.scss'],
+})
+export class LayoutComponent {
+  sidebarOpen = true;
+
+  toggleSidebar() {
+    this.sidebarOpen = !this.sidebarOpen;
+  }
+}

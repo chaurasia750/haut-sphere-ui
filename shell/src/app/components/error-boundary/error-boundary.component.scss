@@ -1,0 +1,53 @@
+.error-banner {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  animation: slideDown 0.3s ease-out;
+
+  &.hidden {
+    display: none;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.error-content {
+  margin: 0 auto;
+  max-width: 90vw;
+}
+
+.flex {
+  display: flex;
+
+  &.items-center {
+    align-items: center;
+  }
+
+  &.justify-between {
+    justify-content: space-between;
+  }
+
+  &.gap-2 {
+    gap: 0.5rem;
+  }
+}
+
+button {
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}

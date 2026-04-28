@@ -1,0 +1,94 @@
+name: CI - Build & Test
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npx nx run-many --target=lint --all
+
+      - name: Run unit tests
+        run: npx nx run-many --target=test --all --coverage
+
+      - name: Build all apps
+        run: npx nx run-many --target=build --all --configuration production
+
+      - name: Upload coverage
+        if: matrix.node-version == '20.x'
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage
+          fail_ci_if_error: false
+
+  deploy-shell:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build shell
+        run: npx nx build shell --configuration production
+
+      - name: Deploy shell
+        run: |
+          echo "TODO: Deploy dist/shell to CDN/server"
+          # Example: aws s3 sync dist/shell s3://your-bucket/shell
+
+  deploy-remotes:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    strategy:
+      matrix:
+        app: [admin, member, management]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build ${{ matrix.app }}
+        run: npx nx build ${{ matrix.app }} --configuration production
+
+      - name: Deploy ${{ matrix.app }}
+        run: |
+          echo "TODO: Deploy dist/${{ matrix.app }} to CDN"
+          # Example: aws s3 sync dist/${{ matrix.app }} s3://your-bucket/${{ matrix.app }}

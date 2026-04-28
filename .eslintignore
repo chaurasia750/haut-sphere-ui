@@ -1,0 +1,8 @@
+node_modules/
+dist/
+coverage/
+.angular/
+build/
+*.spec.ts
+spec/
+e2e/
