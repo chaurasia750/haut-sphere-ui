@@ -19,14 +19,16 @@ const config: ModuleFederationConfig = {
   filename: 'remoteEntry.mjs',
   exposes: {
     './Module': {
-      import: 'admin/src/app/app.module.ts'
+      import: './src/app/app.module.ts'
     }
   },
   // Provide a function so @nx/module-federation can filter/modify shared deps
   shared: (packageName: string, defaultSharedConfig: any) => {
     if (explicitShared[packageName]) return explicitShared[packageName];
     return defaultSharedConfig;
-  }
+  },
+  // Disable DTS plugin to avoid TYPE-001 errors during serve
+  dts: false
 };
 
 export default config;

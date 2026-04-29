@@ -86,6 +86,12 @@ export class RemoteContainerComponent implements OnInit, OnDestroy {
   private async loadRemote(): Promise<void> {
     if (!this.remoteConfig) return;
 
+    // If remoteConfig does not specify a remote entry, treat it as a local/internal route
+    if (!this.remoteConfig.entry) {
+      console.warn('Remote config has no entry; skipping remote load for', this.remoteConfig.key);
+      return;
+    }
+
     try {
       const module = await this.remoteLoader.load(this.remoteConfig);
       const component = this.getComponentFromModule(module);

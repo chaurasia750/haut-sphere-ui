@@ -1,10 +1,10 @@
 {
   "latestErrorEvent": {
     "code": "TYPE-001",
-    "message": "Failed to generate type declaration. Execute the below cmd to reproduce and fix the error. #TYPE-001\nargs: {\"cmd\":\"npx tsc --project D:\\\\Projects\\\\haut-spare-ui-final\\\\haut-spare-ui-all\\\\admin\\\\node_modules\\\\.federation\\\\tsconfig.b705d38d8d5b4be0723153519f816912.json\"}\nView the docs to see how to solve: https://module-federation.io/guide/troubleshooting/type#type-001",
+    "message": "Failed to generate type declaration. Execute the below cmd to reproduce and fix the error. #TYPE-001\nargs: {\"cmd\":\"npx tsc --project D:\\\\Projects\\\\haut-spare-ui-final\\\\haut-spare-ui-all\\\\admin\\\\node_modules\\\\.federation\\\\tsconfig.2b7d156949f795ee044f17a294ddb090.json\"}\nView the docs to see how to solve: https://module-federation.io/guide/troubleshooting/type#type-001",
     "args": {
-      "cmd": "npx tsc --project D:\\Projects\\haut-spare-ui-final\\haut-spare-ui-all\\admin\\node_modules\\.federation\\tsconfig.b705d38d8d5b4be0723153519f816912.json"
+      "cmd": "npx tsc --project D:\\Projects\\haut-spare-ui-final\\haut-spare-ui-all\\admin\\node_modules\\.federation\\tsconfig.2b7d156949f795ee044f17a294ddb090.json"
     },
-    "timestamp": 1777410959269
+    "timestamp": 1777413846710
   }
 }

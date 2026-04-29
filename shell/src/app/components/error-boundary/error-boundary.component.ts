@@ -5,7 +5,8 @@ import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-error-boundary',
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './error-boundary.component.html',
   styleUrls: ['./error-boundary.component.scss'],
 })

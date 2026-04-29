@@ -5,7 +5,7 @@ const config: ModuleFederationConfig = {
   filename: 'remoteEntry.js',
   exposes: {
     './Module': {
-      import: 'management/src/app/app.module.ts',
+      import: './src/app/app.module.ts',
       shareScope: 'default'
     }
   },
@@ -26,7 +26,9 @@ const config: ModuleFederationConfig = {
     '@shared/auth': { singleton: true, strictVersion: true },
     '@shared/errors': { singleton: true, strictVersion: true },
     '@shared/logging': { singleton: true, strictVersion: true }
-  }
+  },
+  // Disable DTS plugin to avoid TYPE-001 errors during serve
+  dts: false
 };
 
 export default config;

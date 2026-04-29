@@ -1,67 +1,39 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard, RoleGuard } from '@shared';
-import { RemoteContainerComponent } from './components/remote-container.component';
-import { remoteConfig } from '../environments/remotes.dev.config';
+import { LoginComponent } from './modules/login/login.component';
+import { AdminRedirectComponent } from './modules/admin-redirect/admin-redirect.component';
+import { MemberRedirectComponent } from './modules/member-redirect/member-redirect.component';
+import { ManagementRedirectComponent } from './modules/management-redirect/management-redirect.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/home',
+    redirectTo: '/dashboard',
     pathMatch: 'full',
   },
   {
-    path: 'home',
-    
-    component: RemoteContainerComponent,
-    data: {
-      remoteConfig: {
-        key: 'home',
-        route: '/home',
-        displayName: 'Home'
-      }
-    }
+    path: 'login',
+    component: LoginComponent,
+  },
+  {
+    path: 'dashboard',
+    component: LoginComponent, // Placeholder - replace with actual dashboard when ready
   },
   {
     path: 'admin',
-    
-    component: RemoteContainerComponent,
-    data: {
-      remoteConfig: remoteConfig.find((c: any) => c.key === 'admin'),
-      roles: ['admin']
-    }
+    component: AdminRedirectComponent,
   },
   {
     path: 'member',
-    
-    component: RemoteContainerComponent,
-    data: {
-      remoteConfig: remoteConfig.find((c: any) => c.key === 'member'),
-      roles: ['member']
-    }
+    component: MemberRedirectComponent,
   },
   {
     path: 'management',
-    
-    component: RemoteContainerComponent,
-    data: {
-      remoteConfig: remoteConfig.find((c: any) => c.key === 'management'),
-      roles: ['management']
-    }
-  },
-  {
-    path: 'unauthorized',
-    component: RemoteContainerComponent,
-    data: { error: 'unauthorized' }
-  },
-  {
-    path: '404',
-    component: RemoteContainerComponent,
-    data: { error: 'notfound' }
+    component: ManagementRedirectComponent,
   },
   {
     path: '**',
-    redirectTo: '/404'
+    redirectTo: '/login'
   }
 ];
 

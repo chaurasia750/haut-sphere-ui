@@ -52,7 +52,7 @@
         "buildTarget": "member:build",
         "host": "localhost",
         "port": 4102,
-        "hmr": true
+        "hmr": false
       },
       "configurations": {
         "production": {

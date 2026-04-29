@@ -19,13 +19,15 @@ const config: ModuleFederationConfig = {
   filename: 'remoteEntry.mjs',
   exposes: {
     './Module': {
-      import: 'member/src/app/app.module.ts'
+      import: './src/app/app.module.ts'
     }
   },
   shared: (packageName: string, defaultSharedConfig: any) => {
     if (explicitShared[packageName]) return explicitShared[packageName];
     return defaultSharedConfig;
-  }
+  },
+  // Disable DTS plugin to avoid TYPE-001 errors during serve
+  dts: false
 };
 
 export default config;

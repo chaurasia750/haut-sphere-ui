@@ -52,7 +52,7 @@
         "buildTarget": "admin:build",
         "host": "localhost",
         "port": 4101,
-        "hmr": true
+        "hmr": false
       },
       "configurations": {
         "production": {

@@ -54,6 +54,13 @@ export class RemoteLoaderService {
 
     try {
       this.updateMetadata(config.key, metadata);
+      // Validate config has required fields
+      if (!config.entry) {
+        throw new Error(`Remote entry URL missing for remote "${config.key}"`);
+      }
+      if (!config.exposedModule) {
+        throw new Error(`Remote exposedModule missing for remote "${config.key}"`);
+      }
       this.logger.info(`Loading remote: ${config.key} from ${config.entry}`);
 
       // Load remote using dynamic import and Module Federation
@@ -136,11 +143,33 @@ export class RemoteLoaderService {
    * @returns Script content or module
    */
   private async fetchRemoteEntry(entry: string): Promise<any> {
+    // For ESM remote entries (.mjs) use dynamic import so we can access module exports directly.
+    if (entry.endsWith('.mjs')) {
+      // Try dynamic import first (fast, gives module namespace). If it fails
+      // (network error or runtime syntax), fall back to injecting a
+      // `<script type="module">` tag so the remote can initialize itself
+      // and expose a global container that we can poll for.
+      try {
+        const mod = await import(/* @vite-ignore */ entry);
+        return mod;
+      } catch (err) {
+        // fallback to script injection
+        return new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.type = 'module';
+          script.src = entry;
+          script.async = true;
+          script.onload = () => resolve(script);
+          script.onerror = (e) => reject(new Error(`Failed to load remote entry script: ${entry}`));
+          document.body.appendChild(script);
+        });
+      }
+    }
+
     return new Promise((resolve, reject) => {
       const script = document.createElement('script');
       script.src = entry;
-      // Use module type for ESM remote entries (.mjs), otherwise classic script
-      script.type = entry.endsWith('.mjs') ? 'module' : 'text/javascript';
+      script.type = 'text/javascript';
       script.async = true;
       script.onload = () => resolve(script);
       script.onerror = () => reject(new Error(`Failed to fetch remote entry: ${entry}`));
@@ -161,11 +190,15 @@ export class RemoteLoaderService {
       }
 
       const globalObj: any = typeof globalThis === 'object' ? globalThis : window;
+      // If we loaded an ESM module via dynamic import, the module namespace should
+      // contain the container exports (`get`, `init`) directly.
+      if (script && typeof script === 'object' && (script.get || script.init)) {
+        return resolve(script);
+      }
 
       const keysToCheck = [
         config.key,
         `__FEDERATION_${config.key}:custom__`,
-        // legacy: check module name on window/globalThis
         `${config.key}`
       ];
 
@@ -180,10 +213,6 @@ export class RemoteLoaderService {
           }
         }
 
-        // Some runtimes register under globalThis.__MF or other indirections
-        // Try common fallback: module-federation SDK may attach container under
-        // a module export; if script has dataset or exports we already loaded, try nothing else here.
-
         if (Date.now() - start > timeoutMs) {
           return resolve(undefined);
         }
@@ -191,7 +220,6 @@ export class RemoteLoaderService {
         setTimeout(check, intervalMs);
       };
 
-      // Start checking
       check();
     });
   }
