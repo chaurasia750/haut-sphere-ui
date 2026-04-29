@@ -1,11 +1,10 @@
-import { NgModule, Injector } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { LayoutComponent } from './layout/layout.component';
 import { HttpAuthInterceptor } from './core/http-interceptor';
@@ -17,6 +16,8 @@ import { LoginComponent } from './modules/login/login.component';
 
 @NgModule({
   declarations: [
+    LayoutComponent,
+    ErrorBoundaryComponent,
     AdminRedirectComponent,
     MemberRedirectComponent,
     ManagementRedirectComponent,
@@ -37,12 +38,11 @@ import { LoginComponent } from './modules/login/login.component';
       multi: true,
     },
   ],
+  bootstrap: [],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule {
-  constructor(private injector: Injector) {}
-
   ngDoBootstrap() {
-    // Custom ngDoBootstrap to prevent auto-bootstrap
-    // The standalone AppComponent is bootstrapped by bootstrapApplication in main.ts
+    // Standalone AppComponent is bootstrapped via bootstrapApplication in main.ts
   }
 }

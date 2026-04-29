@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ErrorBoundaryService } from '../../core/error-boundary.service';
 import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-error-boundary',
-  standalone: true,
-  imports: [CommonModule],
+  standalone: false,
   templateUrl: './error-boundary.component.html',
   styleUrls: ['./error-boundary.component.scss'],
 })

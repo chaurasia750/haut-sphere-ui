@@ -33,7 +33,7 @@ export const remoteConfig: RemoteConfig[] = [
   },
   {
     key: 'management',
-    entry: 'http://localhost:4103/remoteEntry.js',
+    entry: 'http://localhost:4103/remoteEntry.mjs',
     exposedModule: './Module',
     route: '/management',
     displayName: 'Management Dashboard',

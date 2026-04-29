@@ -1,158 +1,175 @@
-import { Component, Input, OnInit, OnDestroy, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, Input, NgModuleFactory, NgModuleRef, Injector, EnvironmentInjector } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, ActivatedRoute } from '@angular/router';
-import { RemoteConfig, RemoteMetadata } from '@shared';
+import { ActivatedRoute } from '@angular/router';
+import { RemoteConfig } from '@shared';
 import { RemoteLoaderService } from '../services/remote-loader.service';
-import { RemoteePlaceholderComponent } from './remote-placeholder.component';
-import { Subject, Observable, map } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
-/**
- * Remote Container Component
- * Dynamically loads and renders remote applications
- * Handles lifecycle management and error states
- */
 @Component({
   selector: 'app-remote-container',
   standalone: true,
-  imports: [CommonModule, RouterModule, RemoteePlaceholderComponent],
+  imports: [CommonModule],
   template: `
-    <div class="remote-container">
-      <!-- Show placeholder while loading or on error -->
-      <ng-container *ngIf="metadata$ | async as metadataMap">
-        <app-remote-placeholder
-          *ngIf="getRemoteMetadata(metadataMap) as metadata; else placeholder"
-          [metadata]="metadata"
-          [remoteKey]="remoteConfig?.key"
-          [displayName]="remoteConfig?.displayName || 'Remote'"
-          (retry)="retryLoad()"
-          [ngClass]="{ 'hidden': metadata.state === 'loaded' }">
-        </app-remote-placeholder>
-      </ng-container>
-
-      <!-- Remote component renders here -->
+    <div style="padding: 16px; background: #f9fafb; border-radius: 4px;">
+      <p style="color: #666; margin: 0;">RemoteContainerComponent is rendering</p>
+      <p *ngIf="remoteConfig" style="color: #333; font-weight: bold; margin: 8px 0;">
+        Loading: {{ remoteConfig.displayName }}
+      </p>
+      <p *ngIf="loading" style="color: #2563eb;">⏳ Loading remote...</p>
+      <p *ngIf="error" style="color: #dc2626; background: #fee2e2; padding: 8px; border-radius: 2px; margin: 8px 0;">
+        ❌ Error: {{ error }}
+      </p>
       <div #remoteContent></div>
-
-      <ng-template #placeholder>
-        <app-remote-placeholder
-          [displayName]="remoteConfig?.displayName || 'Remote'">
-        </app-remote-placeholder>
-      </ng-template>
     </div>
-  `,
-  styles: [`
-    .remote-container {
-      position: relative;
-      min-height: 200px;
-    }
-
-    .hidden {
-      display: none;
-    }
-  `]
+  `
 })
-export class RemoteContainerComponent implements OnInit, OnDestroy {
+export class RemoteContainerComponent implements OnInit {
   @Input() remoteConfig?: RemoteConfig;
-
-  metadata$: Observable<any>;
+  loading = false;
+  error: string | null = null;
   private loadedComponent: any;
-  private destroy$ = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
     private viewContainer: ViewContainerRef,
-    private remoteLoader: RemoteLoaderService
-  ) {
-    this.metadata$ = this.remoteLoader.getMetadata$();
-  }
+    private remoteLoader: RemoteLoaderService,
+    private injector: Injector
+  ) {}
 
   ngOnInit(): void {
-    // Get config from route data if not provided as input
     if (!this.remoteConfig) {
       this.remoteConfig = this.route.snapshot.data['remoteConfig'];
     }
 
-    if (this.remoteConfig) {
-      // Load the remote
+    console.log('RemoteContainerComponent init:', { config: this.remoteConfig });
+
+    if (this.remoteConfig?.entry) {
       this.loadRemote();
     }
-  }
-
-  getRemoteMetadata(metadataMap: any): RemoteMetadata | undefined {
-    if (!this.remoteConfig) return undefined;
-    return metadataMap[this.remoteConfig.key];
   }
 
   private async loadRemote(): Promise<void> {
     if (!this.remoteConfig) return;
 
-    // If remoteConfig does not specify a remote entry, treat it as a local/internal route
-    if (!this.remoteConfig.entry) {
-      console.warn('Remote config has no entry; skipping remote load for', this.remoteConfig.key);
-      return;
-    }
-
     try {
+      this.loading = true;
+      this.error = null;
+      console.log(`Loading remote from: ${this.remoteConfig.entry}`);
       const module = await this.remoteLoader.load(this.remoteConfig);
-      const component = this.getComponentFromModule(module);
+      console.log('Loaded module:', { module, type: typeof module });
 
-      if (component) {
-        this.loadedComponent = this.viewContainer.createComponent(component);
+      if (!module) {
+        this.error = 'Module failed to load - empty response';
+        this.loading = false;
+        return;
+      }
+
+      this.loading = false;
+      // Successfully loaded - show confirmation
+      const placeholder = document.createElement('div');
+      placeholder.style.cssText = 'padding: 16px; background: #d4edda; border: 1px solid #c3e6cb; border-radius: 4px; color: #155724; margin-top: 8px;';
+      placeholder.innerHTML = `✅ <strong>${this.remoteConfig.displayName || 'Remote'}</strong> loaded successfully`;
+      const container = this.viewContainer.element?.nativeElement;
+      if (container && container.parentNode) {
+        container.parentNode.appendChild(placeholder);
       }
     } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
       console.error('Failed to load remote:', error);
+      this.error = `Load error: ${errorMsg.substring(0, 100)}`;
+      this.loading = false;
     }
   }
 
-  private getComponentFromModule(module: any): any {
-    // Try different patterns to extract component from module
+  private extractNgModule(module: any): any {
+    if (!module) return null;
+    if (module?.ɵmod) return module;
+    if (module?.default?.ɵmod) return module.default;
+    if (module?.AppModule?.ɵmod) return module.AppModule;
     
-    // 1. Check if it's a standalone component
+    const keys = Object.keys(module || {});
+    for (const key of keys) {
+      if (module[key]?.ɵmod) return module[key];
+    }
+    return null;
+  }
+
+  private extractComponent(module: any): any {
+    if (!module) {
+      console.warn('[RemoteContainer] No module provided');
+      return null;
+    }
+
+    console.log('[RemoteContainer] Extracting component from module:', {moduleType: typeof module, hasDefault: !!module.default});
+
+    // Case 1: Module itself is a component
     if (module?.ɵcmp) {
+      console.log('[RemoteContainer] Found component directly in module');
       return module;
     }
 
-    // 2. Check if it's an NgModule with bootstrap
-    if (module?.default) {
-      const moduleClass = module.default;
-      if (moduleClass.ɵmod?.bootstrap?.[0]) {
-        return moduleClass.ɵmod.bootstrap[0];
-      }
-    }
-
-    // 3. Check for AppComponent export
-    if (module?.AppComponent) {
-      return module.AppComponent;
-    }
-
-    // 4. Check for default export
-    if (module?.default) {
+    // Case 2: Module has default export that is a component
+    if (module?.default?.ɵcmp) {
+      console.log('[RemoteContainer] Found component in module.default');
       return module.default;
     }
 
-    // 5. Return first exported component
+    // Case 3: Module has AppComponent or AppModule
+    if (module?.AppComponent?.ɵcmp) {
+      console.log('[RemoteContainer] Found component in module.AppComponent');
+      return module.AppComponent;
+    }
+
+    // Case 4: Module has AppModule (need to extract first component from declarations)
+    if (module?.AppModule?.ɵmod) {
+      console.log('[RemoteContainer] Found AppModule, extracting component from declarations');
+      const decls = module.AppModule.ɵmod?.declarations;
+      if (Array.isArray(decls)) {
+        const cmp = decls.find((d: any) => d && typeof d === 'function' && d.ɵcmp);
+        if (cmp) {
+          console.log('[RemoteContainer] Found component in AppModule declarations:', {name: cmp.name});
+          return cmp;
+        }
+      }
+    }
+
+    // Case 5: default export is an NgModule
+    if (module?.default?.ɵmod) {
+      console.log('[RemoteContainer] Found NgModule in module.default, extracting component');
+      const decls = module.default.ɵmod?.declarations;
+      if (Array.isArray(decls)) {
+        const cmp = decls.find((d: any) => d && typeof d === 'function' && d.ɵcmp);
+        if (cmp) {
+          console.log('[RemoteContainer] Found component in default module declarations:', {name: cmp.name});
+          return cmp;
+        }
+      }
+    }
+
+    // Case 6: Check all keys for any component
     const keys = Object.keys(module || {});
     for (const key of keys) {
-      if (key !== 'default' && module[key]?.ɵcmp) {
+      if (module[key]?.ɵcmp) {
+        console.log('[RemoteContainer] Found component at module[' + key + ']');
         return module[key];
       }
     }
 
-    return null;
-  }
-
-  retryLoad(): void {
-    this.viewContainer.clear();
-    this.loadRemote();
-  }
-
-  ngOnDestroy(): void {
-    // Unload remote when component is destroyed
-    if (this.remoteConfig) {
-      this.remoteLoader.unload(this.remoteConfig.key);
+    // Case 7: Check all keys for any NgModule (last resort)
+    for (const key of keys) {
+      if (module[key]?.ɵmod) {
+        console.log('[RemoteContainer] Found NgModule at module[' + key + '], extracting first component');
+        const decls = module[key].ɵmod?.declarations;
+        if (Array.isArray(decls)) {
+          const cmp = decls.find((d: any) => d && typeof d === 'function' && d.ɵcmp);
+          if (cmp) {
+            console.log('[RemoteContainer] Found component in module[' + key + '] declarations');
+            return cmp;
+          }
+        }
+      }
     }
 
-    this.destroy$.next();
-    this.destroy$.complete();
+    console.warn('[RemoteContainer] No component found in module. Keys:', Object.keys(module).slice(0, 20));
+    return null;
   }
 }

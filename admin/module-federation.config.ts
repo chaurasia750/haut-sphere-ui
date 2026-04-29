@@ -27,7 +27,7 @@ const config: ModuleFederationConfig = {
     if (explicitShared[packageName]) return explicitShared[packageName];
     return defaultSharedConfig;
   },
-  // Disable DTS plugin to avoid TYPE-001 errors during serve
+  // Completely disable DTS generation to avoid 'ws' import in browser
   dts: false
 };
 
