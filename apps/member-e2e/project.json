@@ -1,0 +1,9 @@
+{
+  "name": "member-e2e",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/member-e2e/src",
+  "implicitDependencies": ["member"],
+  "// targets": "to see all targets run: nx show project member-e2e --web",
+  "targets": {}
+}

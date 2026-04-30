@@ -1,0 +1,84 @@
+{
+  "name": "management",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/management/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "web",
+        "compiler": "tsc",
+        "outputPath": "dist/management",
+        "index": "apps/management/src/index.html",
+        "baseHref": "/",
+        "main": "apps/management/src/main.ts",
+        "tsConfig": "apps/management/tsconfig.app.json",
+        "assets": [
+          "apps/management/src/public"
+        ],
+        "styles": [
+          "apps/management/src/styles.scss"
+        ],
+        "scripts": []
+      ,
+        "webpackConfig": "apps/management/webpack.config.ts"
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "outputHashing": "all",
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": false
+        },
+        "development": {
+          "optimization": false,
+          "aot": false,
+          "vendorChunk": true,
+          "sourceMap": true
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/webpack:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "management:build",
+        "host": "localhost",
+        "port": 4103,
+        "hmr": false
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "management:build:production"
+        },
+        "development": {
+          "buildTarget": "management:build:development"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "options": {}
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "management:build",
+        "port": 4200,
+        "staticFilePath": "dist/management/browser",
+        "spa": true
+      }
+    }
+  }
+}

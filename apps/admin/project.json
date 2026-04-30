@@ -1,0 +1,84 @@
+{
+  "name": "admin",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/admin/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "target": "web",
+        "compiler": "tsc",
+        "outputPath": "dist/admin",
+        "index": "apps/admin/src/index.html",
+        "baseHref": "/",
+        "main": "apps/admin/src/main.ts",
+        "tsConfig": "apps/admin/tsconfig.app.json",
+        "assets": [
+          "apps/admin/src/public"
+        ],
+        "styles": [
+          "apps/admin/src/styles.scss"
+        ],
+        "scripts": []
+      ,
+        "webpackConfig": "apps/admin/webpack.config.ts"
+      },
+      "defaultConfiguration": "production",
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "outputHashing": "all",
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": false
+        },
+        "development": {
+          "optimization": false,
+          "aot": false,
+          "vendorChunk": true,
+          "sourceMap": true
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/webpack:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "admin:build",
+        "host": "localhost",
+        "port": 4101,
+        "hmr": false
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "admin:build:production"
+        },
+        "development": {
+          "buildTarget": "admin:build:development"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "options": {}
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "admin:build",
+        "port": 4200,
+        "staticFilePath": "dist/admin/browser",
+        "spa": true
+      }
+    }
+  }
+}

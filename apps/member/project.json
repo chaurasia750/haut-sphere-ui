@@ -1,0 +1,84 @@
+{
+  "name": "member",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/member/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "web",
+        "compiler": "tsc",
+        "outputPath": "dist/member",
+        "index": "apps/member/src/index.html",
+        "baseHref": "/",
+        "main": "apps/member/src/main.ts",
+        "tsConfig": "apps/member/tsconfig.app.json",
+        "assets": [
+          "apps/member/src/public"
+        ],
+        "styles": [
+          "apps/member/src/styles.scss"
+        ],
+        "scripts": []
+      ,
+        "webpackConfig": "apps/member/webpack.config.ts"
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "outputHashing": "all",
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": false
+        },
+        "development": {
+          "optimization": false,
+          "aot": false,
+          "vendorChunk": true,
+          "sourceMap": true
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/webpack:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "member:build",
+        "host": "localhost",
+        "port": 4102,
+        "hmr": false
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "member:build:production"
+        },
+        "development": {
+          "buildTarget": "member:build:development"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "options": {}
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "member:build",
+        "port": 4200,
+        "staticFilePath": "dist/member/browser",
+        "spa": true
+      }
+    }
+  }
+}
