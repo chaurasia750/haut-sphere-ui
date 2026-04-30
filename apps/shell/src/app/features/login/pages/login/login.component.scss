@@ -1,0 +1,12 @@
+/* Tailwind CSS is applied via component classes */
+/* Additional responsive and animation styles if needed */
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}

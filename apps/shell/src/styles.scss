@@ -1,9 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
-/* Tailwind CSS */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind CSS v4 */
+@import "tailwindcss";
 
 /* Custom global styles */
 html, body {
@@ -38,3 +36,4 @@ app-root {
 .text-primary {
   @apply text-blue-600;
 }
+

@@ -28,7 +28,9 @@
       "@shared": ["libs/shared/index.ts"],
       "@shared/*": ["libs/shared/*"],
       "@ui/*": ["libs/ui/src/*"],
-      "@auth/*": ["libs/auth/src/*"]
+      "@auth/*": ["libs/auth/src/*"],
+      "@libs/shared/auth": ["libs/shared/auth/src/index.ts"],
+      "@libs/shared/auth/*": ["libs/shared/auth/src/*"]
     }
   },
   "angularCompilerOptions": {

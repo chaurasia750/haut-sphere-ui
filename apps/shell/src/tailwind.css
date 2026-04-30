@@ -1,0 +1,6 @@
+/* Tailwind CSS v4 - Using @tailwindcss/postcss plugin */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+

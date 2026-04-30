@@ -1,0 +1,23 @@
+{
+  "name": "@libs/shared/auth",
+  "version": "1.0.0",
+  "description": "Centralized authentication and session management library",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "keywords": [
+    "angular",
+    "authentication",
+    "authorization",
+    "auth",
+    "session",
+    "role-based",
+    "guards"
+  ],
+  "author": "Development Team",
+  "license": "MIT"
+}

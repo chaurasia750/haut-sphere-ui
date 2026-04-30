@@ -4,29 +4,62 @@ import { provideHttpClient } from '@angular/common/http';
 import { RemoteLoaderService } from './services/remote-loader.service';
 import { RemoteContainerComponent } from './components/remote-container.component';
 import { remoteConfig } from '../environments/remotes.dev.config';
+import { LoginComponent } from './features/login/pages/login/login.component';
+import { authGuard } from './core/guards/auth.guard';
+import { RoleId } from '@libs/shared/auth';
 
 export const appRoutes: Route[] = [
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  // Public login route
+  {
+    path: 'login',
+    component: LoginComponent,
+    data: { title: 'Login' }
+  },
+  
+  // Dashboard
   {
     path: 'dashboard',
     loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule),
   },
+  
+  // Module federation routes (protected)
   {
     path: 'admin',
     component: RemoteContainerComponent,
-    data: { remoteConfig: remoteConfig.find((c: any) => c.key === 'admin') }
+    canActivate: [authGuard],
+    data: {
+      remoteConfig: remoteConfig.find((c: any) => c.key === 'admin'),
+      roles: [RoleId.SYSTEM_ADMIN, RoleId.ADMIN]
+    }
   },
   {
     path: 'member',
     component: RemoteContainerComponent,
-    data: { remoteConfig: remoteConfig.find((c: any) => c.key === 'member') }
+    canActivate: [authGuard],
+    data: {
+      remoteConfig: remoteConfig.find((c: any) => c.key === 'member'),
+      roles: [RoleId.MEMBER]
+    }
   },
   {
     path: 'management',
     component: RemoteContainerComponent,
-    data: { remoteConfig: remoteConfig.find((c: any) => c.key === 'management') }
+    canActivate: [authGuard],
+    data: {
+      remoteConfig: remoteConfig.find((c: any) => c.key === 'management'),
+      roles: [RoleId.MANAGER]
+    }
   },
-  { path: '**', redirectTo: '/dashboard' }
+  
+  // Default redirect to login
+  {
+    path: '',
+    redirectTo: '/login',
+    pathMatch: 'full'
+  },
+  
+  // Wildcard route
+  { path: '**', redirectTo: '/login' }
 ];
 
 export const appConfig: ApplicationConfig = {
