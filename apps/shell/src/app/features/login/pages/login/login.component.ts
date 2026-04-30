@@ -22,6 +22,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   loginForm!: FormGroup;
   isLoading = false;
   errorMessage = '';
+  showPassword = false;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -45,7 +46,7 @@ export class LoginComponent implements OnInit, OnDestroy {
    */
   private initializeForm(): void {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required]],
       password: ['', [Validators.required]]
     });
   }
@@ -134,5 +135,12 @@ export class LoginComponent implements OnInit, OnDestroy {
   isFieldInvalid(fieldName: string): boolean {
     const field = this.loginForm.get(fieldName);
     return !!(field && field.invalid && field.touched);
+  }
+
+  /**
+   * Toggle password visibility
+   */
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 }
