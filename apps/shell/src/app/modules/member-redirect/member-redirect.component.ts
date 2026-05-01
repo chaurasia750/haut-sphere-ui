@@ -12,7 +12,6 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MemberRedirectComponent implements OnInit {
   ngOnInit(): void {
-    // Redirect to the member remote app running on port 4202
-    window.location.href = 'http://localhost:4202';
+    window.location.href = 'http://localhost:4102';
   }
 }

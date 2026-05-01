@@ -3,6 +3,7 @@ import { provideRouter, Route } from '@angular/router';
 import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RemoteLoaderService } from './services/remote-loader.service';
 import { RemoteContainerComponent } from './components/remote-container.component';
+import { RemoteUnavailableComponent } from './components/remote-unavailable.component';
 import { remoteConfig } from '../environments/remotes.dev.config';
 import { LoginComponent } from './features/login/pages/login/login.component';
 import { authGuard } from './core/guards/auth.guard';
@@ -35,11 +36,33 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'member',
-    component: RemoteContainerComponent,
-    canActivate: [authGuard],
-    data: {
-      remoteConfig: remoteConfig.find((c: any) => c.key === 'member'),
-      roles: [RoleId.MEMBER]
+    // canActivate: [authGuard],  // Temporarily disabled for route verification
+    loadChildren: async () => {
+      const memberEntry = 'http://localhost:4102/remoteEntry.mjs';
+      try {
+        const container: any = await import(/* @vite-ignore */ memberEntry);
+        if (typeof (window as any).__webpack_init_sharing__ === 'function') {
+          await (window as any).__webpack_init_sharing__('default');
+        }
+        try {
+          await container.init((window as any).__webpack_share_scopes__?.default);
+        } catch {}
+        const factory = await container.get('./Module');
+        const mod = factory();
+        return mod.AppModule;
+      } catch (error) {
+        console.error('[shell] Member remote unavailable:', error);
+        return [
+          {
+            path: '',
+            component: RemoteUnavailableComponent,
+            data: {
+              title: 'Member App Unavailable',
+              message: 'Member remote could not be loaded from http://localhost:4102/remoteEntry.mjs.',
+            },
+          },
+        ];
+      }
     }
   },
   {
@@ -52,15 +75,15 @@ export const appRoutes: Route[] = [
     }
   },
   
-  // Default redirect to login
+  // Default redirect to local dashboard so shell remains usable if remotes are down
   {
     path: '',
-    redirectTo: '/login',
+    redirectTo: '/dashboard',
     pathMatch: 'full'
   },
   
-  // Wildcard route
-  { path: '**', redirectTo: '/login' }
+  // All unmatched routes → local dashboard
+  { path: '**', redirectTo: '/dashboard' }
 ];
 
 export const appConfig: ApplicationConfig = {

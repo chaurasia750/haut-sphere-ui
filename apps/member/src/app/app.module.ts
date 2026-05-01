@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { SharedLayoutModule } from '@shared';
 
@@ -11,7 +10,6 @@ import { AppRoutingModule } from './app-routing.module';
     AppComponent,
   ],
   imports: [
-    BrowserAnimationsModule,
     HttpClientModule,
     SharedLayoutModule,
     AppRoutingModule,

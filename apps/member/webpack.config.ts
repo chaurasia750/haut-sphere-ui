@@ -16,10 +16,15 @@ export default (config, context) => {
 		withModuleFederation(moduleFederationConfig, { dts: false })
 	)(config, context);
 	
-	// Post-compose: Disable dev-server
+	// Post-compose: Disable dev-server HMR but keep index.html serving
 	cfg.devServer = cfg.devServer || {};
 	cfg.devServer.client = false;
 	cfg.devServer.hot = false;
+	cfg.devServer.historyApiFallback = true;
+	// Ensure static files (index.html) are served from the output directory
+	cfg.devServer.static = cfg.devServer.static || { directory: require('path').join(__dirname, 'src') };
+	cfg.devServer.devMiddleware = cfg.devServer.devMiddleware || {};
+	cfg.devServer.devMiddleware.writeToDisk = false;
 	
 	// Clean up plugins
 	if (cfg.plugins) {

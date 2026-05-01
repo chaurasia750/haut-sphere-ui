@@ -22,7 +22,7 @@
       'justify-start': (isExpanded$ | async) || (isHovered$ | async)
     }"
   >
-    <a routerLink="/">
+    <a [routerLink]="config?.homeRoute || '/'">
       <img src="/assets/logo.svg" alt="Logo" width="60" height="60" class="rounded-full" />
     </a>
     @if ((isExpanded$ | async) || (isHovered$ | async) || (isMobileOpen$ | async)) {

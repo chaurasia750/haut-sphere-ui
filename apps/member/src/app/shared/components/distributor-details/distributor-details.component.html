@@ -1,0 +1,67 @@
+<div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] w-full p-5 lg:p-6">
+  <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+    <div class="w-full">
+      <h4 class="text-lg font-semibold text-gray-800 dark:text-white/90 mb-6">
+        Distributor Details
+      </h4>
+      <div class="grid grid-cols-2 gap-4 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 lg:gap-7 2xl:gap-x-32 xl:gap-x-30">
+        <div>
+          <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+            User Name
+          </p>
+          <p class="text-sm font-medium text-gray-800 dark:text-white/90">
+            {{   distributorDetails.userName }}
+          </p>
+        </div>
+        <div>
+          <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+            Name
+          </p>
+          <p class="text-sm font-medium text-gray-800 dark:text-white/90">
+            {{ distributorDetails.name }}
+          </p>
+        </div>
+        <div>
+          <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+            Date Of Joining
+          </p>
+          <p class="text-sm font-medium text-gray-800 dark:text-white/90">
+            {{ distributorDetails.dateOfJoining }}
+          </p>
+        </div>
+        <div>
+          <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+            Designation
+          </p>
+          <p class="text-sm font-medium text-gray-800 dark:text-white/90">
+            {{ distributorDetails.designation }}
+          </p>
+        </div>
+        <div>
+          <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+            Sponsor UserID
+          </p>
+          <p class="text-sm font-medium text-gray-800 dark:text-white/90">
+            {{ distributorDetails.sponsorUserID }}
+          </p>
+        </div>
+        <div>
+          <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+            Sponsor Name
+          </p>
+          <p class="text-sm font-medium text-gray-800 dark:text-white/90">
+            {{ distributorDetails.sponsorName }}
+          </p>
+        </div>
+        <div>
+          <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+            Direct Member
+          </p>
+          <p class="text-sm font-medium text-gray-800 dark:text-white/90">
+            {{ distributorDetails.directMember }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
