@@ -19,6 +19,11 @@
         "main": "apps/member/src/main.ts",
         "tsConfig": "apps/member/tsconfig.app.json",
         "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/member/src/assets",
+            "output": "assets"
+          },
           "apps/member/src/public"
         ],
         "styles": [

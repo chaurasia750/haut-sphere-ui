@@ -18,6 +18,11 @@
         "main": "apps/admin/src/main.ts",
         "tsConfig": "apps/admin/tsconfig.app.json",
         "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/admin/src/assets",
+            "output": "assets"
+          },
           "apps/admin/src/public"
         ],
         "styles": [

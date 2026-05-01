@@ -17,6 +17,11 @@
         "assets": [
           {
             "glob": "**/*",
+            "input": "apps/shell/src/assets",
+            "output": "assets"
+          },
+          {
+            "glob": "**/*",
             "input": "apps/shell/public"
           }
         ],

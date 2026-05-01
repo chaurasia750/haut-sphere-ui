@@ -19,6 +19,11 @@
         "main": "apps/management/src/main.ts",
         "tsConfig": "apps/management/tsconfig.app.json",
         "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/management/src/assets",
+            "output": "assets"
+          },
           "apps/management/src/public"
         ],
         "styles": [
