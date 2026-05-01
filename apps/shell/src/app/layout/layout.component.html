@@ -8,7 +8,8 @@
 </header>
 
 <div class="flex flex-1">
-  <nav class="w-64 bg-gray-100 p-4" *ngIf="sidebarOpen">
+  @if (sidebarOpen) {
+  <nav class="w-64 bg-gray-100 p-4">
     <ul class="space-y-2">
       <li><a href="/dashboard" class="text-primary hover:underline">Dashboard</a></li>
       <li><a href="/admin" class="text-primary hover:underline">Admin</a></li>
@@ -16,6 +17,7 @@
       <li><a href="/management" class="text-primary hover:underline">Management</a></li>
     </ul>
   </nav>
+  }
 
   <main class="flex-1 p-6">
     <router-outlet></router-outlet>

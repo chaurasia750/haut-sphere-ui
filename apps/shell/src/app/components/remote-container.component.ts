@@ -11,13 +11,19 @@ import { RemoteLoaderService } from '../services/remote-loader.service';
   template: `
     <div style="padding: 16px; background: #f9fafb; border-radius: 4px;">
       <p style="color: #666; margin: 0;">RemoteContainerComponent is rendering</p>
-      <p *ngIf="remoteConfig" style="color: #333; font-weight: bold; margin: 8px 0;">
+      @if (remoteConfig) {
+      <p style="color: #333; font-weight: bold; margin: 8px 0;">
         Loading: {{ remoteConfig.displayName }}
       </p>
-      <p *ngIf="loading" style="color: #2563eb;">⏳ Loading remote...</p>
-      <p *ngIf="error" style="color: #dc2626; background: #fee2e2; padding: 8px; border-radius: 2px; margin: 8px 0;">
+      }
+      @if (loading) {
+      <p style="color: #2563eb;">⏳ Loading remote...</p>
+      }
+      @if (error) {
+      <p style="color: #dc2626; background: #fee2e2; padding: 8px; border-radius: 2px; margin: 8px 0;">
         ❌ Error: {{ error }}
       </p>
+      }
       <div #remoteContent></div>
     </div>
   `

@@ -107,7 +107,8 @@
         <span class="text-xs font-semibold text-green-700">SSL Encrypted · Your data is safe</span>
       </div>
 
-      <div *ngIf="errorMessage"
+      @if (errorMessage) {
+      <div
            class="mb-5 p-3 bg-red-50 border border-red-300 rounded-lg flex gap-2"
            role="alert"
            aria-live="polite">
@@ -116,6 +117,7 @@
         </svg>
         <p class="text-red-700 text-xs font-medium">{{ errorMessage }}</p>
       </div>
+      }
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4">
         <div>
@@ -136,7 +138,9 @@
               [class.border-red-400]="isFieldInvalid('email')"
             />
           </div>
-          <p *ngIf="isFieldInvalid('email')" class="text-red-500 text-xs mt-1">{{ getFieldError('email') }}</p>
+          @if (isFieldInvalid('email')) {
+          <p class="text-red-500 text-xs mt-1">{{ getFieldError('email') }}</p>
+          }
         </div>
 
         <div>
@@ -166,16 +170,22 @@
               class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
               [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
             >
-              <svg *ngIf="!showPassword" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+              @if (!showPassword) {
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm3.5-5c0 1.93-1.57 3.5-3.5 3.5S8 13.93 8 12s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5z"/>
                 <line x1="3" y1="21" x2="21" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
               </svg>
-              <svg *ngIf="showPassword" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+              }
+              @if (showPassword) {
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm3.5-5c0 1.93-1.57 3.5-3.5 3.5S8 13.93 8 12s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5z"/>
               </svg>
+              }
             </button>
           </div>
-          <p *ngIf="isFieldInvalid('password')" class="text-red-500 text-xs mt-1">{{ getFieldError('password') }}</p>
+          @if (isFieldInvalid('password')) {
+          <p class="text-red-500 text-xs mt-1">{{ getFieldError('password') }}</p>
+          }
         </div>
 
         <div class="flex items-center">
@@ -190,10 +200,12 @@
           [attr.aria-busy]="isLoading"
           class="w-full py-2.5 px-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:from-slate-400 disabled:to-slate-400 disabled:cursor-not-allowed text-white font-semibold rounded-lg text-sm transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2"
         >
-          <svg *ngIf="isLoading" class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+          @if (isLoading) {
+          <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
+          }
           {{ isLoading ? 'Signing in...' : 'Sign In' }}
         </button>
       </form>

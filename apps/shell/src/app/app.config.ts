@@ -1,12 +1,13 @@
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter, Route } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RemoteLoaderService } from './services/remote-loader.service';
 import { RemoteContainerComponent } from './components/remote-container.component';
 import { remoteConfig } from '../environments/remotes.dev.config';
 import { LoginComponent } from './features/login/pages/login/login.component';
 import { authGuard } from './core/guards/auth.guard';
 import { RoleId } from '@libs/shared/auth';
+import { HttpAuthInterceptor } from './core/http-interceptor';
 
 export const appRoutes: Route[] = [
   // Public login route
@@ -65,7 +66,12 @@ export const appRoutes: Route[] = [
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(appRoutes),
-    provideHttpClient(),
+    provideHttpClient(withInterceptorsFromDi()),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpAuthInterceptor,
+      multi: true,
+    },
     RemoteLoaderService,
   ],
 };
