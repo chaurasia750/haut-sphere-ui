@@ -18,3 +18,6 @@ export { ErrorHandlerService } from './errors/error-handler.service';
 
 // Re-export Logging
 export { LoggingService } from './logging/logging.service';
+
+// Re-export shared UI layout module/components
+export * from './ui/src';
