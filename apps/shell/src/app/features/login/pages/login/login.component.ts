@@ -74,8 +74,9 @@ export class LoginComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const { email, password } = this.loginForm.getRawValue();
     this.isLoading = true;
-    const { email, password } = this.loginForm.value;
+    this.loginForm.disable();
 
     this.authService.login(email, password)
       .pipe(takeUntil(this.destroy$))
@@ -87,6 +88,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.isLoading = false;
+          this.loginForm.enable();
           this.handleLoginError(err);
         }
       });

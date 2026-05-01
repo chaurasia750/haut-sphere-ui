@@ -20,7 +20,7 @@
             "input": "apps/shell/public"
           }
         ],
-        "styles": ["apps/shell/src/styles.scss"]
+        "styles": ["apps/shell/src/tailwind.css", "apps/shell/src/styles.scss"]
       },
       "configurations": {
         "production": {

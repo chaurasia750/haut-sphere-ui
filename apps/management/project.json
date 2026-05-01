@@ -22,6 +22,7 @@
           "apps/management/src/public"
         ],
         "styles": [
+          "apps/management/src/tailwind.css",
           "apps/management/src/styles.scss"
         ],
         "scripts": []

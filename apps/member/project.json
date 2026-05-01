@@ -22,6 +22,7 @@
           "apps/member/src/public"
         ],
         "styles": [
+          "apps/member/src/tailwind.css",
           "apps/member/src/styles.scss"
         ],
         "scripts": []
