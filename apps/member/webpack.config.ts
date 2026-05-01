@@ -13,7 +13,7 @@ export default (config, context) => {
 	// Compose with module federation and Nx
 	const cfg = composePlugins(
 		withNx(),
-		withModuleFederation(moduleFederationConfig)
+		withModuleFederation(moduleFederationConfig, { dts: false })
 	)(config, context);
 	
 	// Post-compose: Disable dev-server
