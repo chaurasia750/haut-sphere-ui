@@ -1,14 +1,14 @@
 const explicitShared: Record<string, any> = {
-  '@angular/core': { singleton: true, strictVersion: false },
-  '@angular/common': { singleton: true, strictVersion: false },
-  '@angular/platform-browser': { singleton: true, strictVersion: false },
-  '@angular/router': { singleton: true, strictVersion: false },
-  '@angular/forms': { singleton: true, strictVersion: false },
-  'rxjs': { singleton: true, strictVersion: false },
-  '@shared/types': { singleton: true, strictVersion: false },
-  '@shared/auth': { singleton: true, strictVersion: false },
-  '@shared/errors': { singleton: true, strictVersion: false },
-  '@shared/logging': { singleton: true, strictVersion: false }
+  '@angular/core': { singleton: true, strictVersion: false, eager: true },
+  '@angular/common': { singleton: true, strictVersion: false, eager: true },
+  '@angular/platform-browser': { singleton: true, strictVersion: false, eager: true },
+  '@angular/router': { singleton: true, strictVersion: false, eager: true },
+  '@angular/forms': { singleton: true, strictVersion: false, eager: true },
+  'rxjs': { singleton: true, strictVersion: false, eager: true },
+  '@shared/types': { singleton: true, strictVersion: false, eager: true },
+  '@shared/auth': { singleton: true, strictVersion: false, eager: true },
+  '@shared/errors': { singleton: true, strictVersion: false, eager: true },
+  '@shared/logging': { singleton: true, strictVersion: false, eager: true }
 };
 
 const config = {
