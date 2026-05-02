@@ -4,7 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { catchError, debounceTime, distinctUntilChanged, filter, of, switchMap, tap } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, finalize, of, switchMap, tap } from 'rxjs';
 import { SharedTranslationService } from '@shared/i18n';
 import {
   AadhaarInputDirective,
@@ -128,8 +128,6 @@ export class SignupComponent {
     sponsorIdControl.valueChanges
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        debounceTime(250),
-        distinctUntilChanged(),
         tap((rawValue) => {
           const value = (rawValue ?? '').toString().trim().toUpperCase();
           if (value !== rawValue) {
@@ -140,11 +138,16 @@ export class SignupComponent {
           this.isSponsorLookupPending = false;
           this.clearSponsorLookupError();
         }),
-        filter(() => sponsorIdControl.valid),
-        tap(() => {
-          this.isSponsorLookupPending = true;
-        }),
+        debounceTime(250),
+        distinctUntilChanged(),
         switchMap(() => {
+          // Always switch on each change so in-flight lookup is cancelled.
+          // This prevents stale responses from restoring old sponsor names.
+          if (!sponsorIdControl.valid) {
+            return of(null);
+          }
+
+          this.isSponsorLookupPending = true;
           const fullSponsorId = this.getFullSponsorId();
           return this.signupService
             .validateSponsor(fullSponsorId)
@@ -158,11 +161,11 @@ export class SignupComponent {
               catchError(() => {
                 this.setSponsorLookupError();
                 return of(null);
+              }),
+              finalize(() => {
+                this.isSponsorLookupPending = false;
               })
             );
-        }),
-        tap(() => {
-          this.isSponsorLookupPending = false;
         })
       )
       .subscribe();

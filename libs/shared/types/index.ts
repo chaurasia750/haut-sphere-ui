@@ -93,12 +93,30 @@ export interface ApiError {
 }
 
 export interface ApiResponse<T> {
-  data: T;
-  error?: ApiError;
-  meta?: {
-    timestamp: number;
-    requestId: string;
-  };
+  /**
+   * Response payload. Null on error, typed data on success.
+   */
+  data: T | null;
+
+  /**
+   * Error code. 0 = success, non-zero = error
+   */
+  errorCode: number;
+
+  /**
+   * Technical error description for logging. Null on success.
+   */
+  errorDescription: string | null;
+
+  /**
+   * User-friendly message. Optional on success, required on error.
+   */
+  message: string | null;
+
+  /**
+   * Indicates if UI feedback (toast) should be shown
+   */
+  isFeedbackSet: boolean;
 }
 
 // ============================================================================

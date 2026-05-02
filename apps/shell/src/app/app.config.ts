@@ -1,6 +1,9 @@
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter, Route } from '@angular/router';
 import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
+import { firstValueFrom } from 'rxjs';
 import { RemoteLoaderService } from './services/remote-loader.service';
 import { RemoteContainerComponent } from './components/remote-container.component';
 import { RemoteUnavailableComponent } from './components/remote-unavailable.component';
@@ -10,7 +13,9 @@ import { SignupComponent } from './features/signup/pages/signup/signup.component
 import { authGuard } from './core/guards/auth.guard';
 import { RoleId } from '@libs/shared/auth';
 import { HttpAuthInterceptor } from './core/http-interceptor';
-import { createSharedTranslateLoader } from '@shared/i18n';
+import { HttpErrorInterceptor } from './core/http-error.interceptor';
+import { HttpResponseInterceptor } from './core/http-response.interceptor';
+import { createSharedTranslateLoader, SharedTranslationService } from '@shared/i18n';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 
 export const appRoutes: Route[] = [
@@ -149,8 +154,16 @@ export const appRoutes: Route[] = [
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(appRoutes),
+    provideAnimations(),
     provideHttpClient(withInterceptorsFromDi()),
     importProvidersFrom(
+      ToastrModule.forRoot({
+        timeOut: 4000,
+        positionClass: 'toast-top-right',
+        preventDuplicates: true,
+        progressBar: true,
+        closeButton: true,
+      }),
       TranslateModule.forRoot({
         loader: {
           provide: TranslateLoader,
@@ -163,6 +176,22 @@ export const appConfig: ApplicationConfig = {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpAuthInterceptor,
       multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpErrorInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpResponseInterceptor,
+      multi: true,
+    },
+    {
+      provide: APP_INITIALIZER,
+      multi: true,
+      deps: [SharedTranslationService],
+      useFactory: (i18n: SharedTranslationService) => () => firstValueFrom(i18n.init('en')).then(() => void 0),
     },
     RemoteLoaderService,
   ],

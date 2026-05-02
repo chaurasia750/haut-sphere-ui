@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { map, tap, catchError, switchMap } from 'rxjs/operators';
+import { map, tap, catchError } from 'rxjs/operators';
 import { User, AuthToken } from './user.model';
 
 @Injectable({
@@ -14,15 +14,11 @@ export class AuthService {
   private isAuthenticated$ = new BehaviorSubject<boolean>(false);
 
   constructor() {
-    // Defer initialization to avoid circular dependency during module setup
-    // Just restore the token from localStorage immediately
     const storedToken = localStorage.getItem('auth_token');
     if (storedToken) {
       this.token$.next(storedToken);
       this.isAuthenticated$.next(true);
     }
-    // Schedule fetchCurrentUser for after the app is initialized
-    setTimeout(() => this.tryFetchCurrentUser().subscribe(), 0);
   }
 
   private initializeAuth() {
@@ -42,8 +38,11 @@ export class AuthService {
           localStorage.setItem('auth_token', authToken.accessToken);
           this.token$.next(authToken.accessToken);
           this.isAuthenticated$.next(true);
+          if (authToken.user) {
+            this.currentUser$.next(authToken.user);
+          }
         }),
-        switchMap(() => this.fetchCurrentUser()),
+        map((authToken) => authToken.user as User),
         catchError((error) => {
           console.error('Login failed', error);
           return throwError(() => error);
@@ -97,6 +96,9 @@ export class AuthService {
         tap((authToken) => {
           localStorage.setItem('auth_token', authToken.accessToken);
           this.token$.next(authToken.accessToken);
+          if (authToken.user) {
+            this.currentUser$.next(authToken.user);
+          }
         }),
         map((authToken) => authToken.accessToken),
         catchError((error) => {
@@ -105,32 +107,5 @@ export class AuthService {
           return throwError(() => error);
         })
       );
-  }
-
-  private tryFetchCurrentUser(): Observable<User | null> {
-    return this.http.get<User>('/api/shell/user').pipe(
-      tap((user) => {
-        this.currentUser$.next(user);
-      }),
-      catchError((error) => {
-        // In local development the mock/API may be unavailable or return non-JSON.
-        // Keep the app running in an unauthenticated state instead of surfacing an unhandled error.
-        this.currentUser$.next(null);
-        this.isAuthenticated$.next(false);
-        return of(null);
-      })
-    );
-  }
-
-  private fetchCurrentUser(): Observable<User> {
-    return this.http.get<User>('/api/shell/user').pipe(
-      tap((user) => {
-        this.currentUser$.next(user);
-      }),
-      catchError((error) => {
-        console.error('Failed to fetch current user', error);
-        return throwError(() => error);
-      })
-    );
   }
 }
