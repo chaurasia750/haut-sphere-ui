@@ -1,21 +1,26 @@
 import { NgModule } from '@angular/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { createSharedTranslateLoader } from '@shared/i18n';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { LayoutComponent } from './layout/layout.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LayoutComponent,
   ],
   imports: [
-    BrowserAnimationsModule,
-    HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: createSharedTranslateLoader,
+        deps: [HttpClient],
+      },
+    }),
     AppRoutingModule,
   ],
+  providers: [provideHttpClient(withInterceptorsFromDi())],
   exports: [AppComponent],
 })
 export class AppModule {}

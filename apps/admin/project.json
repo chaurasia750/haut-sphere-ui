@@ -18,9 +18,20 @@
         "main": "apps/admin/src/main.ts",
         "tsConfig": "apps/admin/tsconfig.app.json",
         "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/admin/src/assets",
+            "output": "assets"
+          },
+          {
+            "glob": "**/*.json",
+            "input": "libs/shared/i18n/assets",
+            "output": "assets/i18n"
+          },
           "apps/admin/src/public"
         ],
         "styles": [
+          "apps/admin/src/tailwind.css",
           "apps/admin/src/styles.scss"
         ],
         "scripts": []

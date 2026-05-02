@@ -1,0 +1,13 @@
+{
+  "extends": ["../../../eslint.config.mjs"],
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "rules": {
+        "@typescript-eslint/explicit-function-return-types": "error",
+        "@typescript-eslint/no-unused-vars": "error",
+        "@typescript-eslint/no-explicit-any": "warn"
+      }
+    }
+  ]
+}

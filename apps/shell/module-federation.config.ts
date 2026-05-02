@@ -8,21 +8,22 @@ const config: ModuleFederationConfig = {
   },
   shared: {
     // Angular core packages - singleton to avoid duplication
-    '@angular/core': { singleton: true, strictVersion: true },
-    '@angular/common': { singleton: true, strictVersion: true },
-    '@angular/platform-browser': { singleton: true, strictVersion: true },
-    '@angular/platform-browser-dynamic': { singleton: true, strictVersion: true },
-    '@angular/router': { singleton: true, strictVersion: true },
-    '@angular/forms': { singleton: true, strictVersion: true },
+    '@angular/core': { singleton: true, strictVersion: true, eager: true },
+    '@angular/common': { singleton: true, strictVersion: true, eager: true },
+    '@angular/platform-browser': { singleton: true, strictVersion: true, eager: true },
+    '@angular/platform-browser-dynamic': { singleton: true, strictVersion: true, eager: true },
+    '@angular/router': { singleton: true, strictVersion: true, eager: true },
+    '@angular/forms': { singleton: true, strictVersion: true, eager: true },
     
     // RxJS - singleton to share observable instances
-    'rxjs': { singleton: true, strictVersion: true },
+    'rxjs': { singleton: true, strictVersion: true, eager: true },
     
     // Shared libraries - singleton to enforce single instance
-    '@shared/types': { singleton: true, strictVersion: true },
-    '@shared/auth': { singleton: true, strictVersion: true },
-    '@shared/errors': { singleton: true, strictVersion: true },
-    '@shared/logging': { singleton: true, strictVersion: true }
+    '@shared': { singleton: true, strictVersion: true, eager: true },
+    '@shared/types': { singleton: true, strictVersion: true, eager: true },
+    '@shared/auth': { singleton: true, strictVersion: true, eager: true },
+    '@shared/errors': { singleton: true, strictVersion: true, eager: true },
+    '@shared/logging': { singleton: true, strictVersion: true, eager: true }
   }
 };
 

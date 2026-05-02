@@ -1,14 +1,15 @@
-<div class="error-banner" *ngIf="hasError$ | async as hasError" [class.hidden]="!hasError">
+@if (hasError$ | async; as hasError) {
+<div class="error-banner" [class.hidden]="!hasError">
   <div class="error-content bg-danger text-white p-4 rounded shadow">
     <div class="flex items-center justify-between">
       <div>
         <h3 class="font-bold mb-2">An error occurred</h3>
-        <ng-container *ngIf="error$ | async as error">
+        @if (error$ | async; as error) {
           <p class="text-sm">
             {{ error.remoteApp ? 'Failed to load ' + error.remoteApp : 'Something went wrong' }}
           </p>
           <p class="text-xs mt-1 opacity-90">{{ error.error }}</p>
-        </ng-container>
+        }
       </div>
       <div class="flex gap-2">
         <button (click)="onRetry()" class="px-4 py-2 bg-white text-danger font-semibold rounded hover:bg-gray-100">
@@ -24,5 +25,6 @@
     </div>
   </div>
 </div>
+}
 
 <ng-content></ng-content>

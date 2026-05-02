@@ -1,1 +1,10 @@
+.member-sidebar-scroll {
+	scrollbar-width: none;
+	scrollbar-color: transparent transparent;
+	-ms-overflow-style: none;
+}
+
+.member-sidebar-scroll::-webkit-scrollbar {
+	display: none;
+}
 /* You can add global styles to this file, and also import other style files */

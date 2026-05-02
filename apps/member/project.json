@@ -7,26 +7,76 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/webpack:webpack",
+      "executor": "@nx/angular:webpack-browser",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "target": "web",
-        "compiler": "tsc",
         "outputPath": "dist/member",
         "index": "apps/member/src/index.html",
         "baseHref": "/",
         "main": "apps/member/src/main.ts",
         "tsConfig": "apps/member/tsconfig.app.json",
         "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/member/src/assets",
+            "output": "assets"
+          },
+          {
+            "glob": "**/*.json",
+            "input": "libs/shared/i18n/assets",
+            "output": "assets/i18n"
+          },
+          {
+            "glob": "app-layout.component.html",
+            "input": "libs/shared/ui/src/lib/layout/components/app-layout",
+            "output": "."
+          },
+          {
+            "glob": "app-header.component.html",
+            "input": "libs/shared/ui/src/lib/layout/components/app-header",
+            "output": "."
+          },
+          {
+            "glob": "app-sidebar.component.html",
+            "input": "libs/shared/ui/src/lib/layout/components/app-sidebar",
+            "output": "."
+          },
+          {
+            "glob": "app-footer.component.html",
+            "input": "libs/shared/ui/src/lib/layout/components/app-footer",
+            "output": "."
+          },
+          {
+            "glob": "backdrop.component.html",
+            "input": "libs/shared/ui/src/lib/layout/components/backdrop",
+            "output": "."
+          },
+          {
+            "glob": "notification-dropdown.component.html",
+            "input": "libs/shared/ui/src/lib/layout/components/notification-dropdown",
+            "output": "."
+          },
+          {
+            "glob": "theme-toggle-button.component.html",
+            "input": "libs/shared/ui/src/lib/layout/components/theme-toggle-button",
+            "output": "."
+          },
+          {
+            "glob": "user-dropdown.component.html",
+            "input": "libs/shared/ui/src/lib/layout/components/user-dropdown",
+            "output": "."
+          },
           "apps/member/src/public"
         ],
         "styles": [
+          "apps/member/src/tailwind.css",
           "apps/member/src/styles.scss"
         ],
-        "scripts": []
-      ,
-        "webpackConfig": "apps/member/webpack.config.ts"
+        "scripts": [],
+        "customWebpackConfig": {
+          "path": "apps/member/webpack.config.ts"
+        }
       },
       "configurations": {
         "production": {
@@ -39,14 +89,14 @@
         },
         "development": {
           "optimization": false,
-          "aot": false,
+          "aot": true,
           "vendorChunk": true,
           "sourceMap": true
         }
       }
     },
     "serve": {
-      "executor": "@nx/webpack:dev-server",
+      "executor": "@nx/angular:dev-server",
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "member:build",
