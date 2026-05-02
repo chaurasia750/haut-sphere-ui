@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-card-four',
+  standalone: true,
   imports: [
     CardTitleComponent,
     CardDescriptionComponent,

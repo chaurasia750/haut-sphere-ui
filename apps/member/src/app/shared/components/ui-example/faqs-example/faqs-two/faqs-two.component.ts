@@ -4,6 +4,7 @@ import { FaqItemTwoComponent } from "../../../faqs/faq-item-two/faq-item-two.com
 
 @Component({
   selector: 'app-faqs-two',
+  standalone: true,
   imports: [
     CommonModule,
     FaqItemTwoComponent
