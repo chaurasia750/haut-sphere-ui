@@ -6,6 +6,7 @@ import { RemoteContainerComponent } from './components/remote-container.componen
 import { RemoteUnavailableComponent } from './components/remote-unavailable.component';
 import { remoteConfig } from '../environments/remotes.dev.config';
 import { LoginComponent } from './features/login/pages/login/login.component';
+import { SignupComponent } from './features/signup/pages/signup/signup.component';
 import { authGuard } from './core/guards/auth.guard';
 import { RoleId } from '@libs/shared/auth';
 import { HttpAuthInterceptor } from './core/http-interceptor';
@@ -18,6 +19,11 @@ export const appRoutes: Route[] = [
     path: 'login',
     component: LoginComponent,
     data: { title: 'Login' }
+  },
+  {
+    path: 'signup',
+    component: SignupComponent,
+    data: { title: 'Signup' }
   },
   
   // Dashboard

@@ -54,7 +54,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private checkRoute() {
-    this.isLoginPage = this.router.url === '/login';
+    this.isLoginPage = this.router.url.startsWith('/login') || this.router.url.startsWith('/signup');
   }
 
   ngOnDestroy() {
