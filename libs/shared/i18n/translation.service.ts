@@ -21,6 +21,20 @@ export class SharedTranslationService {
     return this.translate.get(key, params);
   }
 
+  instant(key: string, fallback = '', params?: Record<string, unknown>): string {
+    const value = this.translate.instant(key, params);
+    if (typeof value !== 'string') {
+      return fallback;
+    }
+
+    const normalized = value.trim();
+    if (!normalized || normalized === key) {
+      return fallback;
+    }
+
+    return normalized;
+  }
+
   setDocumentTitle(title: Title, key = 'app.title', fallbackTitle = 'Anon India'): void {
     title.setTitle(fallbackTitle);
 

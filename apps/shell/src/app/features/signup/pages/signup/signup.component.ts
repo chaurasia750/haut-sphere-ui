@@ -1,13 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { catchError, debounceTime, distinctUntilChanged, filter, of, switchMap, tap } from 'rxjs';
+import { SharedTranslationService } from '@shared/i18n';
 import {
   AadhaarInputDirective,
   NumberOnlyDirective,
   PanCardDirective,
   SharedAddressFormComponent,
 } from '@shared/ui/src';
+import { SignupService } from '../../services/signup.service';
 
 @Component({
   selector: 'app-signup',
@@ -16,6 +21,7 @@ import {
     CommonModule,
     ReactiveFormsModule,
     RouterLink,
+    TranslateModule,
     SharedAddressFormComponent,
     AadhaarInputDirective,
     PanCardDirective,
@@ -25,9 +31,15 @@ import {
   styleUrls: ['./signup.component.scss'],
 })
 export class SignupComponent {
+  private readonly i18n = inject(SharedTranslationService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly signupService = inject(SignupService);
+
   isSubmitting = false;
   positionOpen = false;
-  readonly sponsorPrefix = 'ANON';
+  readonly sponsorPrefix = this.i18n.instant('app.sponsorPrefix', 'ANON');
+  sponsorLookupName = '';
+  isSponsorLookupPending = false;
 
   selectPosition(value: string): void {
     this.signupForm.get('position')?.setValue(value);
@@ -65,7 +77,9 @@ export class SignupComponent {
   constructor(
     private readonly fb: FormBuilder,
     private readonly router: Router
-  ) {}
+  ) {
+    this.setupSponsorValidation();
+  }
 
   get addressGroup() {
     return this.signupForm.controls.address;
@@ -79,17 +93,106 @@ export class SignupComponent {
   getError(controlName: string): string {
     const control: AbstractControl | null = this.signupForm.get(controlName);
     if (!control?.touched || !control?.errors) return '';
-    if (control.errors['required']) return 'This field is required.';
-    if (control.errors['email']) return 'Enter a valid email address.';
+    if (control.errors['required']) return this.i18n.instant('signup.validation.required', 'This field is required.');
+    if (control.errors['email']) return this.i18n.instant('signup.validation.email', 'Enter a valid email address.');
     if (control.errors['pattern']) {
-      if (controlName === 'phone') return 'Phone must be exactly 10 digits.';
-      if (controlName === 'aadhaarNo') return 'Aadhaar must be 12 digits (XXXX XXXX XXXX).';
-      if (controlName === 'panCard') return 'PAN format must be ABCDE1234F.';
+      if (controlName === 'phone') return this.i18n.instant('signup.validation.phone', 'Phone must be exactly 10 digits.');
+      if (controlName === 'aadhaarNo') return this.i18n.instant('signup.validation.aadhaar', 'Aadhaar must be 12 digits (XXXX XXXX XXXX).');
+      if (controlName === 'panCard') return this.i18n.instant('signup.validation.pan', 'PAN format must be ABCDE1234F.');
     }
+    if (control.errors['invalidSponsor']) return this.i18n.instant('signup.sponsor.notFound', 'Sponsor ID was not found.');
     if (control.errors['minlength'] || control.errors['maxlength'])
-      return 'Sponsor ID must be exactly 6 characters.';
-    if (controlName === 'position') return 'Please select a position.';
-    return 'Invalid input.';
+      return this.i18n.instant('signup.validation.sponsorIdLength', 'Sponsor ID must be exactly 6 characters.');
+    if (controlName === 'position') return this.i18n.instant('signup.validation.position', 'Please select a position.');
+    return this.i18n.instant('signup.validation.invalid', 'Invalid input.');
+  }
+
+  getPositionLabel(value: string | null | undefined): string {
+    if (value === 'left') {
+      return this.i18n.instant('signup.position.left', 'Left');
+    }
+
+    if (value === 'right') {
+      return this.i18n.instant('signup.position.right', 'Right');
+    }
+
+    return this.i18n.instant('signup.position.placeholder', 'Select...');
+  }
+
+  private setupSponsorValidation(): void {
+    const sponsorIdControl = this.signupForm.get('sponsorId');
+    if (!sponsorIdControl) {
+      return;
+    }
+
+    sponsorIdControl.valueChanges
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        debounceTime(250),
+        distinctUntilChanged(),
+        tap((rawValue) => {
+          const value = (rawValue ?? '').toString().trim().toUpperCase();
+          if (value !== rawValue) {
+            sponsorIdControl.setValue(value, { emitEvent: false });
+          }
+
+          this.sponsorLookupName = '';
+          this.isSponsorLookupPending = false;
+          this.clearSponsorLookupError();
+        }),
+        filter(() => sponsorIdControl.valid),
+        tap(() => {
+          this.isSponsorLookupPending = true;
+        }),
+        switchMap(() => {
+          const fullSponsorId = this.getFullSponsorId();
+          return this.signupService
+            .validateSponsor(fullSponsorId)
+            .pipe(
+              tap((sponsorName) => {
+                this.sponsorLookupName = sponsorName;
+                if (!sponsorName) {
+                  this.setSponsorLookupError();
+                }
+              }),
+              catchError(() => {
+                this.setSponsorLookupError();
+                return of(null);
+              })
+            );
+        }),
+        tap(() => {
+          this.isSponsorLookupPending = false;
+        })
+      )
+      .subscribe();
+  }
+
+  private getFullSponsorId(): string {
+    const suffix = (this.signupForm.get('sponsorId')?.value ?? '').toString().trim().toUpperCase();
+    return `${this.sponsorPrefix}${suffix}`;
+  }
+
+  private setSponsorLookupError(): void {
+    const sponsorIdControl = this.signupForm.get('sponsorId');
+    if (!sponsorIdControl) {
+      return;
+    }
+
+    sponsorIdControl.setErrors({
+      ...(sponsorIdControl.errors ?? {}),
+      invalidSponsor: true,
+    });
+  }
+
+  private clearSponsorLookupError(): void {
+    const sponsorIdControl = this.signupForm.get('sponsorId');
+    if (!sponsorIdControl?.errors?.['invalidSponsor']) {
+      return;
+    }
+
+    const { invalidSponsor, ...remainingErrors } = sponsorIdControl.errors;
+    sponsorIdControl.setErrors(Object.keys(remainingErrors).length ? remainingErrors : null);
   }
 
   submit(): void {

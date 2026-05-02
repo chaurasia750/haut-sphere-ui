@@ -20,10 +20,10 @@
 
       <!-- Headline -->
       <div class="mb-8">
-        <span class="inline-flex items-center rounded-full border border-violet-400/30 bg-violet-400/10 px-3 py-1 text-xs tracking-widest text-violet-200 uppercase mb-4">New Member Registration</span>
-        <h2 class="text-3xl xl:text-4xl font-bold leading-tight">Join the ANON INDIA Network</h2>
+        <span class="inline-flex items-center rounded-full border border-violet-400/30 bg-violet-400/10 px-3 py-1 text-xs tracking-widest text-violet-200 uppercase mb-4">{{ 'signup.hero.badge' | translate }}</span>
+        <h2 class="text-3xl xl:text-4xl font-bold leading-tight">{{ 'signup.hero.title' | translate }}</h2>
         <p class="text-slate-300 text-sm mt-3 max-w-sm leading-relaxed">
-          Become part of India's fastest-growing direct-selling community. Unlock earnings, rewards, and business tools the moment you register.
+          {{ 'signup.hero.description' | translate }}
         </p>
       </div>
 
@@ -36,8 +36,8 @@
             </svg>
           </div>
           <div>
-            <p class="font-semibold text-sm">Instant Earnings Activation</p>
-            <p class="text-slate-400 text-xs mt-0.5">Start earning from your very first referral with multi-level income plans.</p>
+            <p class="font-semibold text-sm">{{ 'signup.hero.benefits.earningsTitle' | translate }}</p>
+            <p class="text-slate-400 text-xs mt-0.5">{{ 'signup.hero.benefits.earningsDescription' | translate }}</p>
           </div>
         </div>
 
@@ -48,8 +48,8 @@
             </svg>
           </div>
           <div>
-            <p class="font-semibold text-sm">KYC-Verified & Secure</p>
-            <p class="text-slate-400 text-xs mt-0.5">Your Aadhaar & PAN are verified securely — compliant with DPDP Act.</p>
+            <p class="font-semibold text-sm">{{ 'signup.hero.benefits.kycTitle' | translate }}</p>
+            <p class="text-slate-400 text-xs mt-0.5">{{ 'signup.hero.benefits.kycDescription' | translate }}</p>
           </div>
         </div>
 
@@ -60,8 +60,8 @@
             </svg>
           </div>
           <div>
-            <p class="font-semibold text-sm">Sponsor Network Support</p>
-            <p class="text-slate-400 text-xs mt-0.5">Your sponsor and upline team are always there to guide your growth.</p>
+            <p class="font-semibold text-sm">{{ 'signup.hero.benefits.supportTitle' | translate }}</p>
+            <p class="text-slate-400 text-xs mt-0.5">{{ 'signup.hero.benefits.supportDescription' | translate }}</p>
           </div>
         </div>
 
@@ -72,8 +72,8 @@
             </svg>
           </div>
           <div>
-            <p class="font-semibold text-sm">Live Business Dashboard</p>
-            <p class="text-slate-400 text-xs mt-0.5">Real-time tracking of your team, points, payouts, and performance.</p>
+            <p class="font-semibold text-sm">{{ 'signup.hero.benefits.dashboardTitle' | translate }}</p>
+            <p class="text-slate-400 text-xs mt-0.5">{{ 'signup.hero.benefits.dashboardDescription' | translate }}</p>
           </div>
         </div>
       </div>
@@ -81,9 +81,9 @@
       <!-- Footer badges -->
       <div class="mt-8 pt-6 border-t border-slate-700/70">
         <div class="flex items-center justify-between text-xs text-slate-400">
-          <span>DPDP Compliant</span>
-          <span>ISO 27001</span>
-          <span>256-bit SSL</span>
+          <span>{{ 'signup.hero.footer.dpdp' | translate }}</span>
+          <span>{{ 'signup.hero.footer.iso' | translate }}</span>
+          <span>{{ 'signup.hero.footer.ssl' | translate }}</span>
         </div>
       </div>
     </div>
@@ -106,8 +106,8 @@
       <div class="bg-white rounded-2xl shadow-xl border border-slate-200 px-6 py-7 sm:px-8 sm:py-8">
         <!-- Card header -->
         <div class="mb-6">
-          <h1 class="text-xl sm:text-2xl font-bold text-slate-900">Create Your Account</h1>
-          <p class="mt-1 text-sm text-slate-500">Fill in your details below — it takes less than 2 minutes.</p>
+          <h1 class="text-xl sm:text-2xl font-bold text-slate-900">{{ 'signup.header.title' | translate }}</h1>
+          <p class="mt-1 text-sm text-slate-500">{{ 'signup.header.subtitle' | translate }}</p>
         </div>
 
         <form [formGroup]="signupForm" (ngSubmit)="submit()" class="space-y-4" novalidate>
@@ -116,8 +116,8 @@
           <div>
             <!-- Floating labels above the combined box -->
             <div class="mb-1 flex">
-              <span class="flex-1 pl-3 sm:pl-4 text-xs font-medium text-slate-500">Sponsor ID <span class="text-red-400">*</span></span>
-              <span class="shrink-0 pr-4 text-xs font-medium text-slate-500">Position <span class="text-red-400">*</span></span>
+              <span class="flex-1 pl-3 sm:pl-4 text-xs font-medium text-slate-500">{{ 'signup.fields.sponsorId' | translate }} <span class="text-red-400">*</span></span>
+              <span class="shrink-0 pr-4 text-xs font-medium text-slate-500">{{ 'signup.fields.position' | translate }} <span class="text-red-400">*</span></span>
             </div>
 
             <!-- Single combined border box -->
@@ -134,7 +134,7 @@
                   type="text"
                   maxlength="6"
                   formControlName="sponsorId"
-                  placeholder="XXXXXX"
+                  [placeholder]="'signup.sponsor.placeholder' | translate"
                   class="min-w-0 flex-1 border-0 bg-transparent py-3 pl-1 pr-2 text-sm text-slate-900 placeholder:text-slate-300 focus:outline-none"
                 />
               </div>
@@ -150,7 +150,7 @@
                   class="flex w-full items-center justify-between gap-1 px-3 sm:px-4 py-3 text-sm focus:outline-none"
                   [ngClass]="signupForm.get('position')?.value ? 'text-slate-900' : 'text-slate-400'"
                 >
-                  <span>{{ signupForm.get('position')?.value === 'left' ? 'Left' : signupForm.get('position')?.value === 'right' ? 'Right' : 'Select…' }}</span>
+                  <span>{{ getPositionLabel(signupForm.get('position')?.value) }}</span>
                   <svg class="h-4 w-4 shrink-0 text-slate-400 transition-transform duration-200"
                     [ngClass]="positionOpen ? 'rotate-180' : ''"
                     fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -162,13 +162,13 @@
                     <button type="button"
                       class="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
                       (click)="selectPosition('left')">
-                      <span class="h-2 w-2 rounded-full bg-indigo-400 shrink-0"></span> Left
+                      <span class="h-2 w-2 rounded-full bg-indigo-400 shrink-0"></span> {{ 'signup.position.left' | translate }}
                     </button>
                     <div class="mx-3 h-px bg-slate-100"></div>
                     <button type="button"
                       class="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
                       (click)="selectPosition('right')">
-                      <span class="h-2 w-2 rounded-full bg-purple-400 shrink-0"></span> Right
+                      <span class="h-2 w-2 rounded-full bg-purple-400 shrink-0"></span> {{ 'signup.position.right' | translate }}
                     </button>
                   </div>
                 }
@@ -178,6 +178,21 @@
             <!-- Validation errors below -->
             <div class="mt-1.5 flex gap-4">
               <div class="flex-1">
+                @if (isSponsorLookupPending) {
+                  <p class="mb-1 flex items-center gap-1 text-xs text-slate-500">
+                    <svg class="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                    </svg>
+                    {{ 'signup.sponsor.verifying' | translate }}
+                  </p>
+                }
+                @if (sponsorLookupName) {
+                  <p class="mb-1 flex items-center gap-1 text-xs font-medium text-emerald-600">
+                    <svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-7.25 7.25a1 1 0 01-1.414 0l-3.75-3.75a1 1 0 111.414-1.414l3.043 3.043 6.543-6.543a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                    {{ sponsorLookupName }}
+                  </p>
+                }
                 @if (isInvalid('sponsorId')) {
                   <p class="flex items-center gap-1 text-xs text-red-500">
                     <svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
@@ -204,7 +219,7 @@
                 [ngClass]="isInvalid('firstName') ? 'border-red-400 bg-red-50/40 focus:border-red-400 focus:ring-red-400/20' : 'border-slate-300 bg-white focus:border-indigo-500 focus:ring-indigo-500/30'"
               />
               <label for="firstName" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600">
-                First Name <span class="text-red-400">*</span>
+                {{ 'signup.fields.firstName' | translate }} <span class="text-red-400">*</span>
               </label>
               @if (isInvalid('firstName')) {
                 <p class="mt-1.5 flex items-center gap-1 text-xs text-red-500"><svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>{{ getError('firstName') }}</p>
@@ -216,7 +231,7 @@
                 [ngClass]="isInvalid('lastName') ? 'border-red-400 bg-red-50/40 focus:border-red-400 focus:ring-red-400/20' : 'border-slate-300 bg-white focus:border-indigo-500 focus:ring-indigo-500/30'"
               />
               <label for="lastName" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600">
-                Last Name <span class="text-red-400">*</span>
+                {{ 'signup.fields.lastName' | translate }} <span class="text-red-400">*</span>
               </label>
               @if (isInvalid('lastName')) {
                 <p class="mt-1.5 flex items-center gap-1 text-xs text-red-500"><svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>{{ getError('lastName') }}</p>
@@ -232,7 +247,7 @@
                 [ngClass]="isInvalid('email') ? 'border-red-400 bg-red-50/40 focus:border-red-400 focus:ring-red-400/20' : 'border-slate-300 bg-white focus:border-indigo-500 focus:ring-indigo-500/30'"
               />
               <label for="email" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600">
-                Email Address <span class="text-red-400">*</span>
+                {{ 'signup.fields.email' | translate }} <span class="text-red-400">*</span>
               </label>
               @if (isInvalid('email')) {
                 <p class="mt-1.5 flex items-center gap-1 text-xs text-red-500"><svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>{{ getError('email') }}</p>
@@ -244,7 +259,7 @@
                 [ngClass]="isInvalid('phone') ? 'border-red-400 bg-red-50/40 focus:border-red-400 focus:ring-red-400/20' : 'border-slate-300 bg-white focus:border-indigo-500 focus:ring-indigo-500/30'"
               />
               <label for="phone" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600">
-                Mobile Number <span class="text-red-400">*</span>
+                {{ 'signup.fields.phone' | translate }} <span class="text-red-400">*</span>
               </label>
               @if (isInvalid('phone')) {
                 <p class="mt-1.5 flex items-center gap-1 text-xs text-red-500"><svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>{{ getError('phone') }}</p>
@@ -260,7 +275,7 @@
                 [ngClass]="isInvalid('aadhaarNo') ? 'border-red-400 bg-red-50/40 focus:border-red-400 focus:ring-red-400/20' : 'border-slate-300 bg-white focus:border-indigo-500 focus:ring-indigo-500/30'"
               />
               <label for="aadhaarNo" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600">
-                Aadhaar Number <span class="text-red-400">*</span>
+                {{ 'signup.fields.aadhaar' | translate }} <span class="text-red-400">*</span>
               </label>
               @if (isInvalid('aadhaarNo')) {
                 <p class="mt-1.5 flex items-center gap-1 text-xs text-red-500"><svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>{{ getError('aadhaarNo') }}</p>
@@ -272,7 +287,7 @@
                 [ngClass]="isInvalid('panCard') ? 'border-red-400 bg-red-50/40 focus:border-red-400 focus:ring-red-400/20' : 'border-slate-300 bg-white focus:border-indigo-500 focus:ring-indigo-500/30'"
               />
               <label for="panCard" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600">
-                PAN Card <span class="text-red-400">*</span>
+                {{ 'signup.fields.pan' | translate }} <span class="text-red-400">*</span>
               </label>
               @if (isInvalid('panCard')) {
                 <p class="mt-1.5 flex items-center gap-1 text-xs text-red-500"><svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>{{ getError('panCard') }}</p>
@@ -288,7 +303,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              Address Details
+              {{ 'signup.fields.address' | translate }}
             </span>
             <div class="h-px flex-1 bg-slate-200"></div>
           </div>
@@ -303,15 +318,15 @@
               [disabled]="isSubmitting"
               class="w-full rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {{ isSubmitting ? 'Creating Account…' : 'Create Account' }}
+              {{ isSubmitting ? ('signup.submit.loading' | translate) : ('signup.submit.idle' | translate) }}
             </button>
           </div>
 
         </form>
 
         <p class="mt-5 text-center text-sm text-slate-500">
-          Already have an account?
-          <a routerLink="/login" class="font-semibold text-indigo-600 hover:text-indigo-500">Sign in here</a>
+          {{ 'signup.signin.prompt' | translate }}
+          <a routerLink="/login" class="font-semibold text-indigo-600 hover:text-indigo-500">{{ 'signup.signin.link' | translate }}</a>
         </p>
       </div>
 

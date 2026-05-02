@@ -1,6 +1,71 @@
 {
   "app": {
     "title": "Anon India",
-    "sponsorPrefix": "ANON"
+    "sponsorPrefix": "BIT"
+  },
+  "signup": {
+    "hero": {
+      "badge": "New Member Registration",
+      "title": "Join the ANON INDIA Network",
+      "description": "Become part of India's fastest-growing direct-selling community. Unlock earnings, rewards, and business tools the moment you register.",
+      "benefits": {
+        "earningsTitle": "Instant Earnings Activation",
+        "earningsDescription": "Start earning from your very first referral with multi-level income plans.",
+        "kycTitle": "KYC-Verified & Secure",
+        "kycDescription": "Your Aadhaar & PAN are verified securely — compliant with DPDP Act.",
+        "supportTitle": "Sponsor Network Support",
+        "supportDescription": "Your sponsor and upline team are always there to guide your growth.",
+        "dashboardTitle": "Live Business Dashboard",
+        "dashboardDescription": "Real-time tracking of your team, points, payouts, and performance."
+      },
+      "footer": {
+        "dpdp": "DPDP Compliant",
+        "iso": "ISO 27001",
+        "ssl": "256-bit SSL"
+      }
+    },
+    "header": {
+      "title": "Create Your Account",
+      "subtitle": "Fill in your details below — it takes less than 2 minutes."
+    },
+    "fields": {
+      "sponsorId": "Sponsor ID",
+      "position": "Position",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email Address",
+      "phone": "Mobile Number",
+      "aadhaar": "Aadhaar Number",
+      "pan": "PAN Card",
+      "address": "Address Details"
+    },
+    "position": {
+      "placeholder": "Select...",
+      "left": "Left",
+      "right": "Right"
+    },
+    "sponsor": {
+      "placeholder": "XXXXXX",
+      "verifying": "Verifying sponsor...",
+      "notFound": "Sponsor ID was not found."
+    },
+    "validation": {
+      "required": "This field is required.",
+      "email": "Enter a valid email address.",
+      "phone": "Phone must be exactly 10 digits.",
+      "aadhaar": "Aadhaar must be 12 digits (XXXX XXXX XXXX).",
+      "pan": "PAN format must be ABCDE1234F.",
+      "sponsorIdLength": "Sponsor ID must be exactly 6 characters.",
+      "position": "Please select a position.",
+      "invalid": "Invalid input."
+    },
+    "submit": {
+      "idle": "Create Account",
+      "loading": "Creating Account..."
+    },
+    "signin": {
+      "prompt": "Already have an account?",
+      "link": "Sign in here"
+    }
   }
 }
