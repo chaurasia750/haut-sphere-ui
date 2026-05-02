@@ -7,6 +7,7 @@ const explicitShared: Record<string, any> = {
   '@angular/forms': { singleton: true, strictVersion: false, eager: true },
   'rxjs': { singleton: true, strictVersion: false, eager: true },
   'rxjs/operators': { singleton: true, strictVersion: false, eager: true },
+  '@shared/i18n': { singleton: true, strictVersion: false },
   '@shared/types': { singleton: true, strictVersion: false, eager: true },
   '@shared/auth': { singleton: true, strictVersion: false, eager: true },
   '@shared/errors': { singleton: true, strictVersion: false, eager: true },
@@ -23,6 +24,7 @@ const config = {
     // Exclude platform-browser-dynamic — it brings in the JIT compiler
     // which causes "JIT compiler not available" errors in the AOT shell
     if (packageName === '@angular/platform-browser-dynamic') return false;
+    if (packageName === '@shared') return false;
     if (explicitShared[packageName]) return explicitShared[packageName];
     return defaultSharedConfig;
   },

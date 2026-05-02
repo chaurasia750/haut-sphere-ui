@@ -19,6 +19,7 @@ const config: ModuleFederationConfig = {
     'rxjs': { singleton: true, strictVersion: true, eager: true },
     
     // Shared libraries - singleton to enforce single instance
+    '@shared': { singleton: true, strictVersion: true, eager: true },
     '@shared/types': { singleton: true, strictVersion: true, eager: true },
     '@shared/auth': { singleton: true, strictVersion: true, eager: true },
     '@shared/errors': { singleton: true, strictVersion: true, eager: true },

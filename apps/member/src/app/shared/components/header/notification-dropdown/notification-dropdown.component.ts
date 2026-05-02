@@ -5,7 +5,7 @@ import { DropdownComponent } from '../../ui/dropdown/dropdown.component';
 import { DropdownItemComponent } from '../../ui/dropdown/dropdown-item/dropdown-item.component';
 
 @Component({
-  selector: 'app-notification-dropdown',
+  selector: 'member-notification-dropdown',
   templateUrl: './notification-dropdown.component.html',
   imports:[CommonModule,RouterModule,DropdownComponent,DropdownItemComponent]
 })

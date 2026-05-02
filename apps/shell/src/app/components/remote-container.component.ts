@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewContainerRef, Input, NgModuleFactory, NgModuleRef, Injector, EnvironmentInjector } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { RemoteConfig } from '@shared';
+import { RemoteConfig } from '@shared/types';
 import { RemoteLoaderService } from '../services/remote-loader.service';
 
 @Component({

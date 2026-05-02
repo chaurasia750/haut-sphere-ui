@@ -115,7 +115,6 @@ export class AuthService {
       catchError((error) => {
         // In local development the mock/API may be unavailable or return non-JSON.
         // Keep the app running in an unauthenticated state instead of surfacing an unhandled error.
-        console.warn('Could not restore user session from /api/shell/user', error);
         this.currentUser$.next(null);
         this.isAuthenticated$.next(false);
         return of(null);

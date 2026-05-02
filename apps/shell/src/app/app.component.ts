@@ -4,7 +4,7 @@ import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-import { SharedTranslationService } from '@shared';
+import { SharedTranslationService } from '@shared/i18n';
 
 @Component({
   selector: 'app-root',

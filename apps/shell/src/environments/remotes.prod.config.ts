@@ -1,4 +1,4 @@
-import { RemoteConfig } from '@shared';
+import { RemoteConfig } from '@shared/types';
 
 /**
  * Production Environment Remote Configuration

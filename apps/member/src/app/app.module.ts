@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { createSharedTranslateLoader } from '@shared';
+import { createSharedTranslateLoader } from '@shared/i18n';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';

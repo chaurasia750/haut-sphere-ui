@@ -3,7 +3,7 @@ import { ThemeService } from '../../../services/theme.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-theme-toggle-button',
+  selector: 'member-theme-toggle-button',
   templateUrl: './theme-toggle-button.component.html',
   imports:[CommonModule]
 })

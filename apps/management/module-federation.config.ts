@@ -8,6 +8,7 @@ const explicitShared: Record<string, any> = {
   '@angular/router': { singleton: true, strictVersion: true },
   '@angular/forms': { singleton: true, strictVersion: true },
   'rxjs': { singleton: true, strictVersion: true },
+  '@shared': { singleton: true, strictVersion: true },
   '@shared/types': { singleton: true, strictVersion: true },
   '@shared/auth': { singleton: true, strictVersion: true },
   '@shared/errors': { singleton: true, strictVersion: true },

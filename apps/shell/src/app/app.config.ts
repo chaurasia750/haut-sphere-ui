@@ -9,7 +9,7 @@ import { LoginComponent } from './features/login/pages/login/login.component';
 import { authGuard } from './core/guards/auth.guard';
 import { RoleId } from '@libs/shared/auth';
 import { HttpAuthInterceptor } from './core/http-interceptor';
-import { createSharedTranslateLoader } from '@shared';
+import { createSharedTranslateLoader } from '@shared/i18n';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 
 export const appRoutes: Route[] = [
@@ -50,6 +50,7 @@ export const appRoutes: Route[] = [
           ngPlatformBrowser,
           rxjs,
           rxjsOperators,
+          sharedI18n,
         ] = await Promise.all([
           import('@angular/core'),
           import('@angular/common'),
@@ -59,6 +60,7 @@ export const appRoutes: Route[] = [
           import('@angular/platform-browser'),
           import('rxjs'),
           import('rxjs/operators'),
+          import('@shared/i18n'),
         ]);
 
         const w = window as any;
@@ -83,6 +85,7 @@ export const appRoutes: Route[] = [
         registerShare('@angular/platform-browser', ngPlatformBrowser, '21.2.10');
         registerShare('rxjs', rxjs, '7.8.2');
         registerShare('rxjs/operators', rxjsOperators, '7.8.2');
+        registerShare('@shared/i18n', sharedI18n, '0.0.0');
 
         if (typeof w.__webpack_init_sharing__ !== 'function') {
           w.__webpack_init_sharing__ = async () => undefined;

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { SharedTranslationService } from '@shared';
+import { SharedTranslationService } from '@shared/i18n';
 
 @Component({
   selector: 'app-root',
