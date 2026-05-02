@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { AppLayoutConfig } from '@shared';
+import { SharedTranslationService } from '@shared';
 
 @Component({
   selector: 'app-root',
   standalone: false,
   template: `<shared-app-layout [config]="layoutConfig"></shared-app-layout>`,
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   readonly layoutConfig: AppLayoutConfig = {
     appName: 'Management Portal',
     brandName: 'BitScholar',
@@ -41,4 +43,13 @@ export class AppComponent {
       },
     ],
   };
+
+  constructor(
+    private readonly title: Title,
+    private readonly i18n: SharedTranslationService
+  ) {}
+
+  ngOnInit(): void {
+    this.i18n.setDocumentTitle(this.title);
+  }
 }

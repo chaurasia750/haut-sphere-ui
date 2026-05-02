@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { createSharedTranslateLoader } from '@shared';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -9,9 +11,16 @@ import { AppRoutingModule } from './app-routing.module';
     AppComponent,
   ],
   imports: [
-    HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: createSharedTranslateLoader,
+        deps: [HttpClient],
+      },
+    }),
     AppRoutingModule,
   ],
+  providers: [provideHttpClient(withInterceptorsFromDi())],
   exports: [AppComponent],
 })
 export class AppModule {}

@@ -1,8 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { SharedTranslationService } from '@shared';
 
 @Component({
   selector: 'app-root',
   standalone: false,
   template: '<router-outlet></router-outlet>',
 })
-export class AppComponent {}
+export class AppComponent implements OnInit {
+  constructor(
+    private readonly title: Title,
+    private readonly i18n: SharedTranslationService
+  ) {}
+
+  ngOnInit(): void {
+    this.i18n.setDocumentTitle(this.title);
+  }
+}

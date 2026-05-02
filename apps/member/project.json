@@ -23,6 +23,11 @@
             "output": "assets"
           },
           {
+            "glob": "**/*.json",
+            "input": "libs/shared/i18n/assets",
+            "output": "assets/i18n"
+          },
+          {
             "glob": "app-layout.component.html",
             "input": "libs/shared/ui/src/lib/layout/components/app-layout",
             "output": "."

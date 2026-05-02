@@ -23,6 +23,11 @@
             "input": "apps/admin/src/assets",
             "output": "assets"
           },
+          {
+            "glob": "**/*.json",
+            "input": "libs/shared/i18n/assets",
+            "output": "assets/i18n"
+          },
           "apps/admin/src/public"
         ],
         "styles": [

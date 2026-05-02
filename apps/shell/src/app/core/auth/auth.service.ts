@@ -22,7 +22,7 @@ export class AuthService {
       this.isAuthenticated$.next(true);
     }
     // Schedule fetchCurrentUser for after the app is initialized
-    setTimeout(() => this.fetchCurrentUser().subscribe(), 0);
+    setTimeout(() => this.tryFetchCurrentUser().subscribe(), 0);
   }
 
   private initializeAuth() {
@@ -105,6 +105,22 @@ export class AuthService {
           return throwError(() => error);
         })
       );
+  }
+
+  private tryFetchCurrentUser(): Observable<User | null> {
+    return this.http.get<User>('/api/shell/user').pipe(
+      tap((user) => {
+        this.currentUser$.next(user);
+      }),
+      catchError((error) => {
+        // In local development the mock/API may be unavailable or return non-JSON.
+        // Keep the app running in an unauthenticated state instead of surfacing an unhandled error.
+        console.warn('Could not restore user session from /api/shell/user', error);
+        this.currentUser$.next(null);
+        this.isAuthenticated$.next(false);
+        return of(null);
+      })
+    );
   }
 
   private fetchCurrentUser(): Observable<User> {

@@ -1,6 +1,6 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter, Route } from '@angular/router';
-import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
 import { RemoteLoaderService } from './services/remote-loader.service';
 import { RemoteContainerComponent } from './components/remote-container.component';
 import { RemoteUnavailableComponent } from './components/remote-unavailable.component';
@@ -9,6 +9,8 @@ import { LoginComponent } from './features/login/pages/login/login.component';
 import { authGuard } from './core/guards/auth.guard';
 import { RoleId } from '@libs/shared/auth';
 import { HttpAuthInterceptor } from './core/http-interceptor';
+import { createSharedTranslateLoader } from '@shared';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 
 export const appRoutes: Route[] = [
   // Public login route
@@ -37,7 +39,7 @@ export const appRoutes: Route[] = [
   {
     path: 'member',
     loadChildren: async () => {
-      const memberEntry = 'http://localhost:4102/remoteEntry.mjs';
+      const memberEntry = remoteConfig.find((c: any) => c.key === 'member')?.entry ?? 'http://localhost:4102/remoteEntry.mjs';
       try {
         const [
           ngCore,
@@ -47,6 +49,7 @@ export const appRoutes: Route[] = [
           ngForms,
           ngPlatformBrowser,
           rxjs,
+          rxjsOperators,
         ] = await Promise.all([
           import('@angular/core'),
           import('@angular/common'),
@@ -55,6 +58,7 @@ export const appRoutes: Route[] = [
           import('@angular/forms'),
           import('@angular/platform-browser'),
           import('rxjs'),
+          import('rxjs/operators'),
         ]);
 
         const w = window as any;
@@ -78,6 +82,7 @@ export const appRoutes: Route[] = [
         registerShare('@angular/forms', ngForms, '21.2.10');
         registerShare('@angular/platform-browser', ngPlatformBrowser, '21.2.10');
         registerShare('rxjs', rxjs, '7.8.2');
+        registerShare('rxjs/operators', rxjsOperators, '7.8.2');
 
         if (typeof w.__webpack_init_sharing__ !== 'function') {
           w.__webpack_init_sharing__ = async () => undefined;
@@ -104,7 +109,7 @@ export const appRoutes: Route[] = [
             component: RemoteUnavailableComponent,
             data: {
               title: 'Member App Unavailable',
-              message: 'Member remote could not be loaded from http://localhost:4102/remoteEntry.mjs.',
+              message: `Member remote could not be loaded from ${memberEntry}.`,
             },
           },
         ];
@@ -136,6 +141,15 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(appRoutes),
     provideHttpClient(withInterceptorsFromDi()),
+    importProvidersFrom(
+      TranslateModule.forRoot({
+        loader: {
+          provide: TranslateLoader,
+          useFactory: createSharedTranslateLoader,
+          deps: [HttpClient],
+        },
+      })
+    ),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpAuthInterceptor,

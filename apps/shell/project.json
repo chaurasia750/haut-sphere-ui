@@ -21,6 +21,11 @@
             "output": "assets"
           },
           {
+            "glob": "**/*.json",
+            "input": "libs/shared/i18n/assets",
+            "output": "assets/i18n"
+          },
+          {
             "glob": "**/*",
             "input": "apps/shell/public"
           }
@@ -41,7 +46,13 @@
               "maximumError": "8kb"
             }
           ],
-          "outputHashing": "all"
+          "outputHashing": "all",
+          "fileReplacements": [
+            {
+              "replace": "apps/shell/src/environments/remotes.dev.config.ts",
+              "with": "apps/shell/src/environments/remotes.prod.config.ts"
+            }
+          ]
         },
         "development": {
           "optimization": false,

@@ -21,3 +21,6 @@ export { LoggingService } from './logging/logging.service';
 
 // Re-export shared UI layout module/components
 export * from './ui/src';
+
+// Re-export shared i18n service
+export * from './i18n';
