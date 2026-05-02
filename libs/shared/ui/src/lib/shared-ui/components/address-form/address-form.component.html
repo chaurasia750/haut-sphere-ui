@@ -7,7 +7,10 @@
       type="text"
       formControlName="addressLine1"
       placeholder=" "
-      class="peer block w-full appearance-none rounded-xl border border-slate-300 bg-white px-4 pb-2.5 pt-5 text-sm text-slate-900 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+      class="peer block w-full appearance-none rounded-xl border px-4 pb-2.5 pt-5 text-sm text-slate-900 transition-colors focus:outline-none focus:ring-2"
+      [ngClass]="formGroup.get('addressLine1')?.touched && formGroup.get('addressLine1')?.invalid
+        ? 'border-red-400 bg-red-50/40 focus:border-red-400 focus:ring-red-400/20'
+        : 'border-slate-300 bg-white focus:border-indigo-500 focus:ring-indigo-500/20'"
     />
     <label
       for="addressLine1"
@@ -15,6 +18,12 @@
     >
       Address Line 1 <span class="text-red-400">*</span>
     </label>
+    @if (formGroup.get('addressLine1')?.touched && formGroup.get('addressLine1')?.errors?.['required']) {
+      <p class="mt-1.5 flex items-center gap-1 text-xs text-red-500">
+        <svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+        Address Line 1 is required.
+      </p>
+    }
   </div>
 
   <!-- Address Line 2 -->
@@ -31,40 +40,6 @@
       class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600"
     >
       Address Line 2
-    </label>
-  </div>
-
-  <!-- City -->
-  <div class="relative">
-    <input
-      id="city"
-      type="text"
-      formControlName="city"
-      placeholder=" "
-      class="peer block w-full appearance-none rounded-xl border border-slate-300 bg-white px-4 pb-2.5 pt-5 text-sm text-slate-900 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
-    />
-    <label
-      for="city"
-      class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600"
-    >
-      City <span class="text-red-400">*</span>
-    </label>
-  </div>
-
-  <!-- State -->
-  <div class="relative">
-    <input
-      id="state"
-      type="text"
-      formControlName="state"
-      placeholder=" "
-      class="peer block w-full appearance-none rounded-xl border border-slate-300 bg-white px-4 pb-2.5 pt-5 text-sm text-slate-900 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
-    />
-    <label
-      for="state"
-      class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600"
-    >
-      State <span class="text-red-400">*</span>
     </label>
   </div>
 
@@ -85,22 +60,72 @@
     >
       Postal Code <span class="text-red-400">*</span>
     </label>
+    @if (isPostalLookupPending) {
+      <p class="mt-1 flex items-center gap-1 text-xs text-slate-500">
+        <svg class="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+        </svg>
+        Fetching location...
+      </p>
+    }
   </div>
 
-  <!-- Country -->
+  <!-- City (auto-filled options from postal lookup) -->
+  <div class="relative">
+    <select
+      id="city"
+      formControlName="city"
+      class="peer block w-full appearance-none rounded-xl border border-slate-300 bg-white px-4 pb-2.5 pt-5 text-sm text-slate-900 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+    >
+      <option value="" disabled>Select City</option>
+      @for (city of cityList; track city) {
+        <option [value]="city">{{ city }}</option>
+      }
+    </select>
+    <label
+      for="city"
+      class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500"
+    >
+      City <span class="text-red-400">*</span>
+    </label>
+  </div>
+
+  <!-- Country (auto-filled from postal lookup) -->
   <div class="relative">
     <input
       id="country"
       type="text"
       formControlName="country"
       placeholder=" "
-      class="peer block w-full appearance-none rounded-xl border border-slate-300 bg-white px-4 pb-2.5 pt-5 text-sm text-slate-900 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+      readonly
+      class="peer block w-full appearance-none rounded-xl border border-slate-300 bg-slate-50 px-4 pb-2.5 pt-5 text-sm text-slate-900 transition-colors focus:outline-none"
     />
     <label
       for="country"
-      class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600"
+      class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400"
     >
       Country <span class="text-red-400">*</span>
+    </label>
+  </div>
+
+  <!-- State (auto-filled options from postal lookup) -->
+  <div class="relative">
+    <select
+      id="state"
+      formControlName="state"
+      class="peer block w-full appearance-none rounded-xl border border-slate-300 bg-white px-4 pb-2.5 pt-5 text-sm text-slate-900 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+    >
+      <option value="" disabled>Select State</option>
+      @for (state of stateList; track state) {
+        <option [value]="state">{{ state }}</option>
+      }
+    </select>
+    <label
+      for="state"
+      class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500"
+    >
+      State <span class="text-red-400">*</span>
     </label>
   </div>
 

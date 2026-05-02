@@ -16,7 +16,9 @@ import { HttpAuthInterceptor } from './core/http-interceptor';
 import { HttpErrorInterceptor } from './core/http-error.interceptor';
 import { HttpResponseInterceptor } from './core/http-response.interceptor';
 import { createSharedTranslateLoader, SharedTranslationService } from '@shared/i18n';
+import { ADDRESS_LOOKUP_API_BASE_URL } from '@shared/ui/src';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { apiConfig } from '../environments/api.dev.config';
 
 export const appRoutes: Route[] = [
   // Public login route
@@ -192,6 +194,10 @@ export const appConfig: ApplicationConfig = {
       multi: true,
       deps: [SharedTranslationService],
       useFactory: (i18n: SharedTranslationService) => () => firstValueFrom(i18n.init('en')).then(() => void 0),
+    },
+    {
+      provide: ADDRESS_LOOKUP_API_BASE_URL,
+      useValue: apiConfig.baseUrl,
     },
     RemoteLoaderService,
   ],

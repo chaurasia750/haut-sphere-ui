@@ -8,8 +8,8 @@ import { catchError, debounceTime, distinctUntilChanged, finalize, of, switchMap
 import { SharedTranslationService } from '@shared/i18n';
 import {
   AadhaarInputDirective,
-  NumberOnlyDirective,
   PanCardDirective,
+  PhoneFormatDirective,
   SharedAddressFormComponent,
 } from '@shared/ui/src';
 import { SignupService } from '../../services/signup.service';
@@ -25,7 +25,7 @@ import { SignupService } from '../../services/signup.service';
     SharedAddressFormComponent,
     AadhaarInputDirective,
     PanCardDirective,
-    NumberOnlyDirective,
+    PhoneFormatDirective,
   ],
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss'],
@@ -55,10 +55,11 @@ export class SignupComponent {
   }
 
   readonly signupForm = this.fb.group({
-    firstName: ['', [Validators.required]],
-    lastName: ['', [Validators.required]],
+    firstName: ['', [Validators.required, Validators.pattern(/^\S+$/)]],
+    lastName: ['', [Validators.required, Validators.pattern(/^\S+$/)]],
     email: ['', [Validators.required, Validators.email]],
-    phone: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+    phone: ['', [Validators.required, Validators.pattern(/^\d{4} \d{4} \d{2}$/)]],
+    businessCategory: ['', [Validators.required]],
     // Aadhaar directive formats as "XXXX XXXX XXXX" — validator matches spaced format
     aadhaarNo: ['', [Validators.required, Validators.pattern(/^\d{4} \d{4} \d{4}$/)]],
     panCard: ['', [Validators.required, Validators.pattern(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/)]],
@@ -68,9 +69,9 @@ export class SignupComponent {
       addressLine1: ['', [Validators.required]],
       addressLine2: [''],
       city: ['', [Validators.required]],
+      country: [{ value: 'India', disabled: true }, [Validators.required]],
       state: ['', [Validators.required]],
       postalCode: ['', [Validators.required]],
-      country: ['', [Validators.required]],
     }),
   });
 
@@ -96,10 +97,12 @@ export class SignupComponent {
     if (control.errors['required']) return this.i18n.instant('signup.validation.required', 'This field is required.');
     if (control.errors['email']) return this.i18n.instant('signup.validation.email', 'Enter a valid email address.');
     if (control.errors['pattern']) {
-      if (controlName === 'phone') return this.i18n.instant('signup.validation.phone', 'Phone must be exactly 10 digits.');
+      if (controlName === 'firstName' || controlName === 'lastName') return this.i18n.instant('signup.validation.noSpaces', 'Name cannot contain spaces.');
+      if (controlName === 'phone') return this.i18n.instant('signup.validation.phone', 'Enter a valid 10-digit mobile number.');
       if (controlName === 'aadhaarNo') return this.i18n.instant('signup.validation.aadhaar', 'Aadhaar must be 12 digits (XXXX XXXX XXXX).');
       if (controlName === 'panCard') return this.i18n.instant('signup.validation.pan', 'PAN format must be ABCDE1234F.');
     }
+    if (controlName === 'businessCategory') return this.i18n.instant('signup.validation.businessCategory', 'Please select a business category.');
     if (control.errors['invalidSponsor']) return this.i18n.instant('signup.sponsor.notFound', 'Sponsor ID was not found.');
     if (control.errors['minlength'] || control.errors['maxlength'])
       return this.i18n.instant('signup.validation.sponsorIdLength', 'Sponsor ID must be exactly 6 characters.');

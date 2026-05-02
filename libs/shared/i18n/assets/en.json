@@ -5,18 +5,18 @@
   },
   "signup": {
     "hero": {
-      "badge": "New Member Registration",
-      "title": "Join the ANON INDIA Network",
-      "description": "Become part of India's fastest-growing direct-selling community. Unlock earnings, rewards, and business tools the moment you register.",
+      "badge": "Partner Registration",
+      "title": "Build Your Business in Real Estate, Construction & Interior Decor",
+      "description": "Join ANON INDIA's exclusive partner network for property, construction, and interior professionals. Access leads, projects, and earnings from day one.",
       "benefits": {
-        "earningsTitle": "Instant Earnings Activation",
-        "earningsDescription": "Start earning from your very first referral with multi-level income plans.",
+        "earningsTitle": "Project-Based Earnings",
+        "earningsDescription": "Earn commissions on every real estate deal, construction project, or interior assignment you close.",
         "kycTitle": "KYC-Verified & Secure",
-        "kycDescription": "Your Aadhaar & PAN are verified securely — compliant with DPDP Act.",
-        "supportTitle": "Sponsor Network Support",
-        "supportDescription": "Your sponsor and upline team are always there to guide your growth.",
-        "dashboardTitle": "Live Business Dashboard",
-        "dashboardDescription": "Real-time tracking of your team, points, payouts, and performance."
+        "kycDescription": "Your Aadhaar & PAN are verified securely — fully compliant with DPDP Act.",
+        "supportTitle": "Expert Sponsor Guidance",
+        "supportDescription": "Your sponsor and network team help you connect with the right clients and projects.",
+        "dashboardTitle": "Live Project Dashboard",
+        "dashboardDescription": "Track your leads, active projects, commissions, and team performance in real time."
       },
       "footer": {
         "dpdp": "DPDP Compliant",
@@ -40,7 +40,7 @@
       "address": "Address Details"
     },
     "position": {
-      "placeholder": "Select...",
+      "placeholder": "Select",
       "left": "Left",
       "right": "Right"
     },
