@@ -42,6 +42,7 @@ export const appRoutes: Route[] = [
         const [
           ngCore,
           ngCommon,
+          ngCommonHttp,
           ngRouter,
           ngForms,
           ngPlatformBrowser,
@@ -49,6 +50,7 @@ export const appRoutes: Route[] = [
         ] = await Promise.all([
           import('@angular/core'),
           import('@angular/common'),
+          import('@angular/common/http'),
           import('@angular/router'),
           import('@angular/forms'),
           import('@angular/platform-browser'),
@@ -71,6 +73,7 @@ export const appRoutes: Route[] = [
 
         registerShare('@angular/core', ngCore, '21.2.10');
         registerShare('@angular/common', ngCommon, '21.2.10');
+        registerShare('@angular/common/http', ngCommonHttp, '21.2.10');
         registerShare('@angular/router', ngRouter, '21.2.10');
         registerShare('@angular/forms', ngForms, '21.2.10');
         registerShare('@angular/platform-browser', ngPlatformBrowser, '21.2.10');
