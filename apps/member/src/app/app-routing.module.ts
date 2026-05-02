@@ -35,11 +35,12 @@ import { ButtonsComponent } from './features/ui-elements/buttons/buttons.compone
 import { ImagesComponent } from './features/ui-elements/images/images.component';
 import { VideosComponent } from './features/ui-elements/videos/videos.component';
 import { NotFoundComponent } from './features/other-page/not-found/not-found.component';
+import { AppLayoutComponent } from './shared/layout/app-layout/app-layout.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: AppComponent,
+    component: AppLayoutComponent,
     children: [
       { path: '', component: DashboardComponent, pathMatch: 'full' },
       { path: 'referral-link', component: ReferralLinkComponent },

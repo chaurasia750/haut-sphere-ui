@@ -1,28 +1,26 @@
-import { ModuleFederationConfig } from '@nx/module-federation/angular';
-
 const explicitShared: Record<string, any> = {
-  '@angular/core': { singleton: true, strictVersion: true },
-  '@angular/common': { singleton: true, strictVersion: true },
-  '@angular/platform-browser': { singleton: true, strictVersion: true },
-  '@angular/platform-browser-dynamic': { singleton: true, strictVersion: true },
-  '@angular/router': { singleton: true, strictVersion: true },
-  '@angular/forms': { singleton: true, strictVersion: true },
-  'rxjs': { singleton: true, strictVersion: true },
-  '@shared/types': { singleton: true, strictVersion: true },
-  '@shared/auth': { singleton: true, strictVersion: true },
-  '@shared/errors': { singleton: true, strictVersion: true },
-  '@shared/logging': { singleton: true, strictVersion: true }
+  '@angular/core': { singleton: true, strictVersion: false },
+  '@angular/common': { singleton: true, strictVersion: false },
+  '@angular/platform-browser': { singleton: true, strictVersion: false },
+  '@angular/router': { singleton: true, strictVersion: false },
+  '@angular/forms': { singleton: true, strictVersion: false },
+  'rxjs': { singleton: true, strictVersion: false },
+  '@shared/types': { singleton: true, strictVersion: false },
+  '@shared/auth': { singleton: true, strictVersion: false },
+  '@shared/errors': { singleton: true, strictVersion: false },
+  '@shared/logging': { singleton: true, strictVersion: false }
 };
 
-const config: ModuleFederationConfig = {
+const config = {
   name: 'member',
   filename: 'remoteEntry.mjs',
   exposes: {
-    './Module': {
-      import: './src/app/app.module.ts'
-    }
+    './Module': 'apps/member/src/app/app.module.ts'
   },
   shared: (packageName: string, defaultSharedConfig: any) => {
+    // Exclude platform-browser-dynamic — it brings in the JIT compiler
+    // which causes "JIT compiler not available" errors in the AOT shell
+    if (packageName === '@angular/platform-browser-dynamic') return false;
     if (explicitShared[packageName]) return explicitShared[packageName];
     return defaultSharedConfig;
   },

@@ -36,22 +36,65 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'member',
-    // canActivate: [authGuard],  // Temporarily disabled for route verification
     loadChildren: async () => {
       const memberEntry = 'http://localhost:4102/remoteEntry.mjs';
       try {
+        const [
+          ngCore,
+          ngCommon,
+          ngRouter,
+          ngForms,
+          ngPlatformBrowser,
+          rxjs,
+        ] = await Promise.all([
+          import('@angular/core'),
+          import('@angular/common'),
+          import('@angular/router'),
+          import('@angular/forms'),
+          import('@angular/platform-browser'),
+          import('rxjs'),
+        ]);
+
+        const w = window as any;
+        w.__webpack_share_scopes__ = w.__webpack_share_scopes__ || { default: {} };
+        const shareScope = w.__webpack_share_scopes__.default;
+
+        const registerShare = (pkg: string, value: any, version: string) => {
+          const versions = shareScope[pkg] || (shareScope[pkg] = {});
+          versions[version] = {
+            get: () => () => value,
+            from: 'shell',
+            eager: true,
+            loaded: 1,
+          };
+        };
+
+        registerShare('@angular/core', ngCore, '21.2.10');
+        registerShare('@angular/common', ngCommon, '21.2.10');
+        registerShare('@angular/router', ngRouter, '21.2.10');
+        registerShare('@angular/forms', ngForms, '21.2.10');
+        registerShare('@angular/platform-browser', ngPlatformBrowser, '21.2.10');
+        registerShare('rxjs', rxjs, '7.8.2');
+
+        if (typeof w.__webpack_init_sharing__ !== 'function') {
+          w.__webpack_init_sharing__ = async () => undefined;
+        }
+
         const container: any = await import(/* @vite-ignore */ memberEntry);
-        if (typeof (window as any).__webpack_init_sharing__ === 'function') {
-          await (window as any).__webpack_init_sharing__('default');
+        if (typeof w.__webpack_init_sharing__ === 'function') {
+          await w.__webpack_init_sharing__('default');
         }
         try {
-          await container.init((window as any).__webpack_share_scopes__?.default);
+          await container.init(shareScope);
         } catch {}
+
         const factory = await container.get('./Module');
         const mod = factory();
+
         return mod.AppModule;
-      } catch (error) {
-        console.error('[shell] Member remote unavailable:', error);
+      } catch (error: any) {
+        console.error('[shell] Member remote load FAILED:', error?.message || error);
+        console.error('[shell] Full error:', error);
         return [
           {
             path: '',
@@ -63,7 +106,7 @@ export const appRoutes: Route[] = [
           },
         ];
       }
-    }
+    },
   },
   {
     path: 'management',
