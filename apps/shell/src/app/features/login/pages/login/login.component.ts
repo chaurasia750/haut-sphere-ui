@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { roleRouteMap } from '@libs/shared/auth';
+import { TranslateModule } from '@ngx-translate/core';
 
 /**
  * LoginComponent - Main login page component
@@ -14,7 +15,7 @@ import { roleRouteMap } from '@libs/shared/auth';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })

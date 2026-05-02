@@ -67,5 +67,44 @@
       "prompt": "Already have an account?",
       "link": "Sign in here"
     }
+  },
+  "login": {
+    "hero": {
+      "badge": "Partner Portal",
+      "title": "Welcome to ANON INDIA Partner Portal",
+      "description": "Sign in to manage your real estate, construction, and interior decor projects, leads, and commissions.",
+      "features": {
+        "earningsTitle": "Project-Based Earnings",
+        "earningsDescription": "Track commissions from real estate deals, construction projects, and interior assignments.",
+        "securityTitle": "Secure & KYC-Verified",
+        "securityDescription": "Aadhaar & PAN verified access — fully compliant with DPDP Act.",
+        "supportTitle": "24/7 Partner Support",
+        "supportDescription": "Dedicated support for your projects, leads, and payout queries."
+      },
+      "footer": {
+        "dpdp": "DPDP Compliant",
+        "iso": "ISO 27001",
+        "ssl": "256-bit SSL"
+      }
+    },
+    "header": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to your ANON INDIA partner account"
+    },
+    "fields": {
+      "userId": "User ID",
+      "password": "Password",
+      "forgotPassword": "Forgot?",
+      "rememberMe": "Keep me signed in"
+    },
+    "submit": {
+      "idle": "Sign In",
+      "loading": "Signing in..."
+    },
+    "security": "SSL Encrypted · Your data is safe",
+    "signup": {
+      "prompt": "New partner?",
+      "link": "Register here"
+    }
   }
 }
