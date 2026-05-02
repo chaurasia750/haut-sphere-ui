@@ -26,6 +26,21 @@ import {
 })
 export class SignupComponent {
   isSubmitting = false;
+  positionOpen = false;
+  readonly sponsorPrefix = 'ANON';
+
+  selectPosition(value: string): void {
+    this.signupForm.get('position')?.setValue(value);
+    this.signupForm.get('position')?.markAsTouched();
+    this.positionOpen = false;
+  }
+
+  closePositionDropdown(event: FocusEvent): void {
+    const related = event.relatedTarget as HTMLElement | null;
+    if (!related || !related.closest('#position-dropdown')) {
+      this.positionOpen = false;
+    }
+  }
 
   readonly signupForm = this.fb.group({
     firstName: ['', [Validators.required]],
@@ -36,6 +51,7 @@ export class SignupComponent {
     aadhaarNo: ['', [Validators.required, Validators.pattern(/^\d{4} \d{4} \d{4}$/)]],
     panCard: ['', [Validators.required, Validators.pattern(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/)]],
     sponsorId: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
+    position: ['', [Validators.required]],
     address: this.fb.group({
       addressLine1: ['', [Validators.required]],
       addressLine2: [''],
@@ -72,6 +88,7 @@ export class SignupComponent {
     }
     if (control.errors['minlength'] || control.errors['maxlength'])
       return 'Sponsor ID must be exactly 6 characters.';
+    if (controlName === 'position') return 'Please select a position.';
     return 'Invalid input.';
   }
 
