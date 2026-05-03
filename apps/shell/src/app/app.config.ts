@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer } from '@angular/core';
 import { provideRouter, Route } from '@angular/router';
 import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -65,6 +65,8 @@ export const appRoutes: Route[] = [
       try {
         const [
           ngCore,
+          ngCorePrimitivesDi,
+          ngCorePrimitivesSignals,
           ngCommon,
           ngCommonHttp,
           ngRouter,
@@ -75,6 +77,8 @@ export const appRoutes: Route[] = [
           sharedI18n,
         ] = await Promise.all([
           import('@angular/core'),
+          import('@angular/core/primitives/di'),
+          import('@angular/core/primitives/signals'),
           import('@angular/common'),
           import('@angular/common/http'),
           import('@angular/router'),
@@ -100,6 +104,8 @@ export const appRoutes: Route[] = [
         };
 
         registerShare('@angular/core', ngCore, '21.2.10');
+        registerShare('@angular/core/primitives/di', ngCorePrimitivesDi, '21.2.10');
+        registerShare('@angular/core/primitives/signals', ngCorePrimitivesSignals, '21.2.10');
         registerShare('@angular/common', ngCommon, '21.2.10');
         registerShare('@angular/common/http', ngCommonHttp, '21.2.10');
         registerShare('@angular/router', ngRouter, '21.2.10');
@@ -203,12 +209,7 @@ export const appConfig: ApplicationConfig = {
       useClass: HttpResponseInterceptor,
       multi: true,
     },
-    {
-      provide: APP_INITIALIZER,
-      multi: true,
-      deps: [SharedTranslationService],
-      useFactory: (i18n: SharedTranslationService) => () => firstValueFrom(i18n.init('en')).then(() => void 0),
-    },
+    provideAppInitializer(() => firstValueFrom(inject(SharedTranslationService).init('en')).then(() => void 0)),
     provideAuthInitializer(),
     {
       provide: AUTH_API_BASE_URL,
@@ -216,15 +217,7 @@ export const appConfig: ApplicationConfig = {
     },
     {
       provide: AUTH_COOKIE_CONFIG,
-      deps: [SharedTranslationService],
-      useFactory: (i18n: SharedTranslationService) => {
-        const sponsorPrefix = i18n.instant('app.sponsorPrefix', 'ANON');
-        return {
-          accessToken: `${sponsorPrefix}_${apiConfig.authCookies.accessToken}`,
-          refreshToken: `${sponsorPrefix}_${apiConfig.authCookies.refreshToken}`,
-          legacyRefreshToken: `${sponsorPrefix}_${apiConfig.authCookies.legacyRefreshToken}`,
-        };
-      },
+      useValue: apiConfig.authCookies,
     },
     {
       provide: ADDRESS_LOOKUP_API_BASE_URL,

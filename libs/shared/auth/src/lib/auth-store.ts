@@ -1,7 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
-import { catchError, finalize, map, Observable, of, shareReplay, switchMap, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, finalize, map, Observable, of, shareReplay, switchMap, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthApiService } from './auth-api.service';
 import { AuthRequest, AuthResponse, AuthState, Session, ValidRoleId, isValidRole } from './models';
@@ -30,6 +29,7 @@ export class AuthStore {
   private readonly sessionPreferences = inject(AuthSessionPreferencesService);
   private readonly sessionExpiry = inject(AuthSessionExpiryService);
   private readonly state = signal<AuthState>(INITIAL_AUTH_STATE);
+  private readonly authStateSubject = new BehaviorSubject<AuthState>(INITIAL_AUTH_STATE);
   private refreshInFlight$: Observable<void> | null = null;
 
   readonly authState = computed(() => this.state());
@@ -52,8 +52,23 @@ export class AuthStore {
     };
   });
 
-  readonly authState$ = toObservable(this.authState);
-  readonly session$ = toObservable(this.session);
+  readonly authState$ = this.authStateSubject.asObservable();
+  readonly session$ = this.authState$.pipe(
+    map((current): Session | null => {
+      if (!current.isAuthenticated || !current.userId || !current.roleId || current.expiresIn <= 0) {
+        return null;
+      }
+
+      return {
+        userId: current.userId,
+        roleId: current.roleId,
+        isAuthenticated: true,
+        expiresAt: Date.now() + current.expiresIn * 1000,
+        lastActivity: Date.now(),
+      };
+    }),
+    shareReplay(1)
+  );
 
   initializeSession(): Observable<void> {
     if (!this.sessionPreferences.hasSessionHint()) {
@@ -129,7 +144,7 @@ export class AuthStore {
   setUnauthenticated(message: string | null = null): void {
     this.sessionExpiry.cancelAutoLogout();
     this.sessionPreferences.clearSessionHint();
-    this.state.set({
+    this.setState({
       ...INITIAL_AUTH_STATE,
       status: 'unauthenticated',
       errorMessage: message,
@@ -146,13 +161,18 @@ export class AuthStore {
   }
 
   private patch(partial: Partial<AuthState>): void {
-    this.state.update((prev) => ({ ...prev, ...partial }));
+    this.setState({ ...this.state(), ...partial });
+  }
+
+  private setState(nextState: AuthState): void {
+    this.state.set(nextState);
+    this.authStateSubject.next(nextState);
   }
 
   private setAuthenticatedState(response: AuthResponse): void {
     if (!isValidRole(response.roleId)) {
       this.sessionPreferences.clearSessionHint();
-      this.state.set({
+      this.setState({
         ...INITIAL_AUTH_STATE,
         status: 'error',
         errorMessage: 'Unable to access system at this time',
@@ -166,7 +186,7 @@ export class AuthStore {
       this.shouldAutoRefresh(),
       () => this.expireSessionSilently()
     );
-    this.state.set({
+    this.setState({
       isAuthenticated: true,
       userId: response.userId,
       roleId: response.roleId as ValidRoleId,
@@ -187,7 +207,7 @@ export class AuthStore {
     }
 
     if (parsed.status === 403) {
-      this.state.set({
+      this.setState({
         ...INITIAL_AUTH_STATE,
         status: 'error',
         blocked: true,
@@ -196,7 +216,7 @@ export class AuthStore {
       return;
     }
 
-    this.state.set({
+    this.setState({
       ...INITIAL_AUTH_STATE,
       status: 'error',
       errorMessage: parsed.userMessage,
@@ -205,7 +225,7 @@ export class AuthStore {
 
   private applyErrorState(error: unknown): void {
     const parsed = this.parseError(error);
-    this.state.set({
+    this.setState({
       ...INITIAL_AUTH_STATE,
       status: parsed.status === 401 ? 'unauthenticated' : 'error',
       blocked: parsed.status === 403,

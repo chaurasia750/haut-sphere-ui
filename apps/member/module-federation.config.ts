@@ -1,5 +1,7 @@
 const explicitShared: Record<string, any> = {
   '@angular/core': { singleton: true, strictVersion: false, eager: true },
+  '@angular/core/primitives/di': { singleton: true, strictVersion: false, eager: true },
+  '@angular/core/primitives/signals': { singleton: true, strictVersion: false, eager: true },
   '@angular/common': { singleton: true, strictVersion: false, eager: true },
   '@angular/common/http': { singleton: true, strictVersion: false, eager: true },
   '@angular/platform-browser': { singleton: true, strictVersion: false, eager: true },

@@ -2,9 +2,11 @@ import { inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthRequest, AuthResponse } from './models';
+import { apiConfig } from '@app/shell/environments/api.dev.config';
 
 export const AUTH_API_BASE_URL = new InjectionToken<string>('AUTH_API_BASE_URL', {
-  factory: () => '/auth',
+  // Fallback keeps auth traffic on backend API even if a remote misses provider wiring.
+  factory: () => `${apiConfig.baseUrl}/auth`,
 });
 
 @Injectable({

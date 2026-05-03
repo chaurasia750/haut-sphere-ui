@@ -35,6 +35,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.initializeForm();
+    this.setupFormValueChanges();
+
     // If already authenticated, redirect away from login immediately
     if (this.authStore.isAuthenticated()) {
       const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
@@ -47,8 +50,6 @@ export class LoginComponent implements OnInit, OnDestroy {
       }
       return;
     }
-    this.initializeForm();
-    this.setupFormValueChanges();
   }
 
   ngOnDestroy(): void {

@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AuthService } from './auth.service';
+import { apiConfig } from '@app/shell/environments/api.dev.config';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -37,12 +38,12 @@ describe('AuthService', () => {
         done();
       });
 
-      const req = httpMock.expectOne('/api/auth/login');
+      const req = httpMock.expectOne(`${apiConfig.baseUrl}/api/auth/login`);
       expect(req.request.method).toBe('POST');
       req.flush(response);
 
       // Also expect user fetch
-      const userReq = httpMock.expectOne('/api/shell/user');
+      const userReq = httpMock.expectOne(`${apiConfig.baseUrl}/api/shell/user`);
       userReq.flush({ id: '1', username: 'test', email: 'test@example.com', roles: ['user'] });
     });
 
@@ -54,10 +55,10 @@ describe('AuthService', () => {
         });
       });
 
-      const req = httpMock.expectOne('/api/auth/login');
+      const req = httpMock.expectOne(`${apiConfig.baseUrl}/api/auth/login`);
       req.flush({ accessToken: 'test-token' });
 
-      const userReq = httpMock.expectOne('/api/shell/user');
+      const userReq = httpMock.expectOne(`${apiConfig.baseUrl}/api/shell/user`);
       userReq.flush({ id: '1', username: 'test', email: 'test@example.com', roles: [] });
     });
   });
@@ -71,7 +72,7 @@ describe('AuthService', () => {
         done();
       });
 
-      const req = httpMock.expectOne('/api/auth/logout');
+      const req = httpMock.expectOne(`${apiConfig.baseUrl}/api/auth/logout`);
       req.flush({});
     });
 
@@ -85,7 +86,7 @@ describe('AuthService', () => {
         });
       });
 
-      const req = httpMock.expectOne('/api/auth/logout');
+      const req = httpMock.expectOne(`${apiConfig.baseUrl}/api/auth/logout`);
       req.flush({});
     });
   });

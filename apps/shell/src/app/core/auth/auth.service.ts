@@ -3,12 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
 import { User, AuthToken } from './user.model';
+import { apiConfig } from '@app/shell/environments/api.dev.config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private http = inject(HttpClient);
+  private readonly apiBaseUrl = apiConfig.baseUrl;
   private currentUser$ = new BehaviorSubject<User | null>(null);
   private token$ = new BehaviorSubject<string | null>(null);
   private isAuthenticated$ = new BehaviorSubject<boolean>(false);
@@ -32,7 +34,7 @@ export class AuthService {
 
   login(credentials: { username: string; password: string }): Observable<User> {
     return this.http
-      .post<AuthToken>('/api/auth/login', credentials)
+      .post<AuthToken>(`${this.apiBaseUrl}/api/auth/login`, credentials, { withCredentials: true })
       .pipe(
         tap((authToken) => {
           localStorage.setItem('auth_token', authToken.accessToken);
@@ -51,7 +53,7 @@ export class AuthService {
   }
 
   logout(): Observable<void> {
-    return this.http.post<void>('/api/auth/logout', {}).pipe(
+    return this.http.post<void>(`${this.apiBaseUrl}/api/auth/logout`, {}, { withCredentials: true }).pipe(
       tap(() => {
         localStorage.removeItem('auth_token');
         this.token$.next(null);
@@ -91,7 +93,7 @@ export class AuthService {
 
   refreshToken(): Observable<string> {
     return this.http
-      .post<AuthToken>('/api/auth/refresh', {})
+      .post<AuthToken>(`${this.apiBaseUrl}/api/auth/refresh`, {}, { withCredentials: true })
       .pipe(
         tap((authToken) => {
           localStorage.setItem('auth_token', authToken.accessToken);
