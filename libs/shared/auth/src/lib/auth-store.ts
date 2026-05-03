@@ -9,7 +9,6 @@ import { AuthApiError } from './models/auth-api-error.model';
 import { RoleId } from './models/role.enum';
 import { AuthSessionPreferencesService } from './auth-session-preferences.service';
 import { AuthSessionExpiryService } from './auth-session-expiry.service';
-import { AUTH_COOKIE_CONFIG } from './auth-cookie.config';
 
 const INITIAL_AUTH_STATE: AuthState = {
   isAuthenticated: false,
@@ -31,7 +30,6 @@ export class AuthStore {
   private readonly sessionPreferences = inject(AuthSessionPreferencesService);
   private readonly sessionExpiry = inject(AuthSessionExpiryService);
   private readonly document = inject(DOCUMENT);
-  private readonly cookieConfig = inject(AUTH_COOKIE_CONFIG);
   private readonly state = signal<AuthState>(INITIAL_AUTH_STATE);
   private readonly authStateSubject = new BehaviorSubject<AuthState>(INITIAL_AUTH_STATE);
   private refreshInFlight$: Observable<void> | null = null;
@@ -150,18 +148,8 @@ export class AuthStore {
   }
 
   private clearAllCookiesAndStorage(): void {
-    // Attempt to expire any non-HttpOnly cookies client-side.
-    // HttpOnly cookies can only be cleared by the server via the logout response Set-Cookie header.
-    const doc = this.document;
-    const cfg = this.cookieConfig;
-    const cookieNames = [cfg.accessToken, cfg.refreshToken, cfg.legacyRefreshToken];
-    const expiry = 'expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0';
-    const hostname = doc.location?.hostname ?? 'localhost';
-    cookieNames.forEach(name => {
-      // Clear for root path, with and without explicit domain
-      doc.cookie = `${name}=;${expiry};path=/;SameSite=Lax`;
-      doc.cookie = `${name}=;${expiry};path=/;domain=${hostname};SameSite=Lax`;
-    });
+    // Keep client cleanup limited to storage.
+    // Auth cookies are HttpOnly and must be cleared by backend Set-Cookie on /auth/logout.
     try { localStorage.clear(); } catch { /* ignore */ }
     try { sessionStorage.clear(); } catch { /* ignore */ }
   }
@@ -186,16 +174,18 @@ export class AuthStore {
   }
 
   private redirectToLogin(): void {
-    try {
-      this.document.defaultView?.location.replace('/login?loggedOut=1');
-      return;
-    } catch {
-      // Fall through to router navigation if direct location replace is blocked.
-    }
-
     void this.router.navigate(['/login'], {
       replaceUrl: true,
       queryParams: { loggedOut: '1' },
+    }).then((navigated) => {
+      if (navigated) {
+        return;
+      }
+
+      // Fallback for cross-MF routing cases where local router cannot resolve /login.
+      this.document.defaultView?.location.replace('/login?loggedOut=1');
+    }).catch(() => {
+      this.document.defaultView?.location.replace('/login?loggedOut=1');
     });
   }
 
