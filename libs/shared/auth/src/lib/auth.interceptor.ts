@@ -25,6 +25,7 @@ export class AuthInterceptor implements HttpInterceptor {
   private static readonly RETRY_HEADER = 'x-auth-refresh-retry';
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    // Tokens are in HttpOnly cookies — browser sends them automatically via withCredentials.
     const credentialRequest = request.clone({ withCredentials: true });
 
     return next.handle(credentialRequest).pipe(

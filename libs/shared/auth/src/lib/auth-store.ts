@@ -1,4 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, catchError, finalize, map, Observable, of, shareReplay, switchMap, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
@@ -8,6 +9,7 @@ import { AuthApiError } from './models/auth-api-error.model';
 import { RoleId } from './models/role.enum';
 import { AuthSessionPreferencesService } from './auth-session-preferences.service';
 import { AuthSessionExpiryService } from './auth-session-expiry.service';
+import { AUTH_COOKIE_CONFIG } from './auth-cookie.config';
 
 const INITIAL_AUTH_STATE: AuthState = {
   isAuthenticated: false,
@@ -28,6 +30,8 @@ export class AuthStore {
   private readonly router = inject(Router);
   private readonly sessionPreferences = inject(AuthSessionPreferencesService);
   private readonly sessionExpiry = inject(AuthSessionExpiryService);
+  private readonly document = inject(DOCUMENT);
+  private readonly cookieConfig = inject(AUTH_COOKIE_CONFIG);
   private readonly state = signal<AuthState>(INITIAL_AUTH_STATE);
   private readonly authStateSubject = new BehaviorSubject<AuthState>(INITIAL_AUTH_STATE);
   private refreshInFlight$: Observable<void> | null = null;
@@ -131,14 +135,35 @@ export class AuthStore {
     return this.api.logout().pipe(
       tap(() => {
         this.sessionPreferences.clearPersistentSession();
+        this.clearAllCookiesAndStorage();
         this.setUnauthenticated();
+        this.redirectToLogin();
       }),
       catchError(() => {
         this.sessionPreferences.clearPersistentSession();
+        this.clearAllCookiesAndStorage();
         this.setUnauthenticated();
+        this.redirectToLogin();
         return of(void 0);
       })
     );
+  }
+
+  private clearAllCookiesAndStorage(): void {
+    // Attempt to expire any non-HttpOnly cookies client-side.
+    // HttpOnly cookies can only be cleared by the server via the logout response Set-Cookie header.
+    const doc = this.document;
+    const cfg = this.cookieConfig;
+    const cookieNames = [cfg.accessToken, cfg.refreshToken, cfg.legacyRefreshToken];
+    const expiry = 'expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0';
+    const hostname = doc.location?.hostname ?? 'localhost';
+    cookieNames.forEach(name => {
+      // Clear for root path, with and without explicit domain
+      doc.cookie = `${name}=;${expiry};path=/;SameSite=Lax`;
+      doc.cookie = `${name}=;${expiry};path=/;domain=${hostname};SameSite=Lax`;
+    });
+    try { localStorage.clear(); } catch { /* ignore */ }
+    try { sessionStorage.clear(); } catch { /* ignore */ }
   }
 
   setUnauthenticated(message: string | null = null): void {
@@ -157,7 +182,21 @@ export class AuthStore {
 
   expireSessionSilently(): void {
     this.setUnauthenticated();
-    void this.router.navigate(['/login'], { replaceUrl: true });
+    this.redirectToLogin();
+  }
+
+  private redirectToLogin(): void {
+    try {
+      this.document.defaultView?.location.replace('/login?loggedOut=1');
+      return;
+    } catch {
+      // Fall through to router navigation if direct location replace is blocked.
+    }
+
+    void this.router.navigate(['/login'], {
+      replaceUrl: true,
+      queryParams: { loggedOut: '1' },
+    });
   }
 
   private patch(partial: Partial<AuthState>): void {

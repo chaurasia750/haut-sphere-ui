@@ -38,6 +38,12 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.initializeForm();
     this.setupFormValueChanges();
 
+    const loggedOut = this.route.snapshot.queryParamMap.get('loggedOut') === '1';
+    if (loggedOut) {
+      this.authStore.setUnauthenticated();
+      return;
+    }
+
     // If already authenticated, redirect away from login immediately
     if (this.authStore.isAuthenticated()) {
       const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
