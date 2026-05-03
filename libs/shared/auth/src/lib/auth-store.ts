@@ -2,10 +2,13 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
 import { catchError, finalize, map, Observable, of, shareReplay, switchMap, tap, throwError } from 'rxjs';
+import { Router } from '@angular/router';
 import { AuthApiService } from './auth-api.service';
 import { AuthRequest, AuthResponse, AuthState, Session, ValidRoleId, isValidRole } from './models';
 import { AuthApiError } from './models/auth-api-error.model';
 import { RoleId } from './models/role.enum';
+import { AuthSessionPreferencesService } from './auth-session-preferences.service';
+import { AuthSessionExpiryService } from './auth-session-expiry.service';
 
 const INITIAL_AUTH_STATE: AuthState = {
   isAuthenticated: false,
@@ -18,13 +21,14 @@ const INITIAL_AUTH_STATE: AuthState = {
   blocked: false,
 };
 
-const SESSION_HINT_KEY = 'binsera.auth.session';
-
 @Injectable({
   providedIn: 'root',
 })
 export class AuthStore {
   private readonly api = inject(AuthApiService);
+  private readonly router = inject(Router);
+  private readonly sessionPreferences = inject(AuthSessionPreferencesService);
+  private readonly sessionExpiry = inject(AuthSessionExpiryService);
   private readonly state = signal<AuthState>(INITIAL_AUTH_STATE);
   private refreshInFlight$: Observable<void> | null = null;
 
@@ -52,7 +56,7 @@ export class AuthStore {
   readonly session$ = toObservable(this.session);
 
   initializeSession(): Observable<void> {
-    if (!this.shouldAttemptSessionValidation()) {
+    if (!this.sessionPreferences.hasSessionHint()) {
       return of(void 0);
     }
 
@@ -72,6 +76,7 @@ export class AuthStore {
     this.patch({ status: 'loading', errorMessage: null, blocked: false });
 
     return this.api.login(credentials).pipe(
+      tap(() => this.sessionPreferences.setPersistentSession(credentials.keepMeSignedIn)),
       switchMap(() => this.api.validateSession()),
       tap((response) => this.setAuthenticatedState(response)),
       catchError((error) => {
@@ -82,6 +87,10 @@ export class AuthStore {
   }
 
   refreshSession(): Observable<void> {
+    if (!this.shouldAutoRefresh()) {
+      return throwError(() => new HttpErrorResponse({ status: 401, statusText: 'Session expired' }));
+    }
+
     if (this.refreshInFlight$) {
       return this.refreshInFlight$;
     }
@@ -105,8 +114,12 @@ export class AuthStore {
 
   logout(): Observable<void> {
     return this.api.logout().pipe(
-      tap(() => this.setUnauthenticated()),
+      tap(() => {
+        this.sessionPreferences.clearPersistentSession();
+        this.setUnauthenticated();
+      }),
       catchError(() => {
+        this.sessionPreferences.clearPersistentSession();
         this.setUnauthenticated();
         return of(void 0);
       })
@@ -114,12 +127,22 @@ export class AuthStore {
   }
 
   setUnauthenticated(message: string | null = null): void {
-    this.clearSessionHint();
+    this.sessionExpiry.cancelAutoLogout();
+    this.sessionPreferences.clearSessionHint();
     this.state.set({
       ...INITIAL_AUTH_STATE,
       status: 'unauthenticated',
       errorMessage: message,
     });
+  }
+
+  shouldAutoRefresh(): boolean {
+    return this.sessionPreferences.isPersistentSession();
+  }
+
+  expireSessionSilently(): void {
+    this.setUnauthenticated();
+    void this.router.navigate(['/login'], { replaceUrl: true });
   }
 
   private patch(partial: Partial<AuthState>): void {
@@ -128,7 +151,7 @@ export class AuthStore {
 
   private setAuthenticatedState(response: AuthResponse): void {
     if (!isValidRole(response.roleId)) {
-      this.clearSessionHint();
+      this.sessionPreferences.clearSessionHint();
       this.state.set({
         ...INITIAL_AUTH_STATE,
         status: 'error',
@@ -137,7 +160,12 @@ export class AuthStore {
       return;
     }
 
-    this.setSessionHint();
+    this.sessionPreferences.setSessionHint();
+    this.sessionExpiry.scheduleAutoLogout(
+      response.expiresIn,
+      this.shouldAutoRefresh(),
+      () => this.expireSessionSilently()
+    );
     this.state.set({
       isAuthenticated: true,
       userId: response.userId,
@@ -242,30 +270,6 @@ export class AuthStore {
         return 'MANAGER';
       default:
         return 'UNKNOWN';
-    }
-  }
-
-  private shouldAttemptSessionValidation(): boolean {
-    try {
-      return globalThis.localStorage?.getItem(SESSION_HINT_KEY) === '1';
-    } catch {
-      return false;
-    }
-  }
-
-  private setSessionHint(): void {
-    try {
-      globalThis.localStorage?.setItem(SESSION_HINT_KEY, '1');
-    } catch {
-      // Ignore storage access issues in restricted browser contexts
-    }
-  }
-
-  private clearSessionHint(): void {
-    try {
-      globalThis.localStorage?.removeItem(SESSION_HINT_KEY);
-    } catch {
-      // Ignore storage access issues in restricted browser contexts
     }
   }
 

@@ -57,6 +57,10 @@ export class HttpErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          return throwError(() => error);
+        }
+
         const message = getErrorMessage(error);
         this.toastr.error(message, 'Error');
         return throwError(() => error);

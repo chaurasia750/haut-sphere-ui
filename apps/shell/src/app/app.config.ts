@@ -12,7 +12,7 @@ import { LoginComponent } from './features/login/pages/login/login.component';
 import { SignupComponent } from './features/signup/pages/signup/signup.component';
 import { UnauthorizedComponent } from './features/error/pages/unauthorized/unauthorized.component';
 import { authGuard } from './core/guards/auth.guard';
-import { AuthInterceptor, RoleId, provideAuthInitializer } from '@libs/shared/auth';
+import { AUTH_COOKIE_CONFIG, AuthInterceptor, RoleId, provideAuthInitializer } from '@libs/shared/auth';
 import { AUTH_API_BASE_URL } from '@libs/shared/auth/lib/auth-api.service';
 import { HttpCredentialsInterceptor } from './core/http-credentials.interceptor';
 import { HttpErrorInterceptor } from './core/http-error.interceptor';
@@ -213,6 +213,18 @@ export const appConfig: ApplicationConfig = {
     {
       provide: AUTH_API_BASE_URL,
       useValue: `${apiConfig.baseUrl}/auth`,
+    },
+    {
+      provide: AUTH_COOKIE_CONFIG,
+      deps: [SharedTranslationService],
+      useFactory: (i18n: SharedTranslationService) => {
+        const sponsorPrefix = i18n.instant('app.sponsorPrefix', 'ANON');
+        return {
+          accessToken: `${sponsorPrefix}_${apiConfig.authCookies.accessToken}`,
+          refreshToken: `${sponsorPrefix}_${apiConfig.authCookies.refreshToken}`,
+          legacyRefreshToken: `${sponsorPrefix}_${apiConfig.authCookies.legacyRefreshToken}`,
+        };
+      },
     },
     {
       provide: ADDRESS_LOOKUP_API_BASE_URL,

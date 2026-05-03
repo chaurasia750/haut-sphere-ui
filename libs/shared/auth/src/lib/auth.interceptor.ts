@@ -29,6 +29,11 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return next.handle(credentialRequest).pipe(
       catchError((error: HttpErrorResponse) => {
+        if (this.shouldExpireSilently(error, credentialRequest)) {
+          this.authStore.expireSessionSilently();
+          return throwError(() => error);
+        }
+
         if (!this.shouldRefresh(error, credentialRequest)) {
           return throwError(() => error);
         }
@@ -62,7 +67,27 @@ export class AuthInterceptor implements HttpInterceptor {
       return false;
     }
 
+    if (!this.authStore.shouldAutoRefresh()) {
+      return false;
+    }
+
     return !this.isAuthEndpoint(request.url);
+  }
+
+  private shouldExpireSilently(error: HttpErrorResponse, request: HttpRequest<unknown>): boolean {
+    if (error.status !== 401) {
+      return false;
+    }
+
+    if (request.headers.has(AuthInterceptor.RETRY_HEADER)) {
+      return false;
+    }
+
+    if (this.isAuthEndpoint(request.url)) {
+      return false;
+    }
+
+    return !this.authStore.shouldAutoRefresh();
   }
 
   private isAuthEndpoint(url: string): boolean {
