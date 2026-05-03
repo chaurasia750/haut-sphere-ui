@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@amcharts/amcharts5": "^5.17.2",
+    "@amcharts/amcharts5-geodata": "^5.1.5",
+    "apexcharts": "^5.10.6",
+    "ng-apexcharts": "^2.4.0"
+  }
+}
