@@ -18,9 +18,7 @@ const INITIAL_AUTH_STATE: AuthState = {
   blocked: false,
 };
 
-const ACCESS_TOKEN_COOKIE_NAME = 'accessToken';
-const REFRESH_TOKEN_COOKIE_NAME = 'refreshToken';
-const LEGACY_REFRESH_TOKEN_COOKIE_NAME = 'binsera_refresh_token';
+const SESSION_HINT_KEY = 'binsera.auth.session';
 
 @Injectable({
   providedIn: 'root',
@@ -54,6 +52,10 @@ export class AuthStore {
   readonly session$ = toObservable(this.session);
 
   initializeSession(): Observable<void> {
+    if (!this.shouldAttemptSessionValidation()) {
+      return of(void 0);
+    }
+
     this.patch({ status: 'loading', errorMessage: null, blocked: false });
 
     return this.api.validateSession().pipe(
@@ -112,6 +114,7 @@ export class AuthStore {
   }
 
   setUnauthenticated(message: string | null = null): void {
+    this.clearSessionHint();
     this.state.set({
       ...INITIAL_AUTH_STATE,
       status: 'unauthenticated',
@@ -125,6 +128,7 @@ export class AuthStore {
 
   private setAuthenticatedState(response: AuthResponse): void {
     if (!isValidRole(response.roleId)) {
+      this.clearSessionHint();
       this.state.set({
         ...INITIAL_AUTH_STATE,
         status: 'error',
@@ -133,6 +137,7 @@ export class AuthStore {
       return;
     }
 
+    this.setSessionHint();
     this.state.set({
       isAuthenticated: true,
       userId: response.userId,
@@ -237,6 +242,30 @@ export class AuthStore {
         return 'MANAGER';
       default:
         return 'UNKNOWN';
+    }
+  }
+
+  private shouldAttemptSessionValidation(): boolean {
+    try {
+      return globalThis.localStorage?.getItem(SESSION_HINT_KEY) === '1';
+    } catch {
+      return false;
+    }
+  }
+
+  private setSessionHint(): void {
+    try {
+      globalThis.localStorage?.setItem(SESSION_HINT_KEY, '1');
+    } catch {
+      // Ignore storage access issues in restricted browser contexts
+    }
+  }
+
+  private clearSessionHint(): void {
+    try {
+      globalThis.localStorage?.removeItem(SESSION_HINT_KEY);
+    } catch {
+      // Ignore storage access issues in restricted browser contexts
     }
   }
 

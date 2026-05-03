@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { AuthService } from '@libs/shared/auth';
+import { AuthService, AuthStore } from '@libs/shared/auth';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
@@ -29,11 +29,24 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private authStore: AuthStore,
     private router: Router,
     private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
+    // If already authenticated, redirect away from login immediately
+    if (this.authStore.isAuthenticated()) {
+      const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+      if (returnUrl) {
+        this.router.navigateByUrl(returnUrl);
+      } else {
+        const roleId = this.authStore.roleId();
+        const targetRoute = (roleId && roleRouteMap[roleId]) ?? '/dashboard';
+        this.router.navigate([targetRoute]);
+      }
+      return;
+    }
     this.initializeForm();
     this.setupFormValueChanges();
   }
@@ -91,7 +104,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             return;
           }
 
-          const targetRoute = roleRouteMap[response.roleId];
+          const targetRoute = roleRouteMap[response.roleId] ?? '/dashboard';
           this.router.navigate([targetRoute]);
         },
         error: (err) => {

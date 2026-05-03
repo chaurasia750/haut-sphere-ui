@@ -10,6 +10,7 @@ import { RemoteUnavailableComponent } from './components/remote-unavailable.comp
 import { remoteConfig } from '../environments/remotes.dev.config';
 import { LoginComponent } from './features/login/pages/login/login.component';
 import { SignupComponent } from './features/signup/pages/signup/signup.component';
+import { UnauthorizedComponent } from './features/error/pages/unauthorized/unauthorized.component';
 import { authGuard } from './core/guards/auth.guard';
 import { AuthInterceptor, RoleId, provideAuthInitializer } from '@libs/shared/auth';
 import { AUTH_API_BASE_URL } from '@libs/shared/auth/lib/auth-api.service';
@@ -33,6 +34,11 @@ export const appRoutes: Route[] = [
     component: SignupComponent,
     data: { title: 'Signup' }
   },
+  {
+    path: 'error/unauthorized',
+    component: UnauthorizedComponent,
+    data: { title: 'Access Denied' }
+  },
   
   // Dashboard
   {
@@ -52,6 +58,8 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'member',
+    canActivate: [authGuard],
+    data: { roles: [RoleId.MEMBER] },
     loadChildren: async () => {
       const memberEntry = remoteConfig.find((c: any) => c.key === 'member')?.entry ?? 'http://localhost:4102/remoteEntry.mjs';
       try {
