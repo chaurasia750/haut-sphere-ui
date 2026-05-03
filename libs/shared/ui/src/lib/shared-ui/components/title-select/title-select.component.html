@@ -1,0 +1,12 @@
+<select
+  [value]="value ?? ''"
+  (change)="onValueChange($any($event.target).value || null)"
+  (blur)="onBlur()"
+  [disabled]="disabled()"
+  class="block w-full appearance-none rounded-xl border border-slate-300 bg-white px-4 py-3 pr-10 text-sm text-slate-900 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 disabled:cursor-not-allowed disabled:opacity-50"
+>
+  <option value="" disabled>{{ placeholder() }}</option>
+  @for (title of titleOptions; track title) {
+    <option [value]="title">{{ title }}</option>
+  }
+</select>

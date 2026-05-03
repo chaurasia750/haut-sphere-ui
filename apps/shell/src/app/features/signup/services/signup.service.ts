@@ -9,6 +9,33 @@ export interface SponsorValidationResponse {
   lName?: string | null;
 }
 
+export interface RegisterMemberPayload {
+  bussinessCategoryId: number;
+  introRegNo: number;
+  personInfo: {
+    title: string;
+    firstName: string;
+    lastName: string;
+    gender: number;
+    primaryContactNumber: string;
+    aadhaarNo: string;
+    panCard: string;
+    emailId: string;
+  };
+  address: {
+    houseNo: string;
+    street: string;
+    city: string;
+    state: string;
+    countryId: number;
+    stateId: number;
+    cityId: number;
+    zipCode: string;
+    distId: number;
+  };
+  introSide: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -29,5 +56,9 @@ export class SignupService {
             .trim()
         )
       );
+  }
+
+  registerMember(payload: RegisterMemberPayload): Observable<void> {
+    return this.http.post<void>(`${this.apiBaseUrl}/members/registration`, payload);
   }
 }

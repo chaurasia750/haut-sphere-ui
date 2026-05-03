@@ -12,7 +12,7 @@ import {
   PhoneFormatDirective,
   SharedAddressFormComponent,
 } from '@shared/ui/src';
-import { SignupService } from '../../services/signup.service';
+import { SignupService, RegisterMemberPayload } from '../../services/signup.service';
 
 @Component({
   selector: 'app-signup',
@@ -55,8 +55,10 @@ export class SignupComponent {
   }
 
   readonly signupForm = this.fb.group({
+    title: ['', [Validators.required]],
     firstName: ['', [Validators.required, Validators.pattern(/^\S+$/)]],
     lastName: ['', [Validators.required, Validators.pattern(/^\S+$/)]],
+    gender: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
     phone: ['', [Validators.required, Validators.pattern(/^\d{4} \d{4} \d{2}$/)]],
     businessCategory: ['', [Validators.required]],
@@ -95,6 +97,8 @@ export class SignupComponent {
     const control: AbstractControl | null = this.signupForm.get(controlName);
     if (!control?.touched || !control?.errors) return '';
     if (control.errors['required']) return this.i18n.instant('signup.validation.required', 'This field is required.');
+    if (controlName === 'title') return this.i18n.instant('signup.validation.title', 'Please select a title.');
+    if (controlName === 'gender') return this.i18n.instant('signup.validation.gender', 'Please select gender.');
     if (control.errors['email']) return this.i18n.instant('signup.validation.email', 'Enter a valid email address.');
     if (control.errors['pattern']) {
       if (controlName === 'firstName' || controlName === 'lastName') return this.i18n.instant('signup.validation.noSpaces', 'Name cannot contain spaces.');
@@ -207,7 +211,61 @@ export class SignupComponent {
       return;
     }
     this.isSubmitting = true;
-    this.router.navigate(['/login']);
+
+    const formValue = this.signupForm.getRawValue();
+    const addressValue = formValue.address;
+
+    const payload: RegisterMemberPayload = {
+      bussinessCategoryId: this.getBusinessCategoryId(formValue.businessCategory ?? ''),
+      introRegNo: 0,
+      personInfo: {
+        title: formValue.title ?? '',
+        firstName: formValue.firstName ?? '',
+        lastName: formValue.lastName ?? '',
+        gender: formValue.gender === 'male' ? 1 : 2,
+        primaryContactNumber: (formValue.phone ?? '').replace(/\s/g, ''),
+        aadhaarNo: (formValue.aadhaarNo ?? '').replace(/\s/g, ''),
+        panCard: formValue.panCard ?? '',
+        emailId: formValue.email ?? '',
+      },
+      address: {
+        houseNo: addressValue?.addressLine1 ?? '',
+        street: addressValue?.addressLine2 || '',
+        city: addressValue?.city ?? '',
+        state: addressValue?.state ?? '',
+        countryId: 0,
+        stateId: 0,
+        cityId: 0,
+        zipCode: addressValue?.postalCode ?? '',
+        distId: 0,
+      },
+      introSide: formValue.position === 'left' ? 'A' : 'B',
+    };
+
+    this.signupService
+      .registerMember(payload)
+      .pipe(
+        finalize(() => {
+          this.isSubmitting = false;
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/login']);
+        },
+        error: () => {
+          // Handle error - could show toast notification
+        },
+      });
+  }
+
+  private getBusinessCategoryId(category: string): number {
+    const categoryMap: Record<string, number> = {
+      'real-estate': 1,
+      construction: 2,
+      'interior-decor': 3,
+    };
+    return categoryMap[category] || 0;
   }
 }
 
