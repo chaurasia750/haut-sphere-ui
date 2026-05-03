@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from '@libs/shared/auth';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -29,7 +29,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -47,8 +48,9 @@ export class LoginComponent implements OnInit, OnDestroy {
    */
   private initializeForm(): void {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required]],
-      password: ['', [Validators.required]]
+      userName: ['', [Validators.required]],
+      password: ['', [Validators.required]],
+      keepMeSignedIn: [false]
     });
   }
 
@@ -75,17 +77,22 @@ export class LoginComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const { email, password } = this.loginForm.getRawValue();
+    const { userName, password, keepMeSignedIn } = this.loginForm.getRawValue();
     this.isLoading = true;
     this.loginForm.disable();
 
-    this.authService.login(email, password)
+    this.authService.login(userName, password, keepMeSignedIn)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          // Navigate based on role
-          const route = roleRouteMap[response.roleId];
-          this.router.navigate([route]);
+          const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+          if (returnUrl) {
+            this.router.navigateByUrl(returnUrl);
+            return;
+          }
+
+          const targetRoute = roleRouteMap[response.roleId];
+          this.router.navigate([targetRoute]);
         },
         error: (err) => {
           this.isLoading = false;
@@ -103,6 +110,8 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     if (status === 401) {
       this.errorMessage = 'Invalid email or password';
+    } else if (status === 403) {
+      this.errorMessage = 'Your account is disabled. Please contact support';
     } else if (status >= 500) {
       this.errorMessage = 'System unavailable. Please try again later';
     } else if (status === 400) {
@@ -125,8 +134,8 @@ export class LoginComponent implements OnInit, OnDestroy {
       return `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required`;
     }
 
-    if (fieldName === 'email' && field.errors['email']) {
-      return 'Please enter a valid email';
+    if (fieldName === 'userName' && field.errors['required']) {
+      return 'Username is required';
     }
 
     return '';

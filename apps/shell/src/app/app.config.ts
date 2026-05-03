@@ -11,8 +11,9 @@ import { remoteConfig } from '../environments/remotes.dev.config';
 import { LoginComponent } from './features/login/pages/login/login.component';
 import { SignupComponent } from './features/signup/pages/signup/signup.component';
 import { authGuard } from './core/guards/auth.guard';
-import { RoleId } from '@libs/shared/auth';
-import { HttpAuthInterceptor } from './core/http-interceptor';
+import { AuthInterceptor, RoleId, provideAuthInitializer } from '@libs/shared/auth';
+import { AUTH_API_BASE_URL } from '@libs/shared/auth/lib/auth-api.service';
+import { HttpCredentialsInterceptor } from './core/http-credentials.interceptor';
 import { HttpErrorInterceptor } from './core/http-error.interceptor';
 import { HttpResponseInterceptor } from './core/http-response.interceptor';
 import { createSharedTranslateLoader, SharedTranslationService } from '@shared/i18n';
@@ -176,7 +177,12 @@ export const appConfig: ApplicationConfig = {
     ),
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: HttpAuthInterceptor,
+      useClass: HttpCredentialsInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
       multi: true,
     },
     {
@@ -194,6 +200,11 @@ export const appConfig: ApplicationConfig = {
       multi: true,
       deps: [SharedTranslationService],
       useFactory: (i18n: SharedTranslationService) => () => firstValueFrom(i18n.init('en')).then(() => void 0),
+    },
+    provideAuthInitializer(),
+    {
+      provide: AUTH_API_BASE_URL,
+      useValue: `${apiConfig.baseUrl}/auth`,
     },
     {
       provide: ADDRESS_LOOKUP_API_BASE_URL,

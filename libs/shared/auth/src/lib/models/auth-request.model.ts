@@ -2,6 +2,7 @@
  * Authentication request payload sent to backend login endpoint
  */
 export interface AuthRequest {
-  email: string;
+  userName: string;
   password: string;
+  keepMeSignedIn: boolean;
 }

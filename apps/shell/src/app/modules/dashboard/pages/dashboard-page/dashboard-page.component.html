@@ -1,23 +1,47 @@
-<div class="dashboard-container">
-  <h2 class="text-3xl font-bold mb-4">{{ title }}</h2>
-  <div class="bg-blue-50 border-l-4 border-primary p-4 rounded">
-    <p class="text-gray-700">{{ message }}</p>
+<div class="max-w-5xl mx-auto p-6 md:p-8 space-y-6">
+  <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div>
+        <h2 class="text-2xl font-bold text-slate-900">{{ title }}</h2>
+        <p class="text-slate-600 mt-1">{{ message }}</p>
+      </div>
+      <button
+        type="button"
+        class="inline-flex items-center justify-center rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+        (click)="logout()"
+      >
+        Logout
+      </button>
+    </div>
   </div>
-  <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-    <div class="bg-white p-6 rounded shadow hover:shadow-lg transition">
-      <h3 class="text-lg font-semibold text-primary mb-2">Admin Panel</h3>
-      <p class="text-gray-600 text-sm">Manage system settings, users, and reports.</p>
-      <a href="/admin" class="text-primary hover:underline mt-3 inline-block">Open Admin →</a>
+
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <p class="text-xs uppercase tracking-wide text-slate-500">User</p>
+      <p class="mt-2 text-lg font-semibold text-slate-900">{{ userId }}</p>
     </div>
-    <div class="bg-white p-6 rounded shadow hover:shadow-lg transition">
-      <h3 class="text-lg font-semibold text-primary mb-2">Member Area</h3>
-      <p class="text-gray-600 text-sm">View and update your profile and preferences.</p>
-      <a href="/member" class="text-primary hover:underline mt-3 inline-block">Open Member →</a>
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <p class="text-xs uppercase tracking-wide text-slate-500">Role</p>
+      <p class="mt-2 text-lg font-semibold text-slate-900">{{ roleName }}</p>
     </div>
-    <div class="bg-white p-6 rounded shadow hover:shadow-lg transition">
-      <h3 class="text-lg font-semibold text-primary mb-2">Management</h3>
-      <p class="text-gray-600 text-sm">Review operational metrics and analytics.</p>
-      <a href="/management" class="text-primary hover:underline mt-3 inline-block">Open Management →</a>
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <p class="text-xs uppercase tracking-wide text-slate-500">Session Remaining</p>
+      <p class="mt-2 text-lg font-semibold text-slate-900">{{ remainingSeconds }}s</p>
     </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+    <a routerLink="/admin" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:border-blue-300">
+      <h3 class="font-semibold text-slate-900">Admin Panel</h3>
+      <p class="mt-1 text-sm text-slate-600">Manage system settings and users.</p>
+    </a>
+    <a routerLink="/member" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:border-blue-300">
+      <h3 class="font-semibold text-slate-900">Member Area</h3>
+      <p class="mt-1 text-sm text-slate-600">View profile and member modules.</p>
+    </a>
+    <a routerLink="/management" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:border-blue-300">
+      <h3 class="font-semibold text-slate-900">Management</h3>
+      <p class="mt-1 text-sm text-slate-600">Review operational and business data.</p>
+    </a>
   </div>
 </div>

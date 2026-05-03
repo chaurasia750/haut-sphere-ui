@@ -116,17 +116,17 @@
               </svg>
             </div>
             <input
-              id="email"
+              id="userName"
               type="text"
-              formControlName="email"
+              formControlName="userName"
               placeholder="user@123"
               aria-label="User ID"
               class="w-full pl-10 pr-3 py-2.5 border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm"
-              [class.border-red-400]="isFieldInvalid('email')"
+              [class.border-red-400]="isFieldInvalid('userName')"
             />
           </div>
-          @if (isFieldInvalid('email')) {
-          <p class="text-red-500 text-xs mt-1">{{ getFieldError('email') }}</p>
+          @if (isFieldInvalid('userName')) {
+          <p class="text-red-500 text-xs mt-1">{{ getFieldError('userName') }}</p>
           }
         </div>
 
@@ -176,7 +176,7 @@
         </div>
 
         <div class="flex items-center">
-          <input id="remember" type="checkbox" [disabled]="isLoading"
+          <input id="remember" type="checkbox" formControlName="keepMeSignedIn" [disabled]="isLoading"
                  class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer" />
           <label for="remember" class="ml-2 text-xs font-medium text-slate-600 cursor-pointer">{{ 'login.fields.rememberMe' | translate }}</label>
         </div>

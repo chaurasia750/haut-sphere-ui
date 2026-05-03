@@ -51,6 +51,35 @@
             {
               "replace": "apps/shell/src/environments/remotes.dev.config.ts",
               "with": "apps/shell/src/environments/remotes.prod.config.ts"
+            },
+            {
+              "replace": "apps/shell/src/environments/api.dev.config.ts",
+              "with": "apps/shell/src/environments/api.prod.config.ts"
+            }
+          ]
+        },
+        "staging": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "650kb",
+              "maximumError": "750kb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all",
+          "fileReplacements": [
+            {
+              "replace": "apps/shell/src/environments/remotes.dev.config.ts",
+              "with": "apps/shell/src/environments/remotes.staging.config.ts"
+            },
+            {
+              "replace": "apps/shell/src/environments/api.dev.config.ts",
+              "with": "apps/shell/src/environments/api.staging.config.ts"
             }
           ]
         },
@@ -66,11 +95,15 @@
       "executor": "@angular/build:dev-server",
       "options": {
         "port": 4200,
-        "buildTarget": "shell:build:development"
+        "buildTarget": "shell:build:development",
+        "proxyConfig": "apps/shell/proxy.conf.json"
       },
       "configurations": {
         "production": {
           "buildTarget": "shell:build:production"
+        },
+        "staging": {
+          "buildTarget": "shell:build:staging"
         },
         "development": {
           "buildTarget": "shell:build:development"
