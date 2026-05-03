@@ -1,391 +1,158 @@
 <app-page-breadcrumb pageTitle="Profile" />
-<div
-  class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6"
->
-  <h3
-    class="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-7"
-  >
-    Profile
-  </h3>
-  <div class="space-y-6">
-    <div><app-user-meta-card /></div>
 
-    <div class="grid grid-cols-12 gap-4 md:gap-6">
-      <div class="col-span-12 lg:col-span-6">
-        <div
-          class="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6"
-        >
-          <div
-            class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between w-full"
-          >
-            <div class="w-full">
-              <h4
-                class="text-lg font-semibold text-gray-800 dark:text-white/90 mb-6"
-              >
-                Personal Details
-              </h4>
-              <div
-                class="grid grid-cols-2 gap-4 xs:grid-cols-2 lg:gap-7 2xl:gap-x-32"
-              >
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Name
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    Mr. BIT SCHOLARS
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Birthday
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    01 Sep 2025
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Gender
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    Male
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Marital status
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    Married
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Family Remarks
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    NIL
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Father/Husband
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    Company
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Mobile
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    +91-9270848764
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Registration
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    21 Sep 2025
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+@if (isLoading) {
+  <div class="rounded-3xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900/40">
+    <div class="animate-pulse space-y-5">
+      <div class="h-28 rounded-2xl bg-slate-100 dark:bg-slate-800"></div>
+      <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div class="h-52 rounded-2xl bg-slate-100 dark:bg-slate-800"></div>
+        <div class="h-52 rounded-2xl bg-slate-100 dark:bg-slate-800"></div>
       </div>
-
-      <div class="col-span-12 lg:col-span-6">
-        <div
-          class="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6"
-        >
-          <div
-            class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between w-full"
-          >
-            <div class="w-full">
-              <h4
-                class="text-lg font-semibold text-gray-800 dark:text-white/90 mb-6"
-              >
-                Login & Bank Details
-              </h4>
-              <div
-                class="grid grid-cols-2 gap-4 xs:grid-cols-2 lg:gap-7 2xl:gap-x-32"
-              >
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Username
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    Companyid
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Bank Name
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    Rajendra P Chamangale
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    IFSC Code
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    BARB0AMALNE
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Account No
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    4254012
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Bank Address
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    Amalner Branch
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Pan No.
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    ADFPC6790B
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Aadhar number
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    984229930655
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-span-12 lg:col-span-5 flex">
-        <div
-          class="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6 w-full"
-        >
-          <div
-            class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between"
-          >
-            <div>
-              <h4
-                class="text-lg font-semibold text-gray-800 dark:text-white/90 mb-6"
-              >
-                Nominee Details
-              </h4>
-              <div
-                class="grid grid-cols-1 gap-4 xs:grid-cols-1 lg:gap-7 2xl:gap-x-32"
-              >
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Nominee Name
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    Mr Abhishek Bhavsar
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Nominee Relation
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    SELF
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-span-12 lg:col-span-7">
-        <div
-          class="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6"
-        >
-          <div
-            class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between w-full"
-          >
-            <div class="w-full">
-              <h4
-                class="text-lg font-semibold text-gray-800 dark:text-white/90 mb-6"
-              >
-                Address
-              </h4>
-              <div
-                class="grid grid-cols-2 gap-4 xs:grid-cols-2 lg:gap-7 2xl:gap-x-32"
-              >
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Name
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    Mr. BIT SCHOLARS
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Email
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    <a href="mailto:pcei98@gmail.com">pcei98@gmail.com</a>
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    City
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    Amalner (Jalgaon)
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    District
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    Jalgaon
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    State
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    MAHARASHTRA
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    PIN Code
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    425401
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Country
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    India
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div class="h-44 rounded-2xl bg-slate-100 dark:bg-slate-800"></div>
     </div>
   </div>
-</div>
+}
+
+@if (!isLoading) {
+  <section class="space-y-6">
+    <article class="relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-4 shadow-sm ring-1 ring-indigo-100/70 dark:border-gray-800 dark:bg-white/[0.03] dark:ring-indigo-500/10">
+      <span class="pointer-events-none absolute -right-10 -top-8 h-36 w-36 rounded-full bg-indigo-100/60 dark:bg-indigo-500/10"></span>
+      <span class="pointer-events-none absolute -left-10 bottom-0 h-28 w-28 rounded-full bg-cyan-100/60 dark:bg-cyan-500/10"></span>
+
+      <div class="relative flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div class="flex items-center gap-3">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 text-lg font-bold text-white shadow-lg ring-2 ring-white dark:ring-gray-800">
+            {{ initials }}
+          </div>
+          <div>
+            <h2 class="text-lg font-semibold tracking-tight text-gray-800 dark:text-white/90">{{ fullName }}</h2>
+            <p class="mt-0.5 text-xs font-medium text-indigo-600 dark:text-indigo-400">{{ val(profile?.loginId) }}</p>
+            <p class="mt-0.5 text-xs text-gray-500 dark:text-gray-400">Business Real Estate</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 md:min-w-[320px]">
+          <a
+            [routerLink]="['/member/edit-profile']"
+            class="col-span-2 justify-self-end inline-flex items-center gap-1.5 rounded-full border border-indigo-200 bg-gradient-to-r from-indigo-50 to-violet-50 px-3 py-1.5 text-xs font-semibold text-indigo-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:from-indigo-100 hover:to-violet-100 dark:border-indigo-500/30 dark:bg-indigo-500/10 dark:text-indigo-300 dark:hover:bg-indigo-500/20"
+          >
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0">
+              <path d="M2.5 14.375V17.5H5.625L14.8438 8.28125L11.7188 5.15625L2.5 14.375Z" fill="currentColor" />
+              <path d="M16.3024 6.82263C16.6278 6.4972 16.6278 5.96956 16.3024 5.64412L14.3559 3.69764C14.0304 3.3722 13.5028 3.3722 13.1774 3.69764L12.0836 4.79141L15.2086 7.91641L16.3024 6.82263Z" fill="currentColor" />
+            </svg>
+            Edit Profile
+          </a>
+          <div class="rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 dark:border-gray-700 dark:bg-gray-800/60">
+            <p class="text-[11px] uppercase tracking-wide text-gray-500 dark:text-gray-400">Reg. No.</p>
+            <p class="mt-0.5 text-xs font-semibold text-gray-800 dark:text-white/90">{{ val(profile?.loginId) }}</p>
+          </div>
+          <div class="rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 dark:border-gray-700 dark:bg-gray-800/60">
+            <p class="text-[11px] uppercase tracking-wide text-gray-500 dark:text-gray-400">Active Date</p>
+            <p class="mt-0.5 text-xs font-semibold text-gray-800 dark:text-white/90">
+              {{ profile?.registrationDate ? (profile?.registrationDate | date:'dd MMM yyyy') : '—' }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <div class="grid grid-cols-1 gap-5 xl:grid-cols-3">
+      <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/40 xl:col-span-2">
+        <h3 class="flex items-center gap-2 text-lg font-semibold text-slate-800 dark:text-slate-100">
+          <span class="h-2 w-2 rounded-full bg-indigo-500"></span>
+          Personal Information
+        </h3>
+        <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Title</p>
+            <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-100">{{ val(profile?.title) }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">First Name</p>
+            <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-100">{{ val(profile?.firstName) }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Last Name</p>
+            <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-100">{{ val(profile?.lastName) }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Gender</p>
+            <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-100">{{ displayGender }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Email</p>
+            @if (profile?.emailId) {
+              <a [href]="'mailto:' + profile!.emailId" class="mt-1 block break-all text-sm font-medium text-blue-600 hover:underline dark:text-blue-400">{{ profile!.emailId }}</a>
+            } @else {
+              <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-100">—</p>
+            }
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Primary Contact</p>
+            <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-100">{{ val(profile?.primaryContactNumber) }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Secondary Contact</p>
+            <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-100">{{ val(profile?.secondaryContactNumber) }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Login ID</p>
+            <p class="mt-1 text-sm font-semibold text-indigo-600 dark:text-indigo-400">{{ val(profile?.loginId) }}</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/40">
+        <h3 class="flex items-center gap-2 text-lg font-semibold text-slate-800 dark:text-slate-100">
+          <span class="h-2 w-2 rounded-full bg-cyan-500"></span>
+          Referral Details
+        </h3>
+        <div class="mt-4 space-y-4">
+          <div class="rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-800/60">
+            <p class="text-xs text-slate-500 dark:text-slate-400">Intro Reg. No.</p>
+            <p class="mt-1 text-sm font-semibold text-slate-800 dark:text-slate-100">{{ val(profile?.introRegNo) }}</p>
+          </div>
+          <div class="rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-800/60">
+            <p class="text-xs text-slate-500 dark:text-slate-400">Intro Side</p>
+            <p class="mt-1 text-sm font-semibold text-slate-800 dark:text-slate-100">{{ val(profile?.introSide) }}</p>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/40">
+      <h3 class="flex items-center gap-2 text-lg font-semibold text-slate-800 dark:text-slate-100">
+        <span class="h-2 w-2 rounded-full bg-violet-500"></span>
+        Address Details
+      </h3>
+
+      <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <div>
+          <p class="text-xs text-slate-500 dark:text-slate-400">House No.</p>
+          <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-100">{{ val(profile?.address?.houseNo) }}</p>
+        </div>
+        <div>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Street</p>
+          <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-100">{{ val(profile?.address?.street) }}</p>
+        </div>
+        <div>
+          <p class="text-xs text-slate-500 dark:text-slate-400">City</p>
+          <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-100">{{ val(profile?.address?.city) }}</p>
+        </div>
+        <div>
+          <p class="text-xs text-slate-500 dark:text-slate-400">State</p>
+          <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-100">{{ val(profile?.address?.state) }}</p>
+        </div>
+        <div>
+          <p class="text-xs text-slate-500 dark:text-slate-400">ZIP Code</p>
+          <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-100">{{ val(profile?.address?.zipCode) }}</p>
+        </div>
+      </div>
+
+      <div class="mt-5 rounded-xl bg-gradient-to-r from-slate-100 to-indigo-50 px-4 py-3 dark:from-slate-800 dark:to-slate-800/60">
+        <p class="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">Complete Address</p>
+        <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-100">{{ addressLine }}</p>
+      </div>
+    </article>
+  </section>
+}

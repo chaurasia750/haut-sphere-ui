@@ -59,6 +59,18 @@ export class UserDropdownComponent implements OnInit {
     return this.profile?.loginId?.trim() || 'No login id';
   }
 
+  get displayInitials(): string {
+    const first = this.profile?.firstName?.trim();
+    const last = this.profile?.lastName?.trim();
+    if (first && last) {
+      return (first.charAt(0) + last.charAt(0)).toUpperCase();
+    }
+    if (first) {
+      return first.charAt(0).toUpperCase();
+    }
+    return this.profile?.loginId?.charAt(0)?.toUpperCase() || 'M';
+  }
+
   private loadProfile(): void {
     this.memberProfileService
       .getProfile()
