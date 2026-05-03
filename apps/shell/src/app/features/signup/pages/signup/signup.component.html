@@ -246,16 +246,8 @@
             <div class="flex flex-row rounded-xl border border-slate-300 bg-white focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/30"
             >
               <!-- Title select -->
-              <div class="shrink-0">
-                <select
-                  formControlName="title"
-                  class="h-full border-0 bg-transparent px-3 py-3 text-sm text-slate-900 focus:outline-none"
-                >
-                  <option value="" disabled>Title</option>
-                  @for (title of ['Mr', 'Mrs', 'Ms', 'Dr', 'Prof', 'Er']; track title) {
-                    <option [value]="title">{{ title }}</option>
-                  }
-                </select>
+              <div class="shrink-0 w-20">
+                <shared-title-select formControlName="title"></shared-title-select>
               </div>
 
               <!-- Divider -->
@@ -263,8 +255,8 @@
 
               <!-- First Name input with floating label -->
               <div class="relative min-w-0 flex-1">
-                <input id="firstName" type="text" formControlName="firstName" placeholder=" "
-                  class="peer block w-full border-0 bg-transparent px-4 py-3 text-sm text-slate-900 placeholder:text-slate-300 focus:outline-none"
+                <input id="firstName" type="text" formControlName="firstName" placeholder=" " (input)="onFirstNameInput($event)"
+                  class="peer block w-full border-0 bg-transparent px-4 pb-2.5 pt-5 text-sm text-slate-900 placeholder:text-slate-300 focus:outline-none"
                 />
                 <label for="firstName" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600">
                   {{ 'signup.fields.firstName' | translate }} <span class="text-red-400">*</span>
@@ -274,8 +266,8 @@
 
             <!-- Last Name -->
             <div class="relative">
-              <input id="lastName" type="text" formControlName="lastName" placeholder=" "
-                class="peer block w-full appearance-none rounded-xl border border-slate-300 bg-white px-4 pb-2.5 pt-5 text-sm text-slate-900 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/30"
+              <input id="lastName" type="text" formControlName="lastName" placeholder=" " (input)="onLastNameInput($event)"
+                  class="peer block w-full appearance-none rounded-xl border border-slate-300 bg-white px-4 pb-2.5 pt-5 text-sm text-slate-900 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/30'"
               />
               <label for="lastName" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600">
                 {{ 'signup.fields.lastName' | translate }} <span class="text-red-400">*</span>
@@ -284,7 +276,7 @@
           </div>
 
           <!-- Validation errors row -->
-          <div class="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_1fr] mt-1">
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_1fr]">
             <div>
               @if (isInvalid('title')) {
                 <p class="flex items-center gap-1 text-xs text-red-500">
@@ -323,13 +315,13 @@
                 </label>
               }
             </div>
-            @if (isInvalid('gender')) {
-              <p class="mt-1.5 flex items-center gap-1 text-xs text-red-500">
-                <svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
-                {{ getError('gender') }}
-              </p>
-            }
           </div>
+          @if (isInvalid('gender')) {
+            <p class="mt-1.5 flex items-center gap-1 text-xs text-red-500">
+              <svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+              {{ getError('gender') }}
+            </p>
+          }
 
 
           <!-- ── Email & Phone ── -->
@@ -407,16 +399,23 @@
           <!-- ── Shared address form ── -->
           <shared-address-form [formGroup]="addressGroup"></shared-address-form>
 
-          <!-- ── Submit ── -->
-          <div class="pt-1">
-            <button
-              type="submit"
-              [disabled]="isSubmitting"
-              class="w-full rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {{ isSubmitting ? ('signup.submit.loading' | translate) : ('signup.submit.idle' | translate) }}
-            </button>
-          </div>
+            <!-- ── Submit ── -->
+            <div class="pt-1">
+              <button
+                type="submit"
+                [disabled]="isLoading"
+                [attr.aria-busy]="isLoading"
+                class="w-full rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 flex items-center justify-center gap-2"
+              >
+                @if (isLoading) {
+                <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                }
+                {{ isLoading ? ('signup.submit.loading' | translate) : ('signup.submit.idle' | translate) }}
+              </button>
+            </div>
 
         </form>
 

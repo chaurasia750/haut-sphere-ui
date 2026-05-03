@@ -103,26 +103,6 @@
     }
   </div>
 
-  <!-- City (auto-filled options from postal lookup) -->
-  <div class="relative">
-    <select
-      id="city"
-      formControlName="city"
-      class="peer block w-full appearance-none rounded-xl border border-slate-300 bg-white px-4 pb-2.5 pt-5 text-sm text-slate-900 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
-    >
-      <option value="" disabled>Select City</option>
-      @for (city of cityList; track city) {
-        <option [value]="city">{{ city }}</option>
-      }
-    </select>
-    <label
-      for="city"
-      class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500"
-    >
-      City <span class="text-red-400">*</span>
-    </label>
-  </div>
-
   <!-- Country (auto-filled from postal lookup) -->
   <div class="relative">
     <input

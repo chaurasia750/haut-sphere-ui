@@ -11,6 +11,7 @@ import {
   PanCardDirective,
   PhoneFormatDirective,
   SharedAddressFormComponent,
+  SharedTitleSelectComponent,
 } from '@shared/ui/src';
 import { SignupService, RegisterMemberPayload } from '../../services/signup.service';
 
@@ -23,6 +24,7 @@ import { SignupService, RegisterMemberPayload } from '../../services/signup.serv
     RouterLink,
     TranslateModule,
     SharedAddressFormComponent,
+    SharedTitleSelectComponent,
     AadhaarInputDirective,
     PanCardDirective,
     PhoneFormatDirective,
@@ -35,11 +37,12 @@ export class SignupComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly signupService = inject(SignupService);
 
-  isSubmitting = false;
   positionOpen = false;
   readonly sponsorPrefix = this.i18n.instant('app.sponsorPrefix', 'ANON');
   sponsorLookupName = '';
   isSponsorLookupPending = false;
+  isLoading = false;
+  sponsorRegNo: number | null = null;
 
   selectPosition(value: string): void {
     this.signupForm.get('position')?.setValue(value);
@@ -142,6 +145,24 @@ export class SignupComponent {
     return this.i18n.instant('signup.position.placeholder', 'Select...');
   }
 
+  onFirstNameInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const upper = input.value.toUpperCase();
+    if (upper !== input.value) {
+      const control = this.signupForm.get('firstName');
+      control?.setValue(upper, { emitEvent: false });
+    }
+  }
+
+  onLastNameInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const upper = input.value.toUpperCase();
+    if (upper !== input.value) {
+      const control = this.signupForm.get('lastName');
+      control?.setValue(upper, { emitEvent: false });
+    }
+  }
+
   private setupSponsorValidation(): void {
     const sponsorIdControl = this.signupForm.get('sponsorId');
     if (!sponsorIdControl) {
@@ -175,9 +196,13 @@ export class SignupComponent {
           return this.signupService
             .validateSponsor(fullSponsorId)
             .pipe(
-              tap((sponsorName) => {
-                this.sponsorLookupName = sponsorName;
-                if (!sponsorName) {
+              tap((response) => {
+                this.sponsorRegNo = response?.regNo ?? null;
+                this.sponsorLookupName = [response?.title, response?.fName, response?.lName]
+                  .filter((part): part is string => !!part)
+                  .join(' ')
+                  .trim();
+                if (!this.sponsorLookupName) {
                   this.setSponsorLookupError();
                 }
               }),
@@ -222,7 +247,7 @@ export class SignupComponent {
   }
 
   submit(): void {
-    if (this.signupForm.invalid || this.isSubmitting) {
+    if (this.signupForm.invalid) {
       this.signupForm.markAllAsTouched();
       const addressGroup = this.signupForm.get('address') as FormGroup;
       if (addressGroup) {
@@ -235,14 +260,14 @@ export class SignupComponent {
       }
       return;
     }
-    this.isSubmitting = true;
 
+    this.isLoading = true;
     const formValue = this.signupForm.getRawValue();
     const addressValue = formValue.address;
 
     const payload: RegisterMemberPayload = {
       bussinessCategoryId: this.getBusinessCategoryId(formValue.businessCategory ?? ''),
-      introRegNo: 0,
+      introRegNo: this.sponsorRegNo ?? 0 ,
       personInfo: {
         title: formValue.title ?? '',
         firstName: formValue.firstName ?? '',
@@ -271,7 +296,7 @@ export class SignupComponent {
       .registerMember(payload)
       .pipe(
         finalize(() => {
-          this.isSubmitting = false;
+          this.isLoading = false;
         })
       )
       .subscribe({

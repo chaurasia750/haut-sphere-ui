@@ -7,6 +7,7 @@ export interface SponsorValidationResponse {
   title?: string | null;
   fName?: string | null;
   lName?: string | null;
+  regNo?: number | null;
 }
 
 export interface RegisterMemberPayload {
@@ -43,18 +44,10 @@ export class SignupService {
   private readonly http = inject(HttpClient);
   private readonly apiBaseUrl = apiConfig.baseUrl;
 
-  validateSponsor(sponsorId: string): Observable<string> {
+  validateSponsor(sponsorId: string): Observable<SponsorValidationResponse> {
     return this.http
       .get<SponsorValidationResponse>(
         `${this.apiBaseUrl}/registration-validation/sponser?sponsonrId=${encodeURIComponent(sponsorId)}`
-      )
-      .pipe(
-        map((response) =>
-          [response?.title, response?.fName, response?.lName]
-            .filter((part): part is string => !!part)
-            .join(' ')
-            .trim()
-        )
       );
   }
 

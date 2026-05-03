@@ -20,7 +20,7 @@ const TITLE_OPTIONS: TitleOption[] = ['Mr', 'Mrs', 'Ms', 'Dr', 'Prof', 'Er'];
   templateUrl: './title-select.component.html',
 })
 export class SharedTitleSelectComponent implements ControlValueAccessor {
-  readonly placeholder = input<string>('Select Title');
+  readonly placeholder = input<string>('Title');
   readonly disabled = input<boolean>(false);
 
   readonly titleOptions = TITLE_OPTIONS;
