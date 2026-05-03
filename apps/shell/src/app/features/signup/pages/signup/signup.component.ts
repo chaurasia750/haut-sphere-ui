@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { catchError, debounceTime, distinctUntilChanged, finalize, of, switchMap, tap } from 'rxjs';
@@ -96,22 +96,38 @@ export class SignupComponent {
   getError(controlName: string): string {
     const control: AbstractControl | null = this.signupForm.get(controlName);
     if (!control?.touched || !control?.errors) return '';
-    if (control.errors['required']) return this.i18n.instant('signup.validation.required', 'This field is required.');
-    if (controlName === 'title') return this.i18n.instant('signup.validation.title', 'Please select a title.');
-    if (controlName === 'gender') return this.i18n.instant('signup.validation.gender', 'Please select gender.');
-    if (control.errors['email']) return this.i18n.instant('signup.validation.email', 'Enter a valid email address.');
-    if (control.errors['pattern']) {
-      if (controlName === 'firstName' || controlName === 'lastName') return this.i18n.instant('signup.validation.noSpaces', 'Name cannot contain spaces.');
-      if (controlName === 'phone') return this.i18n.instant('signup.validation.phone', 'Enter a valid 10-digit mobile number.');
-      if (controlName === 'aadhaarNo') return this.i18n.instant('signup.validation.aadhaar', 'Aadhaar must be 12 digits (XXXX XXXX XXXX).');
-      if (controlName === 'panCard') return this.i18n.instant('signup.validation.pan', 'PAN format must be ABCDE1234F.');
+    if (control.errors['required']) {
+      const fieldNames: Record<string, string> = {
+        'title': 'Title',
+        'firstName': 'First Name',
+        'lastName': 'Last Name',
+        'gender': 'Gender',
+        'email': 'Email',
+        'phone': 'Phone',
+        'aadhaarNo': 'Aadhaar Number',
+        'panCard': 'PAN Card',
+        'businessCategory': 'Business Category',
+        'sponsorId': 'Sponsor ID',
+        'position': 'Position',
+      };
+      const fieldName = fieldNames[controlName] || controlName;
+      return `${fieldName} is required.`;
     }
-    if (controlName === 'businessCategory') return this.i18n.instant('signup.validation.businessCategory', 'Please select a business category.');
-    if (control.errors['invalidSponsor']) return this.i18n.instant('signup.sponsor.notFound', 'Sponsor ID was not found.');
+    if (controlName === 'title') return 'Please select a title.';
+    if (controlName === 'gender') return 'Please select gender.';
+    if (control.errors['email']) return 'Enter a valid email address.';
+    if (control.errors['pattern']) {
+      if (controlName === 'firstName' || controlName === 'lastName') return 'Name cannot contain spaces.';
+      if (controlName === 'phone') return 'Enter a valid 10-digit mobile number.';
+      if (controlName === 'aadhaarNo') return 'Aadhaar must be 12 digits (XXXX XXXX XXXX).';
+      if (controlName === 'panCard') return 'PAN format must be ABCDE1234F.';
+    }
+    if (controlName === 'businessCategory') return 'Please select a business category.';
+    if (control.errors['invalidSponsor']) return 'Sponsor ID was not found.';
     if (control.errors['minlength'] || control.errors['maxlength'])
-      return this.i18n.instant('signup.validation.sponsorIdLength', 'Sponsor ID must be exactly 6 characters.');
-    if (controlName === 'position') return this.i18n.instant('signup.validation.position', 'Please select a position.');
-    return this.i18n.instant('signup.validation.invalid', 'Invalid input.');
+      return 'Sponsor ID must be exactly 6 characters.';
+    if (controlName === 'position') return 'Please select a position.';
+    return 'Invalid input.';
   }
 
   getPositionLabel(value: string | null | undefined): string {
@@ -208,6 +224,15 @@ export class SignupComponent {
   submit(): void {
     if (this.signupForm.invalid || this.isSubmitting) {
       this.signupForm.markAllAsTouched();
+      const addressGroup = this.signupForm.get('address') as FormGroup;
+      if (addressGroup) {
+        Object.keys(addressGroup.controls).forEach(key => {
+          const control = addressGroup.controls[key];
+          if (control) {
+            control.markAsTouched();
+          }
+        });
+      }
       return;
     }
     this.isSubmitting = true;
@@ -239,7 +264,7 @@ export class SignupComponent {
         zipCode: addressValue?.postalCode ?? '',
         distId: 0,
       },
-      introSide: formValue.position === 'left' ? 'A' : 'B',
+      introSide: formValue.position === 'left' ? 'L' : 'R',
     };
 
     this.signupService

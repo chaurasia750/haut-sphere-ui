@@ -264,7 +264,7 @@
               <!-- First Name input with floating label -->
               <div class="relative min-w-0 flex-1">
                 <input id="firstName" type="text" formControlName="firstName" placeholder=" "
-                  class="peer block w-full border-0 bg-transparent px-4 pb-2.5 pt-5 text-sm text-slate-900 placeholder:text-slate-300 focus:outline-none"
+                  class="peer block w-full border-0 bg-transparent px-4 py-3 text-sm text-slate-900 placeholder:text-slate-300 focus:outline-none"
                 />
                 <label for="firstName" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600">
                   {{ 'signup.fields.firstName' | translate }} <span class="text-red-400">*</span>
@@ -305,8 +305,7 @@
 
           <!-- ── Gender ── -->
           <div>
-            <p class="mb-2 text-xs font-medium text-slate-500">Gender <span class="text-red-400">*</span></p>
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-2 gap-3 mt-0">
               @for (g of [{ value: 'male', label: 'Male' }, { value: 'female', label: 'Female' }]; track g.value) {
                 <label
                   class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm transition-colors"
