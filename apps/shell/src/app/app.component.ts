@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { Title } from '@angular/platform-browser';
@@ -36,7 +36,8 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private title: Title,
-    private i18n: SharedTranslationService
+    private i18n: SharedTranslationService,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -55,6 +56,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private checkRoute() {
     this.isLoginPage = this.router.url.startsWith('/login') || this.router.url.startsWith('/signup');
+    this.cdRef.detectChanges();
   }
 
   ngOnDestroy() {
