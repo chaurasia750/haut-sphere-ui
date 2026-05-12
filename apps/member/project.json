@@ -102,7 +102,9 @@
         "buildTarget": "member:build",
         "host": "localhost",
         "port": 4102,
-        "hmr": false
+        "hmr": false,
+        "liveReload": false,
+        "publicHost": "http://localhost:4102"
       },
       "configurations": {
         "production": {

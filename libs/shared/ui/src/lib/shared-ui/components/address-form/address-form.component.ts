@@ -2,9 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, Input, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { catchError, debounceTime, distinctUntilChanged, finalize, of, switchMap, tap } from 'rxjs';
 import { NumberOnlyDirective } from '../../directives/number-only.directive';
-import { AddressLookupItem, AddressLookupService } from '../../services/address-lookup.service';
+import { AddressLookupItem } from '../../services/address-lookup.service';
 
 @Component({
   selector: 'shared-address-form',
@@ -14,17 +15,28 @@ import { AddressLookupItem, AddressLookupService } from '../../services/address-
 })
 export class SharedAddressFormComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
-  private readonly addressLookupService = inject(AddressLookupService);
+  private readonly http = inject(HttpClient);
 
   @Input({ required: true }) formGroup!: FormGroup;
+  @Input() apiBaseUrl = '';
 
   cityList: string[] = [];
   stateList: string[] = [];
   isPostalLookupPending = false;
 
-  ngOnInit(): void {
-    this.setupPostalLookup();
+
+ngOnInit(): void {
+  this.setupPostalLookup();
+
+  const postalCode = this.formGroup.get('postalCode')?.value;
+
+  if (postalCode) {
+    this.formGroup.get('postalCode')?.setValue(postalCode);
+    this.formGroup.get('postalCode')?.setValue(postalCode);
   }
+}
+
+
 
   private setupPostalLookup(): void {
     const postalCodeControl = this.formGroup.get('postalCode');
@@ -54,7 +66,12 @@ export class SharedAddressFormComponent implements OnInit {
           }
 
           this.isPostalLookupPending = true;
-          return this.addressLookupService.getAddressByPinCode(postalCode).pipe(
+          if (!this.apiBaseUrl) {
+            return of<AddressLookupItem[]>([]);
+          }
+          return this.http.get<AddressLookupItem[]>(
+            `${this.apiBaseUrl}/locations/addresses?pinCode=${encodeURIComponent(postalCode)}`
+          ).pipe(
             catchError(() => of<AddressLookupItem[]>([])),
             finalize(() => {
               this.isPostalLookupPending = false;
@@ -63,32 +80,41 @@ export class SharedAddressFormComponent implements OnInit {
         })
       )
       .subscribe((locations) => {
+        console.log('LOCATIONS' ,locations);
         if (!locations?.length) {
           this.clearLocationState();
           return;
         }
 
-        this.stateList = Array.from(new Set(locations.map((item) => item.stateName).filter(Boolean)));
-        this.cityList = Array.from(new Set(locations.map((item) => item.cityName).filter(Boolean)));
+        this.stateList = Array.from(new Set(locations.map((item:any) => item.stateName).filter(Boolean)));
+        this.cityList = Array.from(new Set(locations.map((item:any) => item.cityName).filter(Boolean)));
 
-        if (this.stateList.length) {
-          this.formGroup.get('state')?.setValue(this.stateList[0]);
-        }
+      
 
-        if (this.cityList.length) {
-          this.formGroup.get('city')?.setValue(this.cityList[0]);
-        }
+       if (this.stateList.length) {
+  this.formGroup.get('state')?.setValue(this.stateList[0]);
+}
+
+if (this.cityList.length) {
+  this.formGroup.get('city')?.setValue(this.cityList[0]);
+}
+
+
+
 
         const country = locations[0]?.countryName ?? '';
         this.formGroup.get('country')?.setValue(country);
       });
   }
 
+
+
+
   private clearLocationState(): void {
     this.isPostalLookupPending = false;
     this.stateList = [];
     this.cityList = [];
-    this.formGroup.get('state')?.setValue('');
-    this.formGroup.get('city')?.setValue('');
+   // this.formGroup.get('state')?.setValue('');
+   // this.formGroup.get('city')?.setValue('');
   }
 }

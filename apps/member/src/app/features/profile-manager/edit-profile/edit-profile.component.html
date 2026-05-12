@@ -1,391 +1,228 @@
 <app-page-breadcrumb pageTitle="Edit Profile" />
-<div
-  class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6"
->
-  <h3
-    class="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-7"
-  >
-    Edit Profile
-  </h3>
-  <div class="space-y-6">
-    <div><app-user-meta-card /></div>
 
-    <div class="grid grid-cols-12 gap-4 md:gap-6">
-      <div class="col-span-12 lg:col-span-6">
-        <div
-          class="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6"
-        >
-          <div
-            class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between w-full"
-          >
-            <div class="w-full">
-              <h4
-                class="text-lg font-semibold text-gray-800 dark:text-white/90 mb-6"
-              >
-                Personal Details
-              </h4>
-              <div
-                class="grid grid-cols-2 gap-4 xs:grid-cols-2 lg:gap-7 2xl:gap-x-32"
-              >
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Name
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    Mr. BIT SCHOLARS
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Birthday
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    01 Sep 2025
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Gender
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    Male
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Marital status
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    Married
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Family Remarks
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    NIL
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Father/Husband
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    Company
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Mobile
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    +91-9270848764
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Registration
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    21 Sep 2025
-                  </p>
-                </div>
-              </div>
+@if (isLoading) {
+  <div class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
+    <div class="animate-pulse space-y-6">
+      <div class="h-7 w-40 bg-gray-200 dark:bg-gray-700 rounded"></div>
+      <div class="grid grid-cols-12 gap-4 md:gap-6">
+        <div class="col-span-12 lg:col-span-6">
+          <div class="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6 space-y-4">
+            <div class="h-6 w-36 bg-gray-200 dark:bg-gray-700 rounded"></div>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="col-span-12 lg:col-span-6">
-        <div
-          class="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6"
-        >
-          <div
-            class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between w-full"
-          >
-            <div class="w-full">
-              <h4
-                class="text-lg font-semibold text-gray-800 dark:text-white/90 mb-6"
-              >
-                Login & Bank Details
-              </h4>
-              <div
-                class="grid grid-cols-2 gap-4 xs:grid-cols-2 lg:gap-7 2xl:gap-x-32"
-              >
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Username
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    Companyid
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Bank Name
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    Rajendra P Chamangale
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    IFSC Code
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    BARB0AMALNE
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Account No
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    4254012
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Bank Address
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    Amalner Branch
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Pan No.
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    ADFPC6790B
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Aadhar number
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    984229930655
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-span-12 lg:col-span-5 flex">
-        <div
-          class="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6 w-full"
-        >
-          <div
-            class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between"
-          >
-            <div>
-              <h4
-                class="text-lg font-semibold text-gray-800 dark:text-white/90 mb-6"
-              >
-                Nominee Details
-              </h4>
-              <div
-                class="grid grid-cols-1 gap-4 xs:grid-cols-1 lg:gap-7 2xl:gap-x-32"
-              >
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Nominee Name
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    Mr Abhishek Bhavsar
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Nominee Relation
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    SELF
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-span-12 lg:col-span-7">
-        <div
-          class="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6"
-        >
-          <div
-            class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between w-full"
-          >
-            <div class="w-full">
-              <h4
-                class="text-lg font-semibold text-gray-800 dark:text-white/90 mb-6"
-              >
-                Address
-              </h4>
-              <div
-                class="grid grid-cols-2 gap-4 xs:grid-cols-2 lg:gap-7 2xl:gap-x-32"
-              >
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Name
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    Mr. BIT SCHOLARS
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Email
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    <a href="mailto:pcei98@gmail.com">pcei98@gmail.com</a>
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    City
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    Amalner (Jalgaon)
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    District
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    Jalgaon
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    State
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    MAHARASHTRA
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    PIN Code
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    425401
-                  </p>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400"
-                  >
-                    Country
-                  </p>
-                  <p
-                    class="text-sm font-medium text-gray-800 dark:text-white/90"
-                  >
-                    India
-                  </p>
-                </div>
-              </div>
+        <div class="col-span-12 lg:col-span-6">
+          <div class="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6 space-y-4">
+            <div class="h-6 w-36 bg-gray-200 dark:bg-gray-700 rounded"></div>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+} @else {
+  <div class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
+    <h3 class="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-7">
+      Edit Profile
+    </h3>
+
+    <form [formGroup]="editForm" (ngSubmit)="submit()" class="space-y-6" novalidate>
+
+      @if (updateSuccess) {
+        <div class="flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 dark:border-emerald-800 dark:bg-emerald-500/10">
+          <svg class="h-5 w-5 shrink-0 text-emerald-600 dark:text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+          <p class="text-sm font-medium text-emerald-800 dark:text-emerald-300">Profile updated successfully!</p>
+        </div>
+      }
+
+      @if (updateError) {
+        <div class="flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 dark:border-red-800 dark:bg-red-500/10">
+          <svg class="h-5 w-5 shrink-0 text-red-600 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+          <p class="text-sm font-medium text-red-800 dark:text-red-300">{{ updateError }}</p>
+        </div>
+      }
+
+      <div class="grid grid-cols-12 gap-4 md:gap-6">
+        <!-- ════════════ PERSONAL DETAILS ════════════ -->
+        <div class="col-span-12 lg:col-span-6">
+          <div class="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
+            <h4 class="text-lg font-semibold text-gray-800 dark:text-white/90 mb-6">Personal Details</h4>
+
+            <div class="space-y-4">
+
+              <!-- Title + First Name | Last Name -->
+              <div class="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_1fr] items-start">
+                <div class="flex flex-row rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/30">
+                  <div class="shrink-0 w-20">
+                    <shared-title-select formControlName="title"></shared-title-select>
+                  </div>
+                  <div class="w-px self-stretch bg-gray-300 dark:bg-gray-600"></div>
+                  <div class="relative min-w-0 flex-1">
+                    <input #formInput id="editFirstName" type="text" formControlName="firstName" placeholder=" " (input)="onInputName($event, 'firstName')"
+                      class="peer block w-full border-0 bg-transparent px-4 pb-2.5 pt-5 text-sm text-slate-900 dark:text-white placeholder:text-slate-300 focus:outline-none"
+                    />
+                    <label for="editFirstName" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600">
+                      First Name <span class="text-red-400">*</span>
+                    </label>
+                  </div>
+                </div>
+                <div class="relative">
+                  <input #formInput id="editLastName" type="text" formControlName="lastName" placeholder=" " (input)="onInputName($event, 'lastName')"
+                    class="peer block w-full appearance-none rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 pb-2.5 pt-5 text-sm text-slate-900 dark:text-white transition-colors focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/30"
+                  />
+                  <label for="editLastName" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600">
+                    Last Name <span class="text-red-400">*</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Errors row -->
+              <div class="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_1fr]">
+                <div>
+                  @if (isInvalid('title')) {
+                    <p class="flex items-center gap-1 text-xs text-red-500"><svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>{{ getError('title') }}</p>
+                  }
+                  @if (isInvalid('firstName')) {
+                    <p class="flex items-center gap-1 text-xs text-red-500"><svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>{{ getError('firstName') }}</p>
+                  }
+                </div>
+                <div>
+                  @if (isInvalid('lastName')) {
+                    <p class="flex items-center gap-1 text-xs text-red-500"><svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>{{ getError('lastName') }}</p>
+                  }
+                </div>
+              </div>
+
+              <!-- Gender -->
+              <div>
+                <p class="mb-2 text-xs font-medium text-slate-500 dark:text-gray-400">Gender <span class="text-red-400">*</span></p>
+                <div class="grid grid-cols-2 gap-3">
+                  @for (g of [{ value: 'male', label: 'Male' }, { value: 'female', label: 'Female' }]; track g.value) {
+                    <label
+                      class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm transition-colors"
+                      [ngClass]="editForm.get('gender')?.value === g.value
+                        ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 font-medium'
+                        : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-slate-700 dark:text-gray-300 hover:border-indigo-300 hover:bg-indigo-50/50 dark:hover:bg-indigo-500/5'"
+                    >
+                      <input type="radio" formControlName="gender" [value]="g.value" class="h-4 w-4 accent-indigo-500" />
+                      {{ g.label }}
+                    </label>
+                  }
+                </div>
+                @if (isInvalid('gender')) {
+                  <p class="mt-1.5 flex items-center gap-1 text-xs text-red-500"><svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>{{ getError('gender') }}</p>
+                }
+              </div>
+
+              <!-- Email & Phone -->
+              <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div class="relative">
+                  <input #formInput id="editEmail" type="email" formControlName="email" placeholder=" "
+                    class="peer block w-full appearance-none rounded-xl border px-4 pb-2.5 pt-5 text-sm text-slate-900 dark:text-white transition-colors focus:outline-none focus:ring-2"
+                    [ngClass]="isInvalid('email') ? 'border-red-400 bg-red-50/40 dark:bg-red-500/10 focus:border-red-400 focus:ring-red-400/20' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:border-indigo-500 focus:ring-indigo-500/30'"
+                  />
+                  <label for="editEmail" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600">
+                    Email <span class="text-red-400">*</span>
+                  </label>
+                  @if (isInvalid('email')) {
+                    <p class="mt-1.5 flex items-center gap-1 text-xs text-red-500"><svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>{{ getError('email') }}</p>
+                  }
+                </div>
+                <div>
+                  <div class="relative">
+                    <span class="pointer-events-none absolute left-4 top-5 bottom-2.5 z-10 flex items-center select-none text-sm font-semibold text-slate-500">+91</span>
+                    <input #formInput id="editPhone" type="text" maxlength="12" formControlName="phone" placeholder=" " (input)="onInputPhone($event)"
+                      class="peer block w-full appearance-none rounded-xl border pl-12 pr-4 pb-2.5 pt-5 text-sm text-slate-900 dark:text-white transition-colors focus:outline-none focus:ring-2"
+                      [ngClass]="isInvalid('phone') ? 'border-red-400 bg-red-50/40 dark:bg-red-500/10 focus:border-red-400 focus:ring-red-400/20' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:border-indigo-500 focus:ring-indigo-500/30'"
+                    />
+                    <label for="editPhone" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-5 peer-placeholder-shown:left-12 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:left-4 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600">
+                      Phone <span class="text-red-400">*</span>
+                    </label>
+                  </div>
+                  @if (isInvalid('phone')) {
+                    <p class="mt-1.5 flex items-center gap-1 text-xs text-red-500"><svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>{{ getError('phone') }}</p>
+                  }
+                </div>
+              </div>
+
+              <!-- ════════════ Aadhaar & PAN ════════════ -->
+              <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <!-- Aadhaar -->
+                <div class="relative">
+                  <input #formInput id="editAadhaar" type="text" maxlength="14" formControlName="adharNo" placeholder=" " 
+                    class="peer block w-full appearance-none rounded-xl border px-4 pb-2.5 pt-5 text-sm tracking-widest text-slate-900 dark:text-white transition-colors focus:outline-none focus:ring-2"
+                    [ngClass]="isInvalid('aadhaarNo') ? 'border-red-400 bg-red-50/40 dark:bg-red-500/10 focus:border-red-400 focus:ring-red-400/20' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:border-indigo-500 focus:ring-indigo-500/30'"
+                  />
+                  <label for="editAadhaar" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600">
+                    Aadhaar Number
+                  </label>
+                  @if (isInvalid('aadhaarNo')) {
+                    <p class="mt-1.5 flex items-center gap-1 text-xs text-red-500"><svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>{{ getError('aadhaarNo') }}</p>
+                  }
+                </div>
+                <!-- PAN -->
+                <div class="relative">
+                  <input #formInput id="editPan" type="text" maxlength="10" formControlName="memPan" placeholder=" " 
+                    class="peer block w-full appearance-none rounded-xl border px-4 pb-2.5 pt-5 text-sm uppercase tracking-widest text-slate-900 dark:text-white transition-colors focus:outline-none focus:ring-2"
+                    [ngClass]="isInvalid('memPan') ? 'border-red-400 bg-red-50/40 dark:bg-red-500/10 focus:border-red-400 focus:ring-red-400/20' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:border-indigo-500 focus:ring-indigo-500/30'"
+                  />
+                  <label for="editPan" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600">
+                    PAN Card
+                  </label>
+                  @if (isInvalid('memPan')) {
+                    <p class="mt-1.5 flex items-center gap-1 text-xs text-red-500"><svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>{{ getError('panCard') }}</p>
+                  }
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════ ADDRESS DETAILS ════════════ -->
+        <div class="col-span-12 lg:col-span-6">
+          <div class="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
+            <h4 class="text-lg font-semibold text-gray-800 dark:text-white/90 mb-6">Address Details</h4>
+            <div class="flex items-center gap-3 py-1 mb-4">
+              <div class="h-px flex-1 bg-gray-200 dark:bg-gray-700"></div>
+              <span class="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Address
+              </span>
+              <div class="h-px flex-1 bg-gray-200 dark:bg-gray-700"></div>
+            </div>
+            <shared-address-form [formGroup]="addressGroup" [apiBaseUrl]="apiBaseUrl"></shared-address-form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="flex justify-end pt-2">
+        <button type="submit" [disabled]="isSaving" [attr.aria-busy]="isSaving"
+          class="rounded-xl bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 flex items-center justify-center gap-2"
+        >
+          @if (isSaving) {
+            <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          }
+          {{ isSaving ? 'Saving...' : 'Update Profile' }}
+        </button>
+      </div>
+    </form>
+  </div>
+}
