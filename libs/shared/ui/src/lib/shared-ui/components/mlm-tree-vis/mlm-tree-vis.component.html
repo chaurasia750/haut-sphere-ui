@@ -1,0 +1,288 @@
+<div class="vis-wrapper" [class.fullscreen]="isFullscreen">
+  <div class="toolbar">
+    <div class="tb-row tb-row-buttons">
+      <button (click)="goBack()" class="tb-btn" [class.disabled]="!canGoBack()" title="Back (Ctrl+Z)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
+      </button>
+      <button (click)="goForward()" class="tb-btn" [class.disabled]="!canGoForward()" title="Forward (Ctrl+Y)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+      </button>
+
+      <span class="divider"></span>
+
+      <button (click)="fit()" class="tb-btn" title="Fit to screen">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+      </button>
+      <button (click)="zoomIn()" class="tb-btn hide-mobile" title="Zoom in">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+      </button>
+      <button (click)="zoomOut()" class="tb-btn hide-mobile" title="Zoom out">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/></svg>
+      </button>
+
+      <span class="divider hide-mobile"></span>
+
+      <button (click)="expandAll()" class="tb-btn hide-mobile" title="Expand all">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+        <span class="label">Expand</span>
+      </button>
+      <button (click)="collapseAll()" class="tb-btn hide-mobile" title="Collapse all">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+        <span class="label">Collapse</span>
+      </button>
+
+      <span class="divider hide-mobile"></span>
+
+      <button (click)="toggleHeatmap()" class="tb-btn hide-mobile" [class.active]="heatmapMode" title="Toggle heatmap (Ctrl+M)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 12 2.992z"/></svg>
+        <span class="label">Heatmap</span>
+      </button>
+      <button (click)="toggleFullscreen()" class="tb-btn hide-mobile" title="Fullscreen (Esc)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          @if (!isFullscreen) {
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+          } @else {
+            <path d="M8 3v3a2 2 0 0 1-2 2H3m0 0h5M3 3v5m18 0v-3a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3m0-5H3m5 5v-5"/>
+          }
+        </svg>
+      </button>
+      <button (click)="exportPNG()" class="tb-btn hide-mobile" title="Export PNG (Ctrl+E)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span class="label">Export</span>
+      </button>
+      <button (click)="exportPDF()" class="tb-btn hide-mobile" title="Print/PDF">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        <span class="label">PDF</span>
+      </button>
+
+      <span class="divider hide-mobile"></span>
+
+      <button (click)="resetTree()" class="tb-btn reset-btn" title="Back to root">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        <span class="label">Root</span>
+      </button>
+
+      <div class="depth-control">
+        <button class="tb-btn sm" (click)="decreaseDepth()" [disabled]="renderDepth <= 0" title="Decrease depth">−</button>
+        <span class="depth-label">Depth {{ renderDepth }}/{{ maxRenderDepth }}</span>
+        <button class="tb-btn sm" (click)="increaseDepth()" [disabled]="renderDepth >= maxRenderDepth" title="Increase depth">+</button>
+        <span class="depth-count">{{ visibleCount }}/{{ treeTotal }}</span>
+      </div>
+
+      <span class="legend">
+        <span class="dot" style="background:#60a5fa"></span> L
+        <span class="dot" style="background:#34d399"></span> R
+        <span class="dot" style="background:#f59e0b"></span> Fold
+        <span class="dot" style="background:#94a3b8;border:1px dashed #64748b;"></span> Ghost
+      </span>
+    </div>
+
+    <div class="tb-row tb-row-search">
+      <div #searchBox class="search-box">
+        <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          (input)="onSearchInput()"
+          (keydown)="onSearchKeydown($event)"
+          placeholder="Search name / ID..."
+          autocomplete="off"
+        />
+        @if (showSearch && searchQuery && searchResults.length) {
+          <div class="search-dropdown show">
+            @for (r of searchResults; track r.id) {
+              <button class="search-item" (click)="onSearchSelect($event, r.id)">
+                <img [src]="r.img" />
+                <span class="si-info">
+                  <strong>{{ r.name }}</strong>
+                  <small>#{{ r.id }} · {{ r.role }} · {{ r.pkg }}</small>
+                </span>
+                <span class="si-glow" [style.background]="roleColor(r.role)"></span>
+              </button>
+            }
+          </div>
+        }
+        @if (showSearch && searchQuery && searchQuery.trim() && !searchResults.length) {
+          <div class="search-dropdown empty show">
+            <span class="search-item no-result">No members found</span>
+          </div>
+        }
+      </div>
+
+      <nav class="breadcrumb">
+        @for (crumb of breadcrumbPath; track crumb.id; let last = $last) {
+          <button class="crumb" [class.crumb-active]="last" (click)="selectRoot(crumb.id)">
+            {{ crumb.name }}
+            <span class="crumb-role">{{ crumb.role }}</span>
+          </button>
+          @if (!last) {
+            <span class="crumb-sep">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </span>
+          }
+        }
+      </nav>
+    </div>
+  </div>
+
+  <div class="main-area">
+    <div #networkContainer class="network-container" [class.searching]="showSearch">
+      @if (loading && !members.length) {
+        <div class="loading-overlay">
+          <div class="spinner"></div>
+          <span>Loading tree...</span>
+        </div>
+      }
+    </div>
+
+    <div class="minimap-container" #minimapContainer></div>
+
+    @if (tipVisible && tipMember) {
+      <div class="node-tooltip" [style.left.px]="tipX" [style.top.px]="tipY" (mouseenter)="hideTip()">
+        <div class="tip-header">
+          <img [src]="tipMember.img" />
+          <div>
+            <strong>{{ tipMember.name }}</strong>
+            <span class="tip-id">#{{ tipMember.id }}</span>
+          </div>
+        </div>
+        <div class="tip-body">
+          <span class="tip-role {{ roleBadgeClass(tipMember.role) }}">{{ tipMember.role }}</span>
+          <span class="tip-status {{ tipMember.status === 'Active' ? 'active' : 'inactive' }}">{{ tipMember.status }}</span>
+        </div>
+        <div class="tip-row"><span>Earnings</span><strong>₹{{ (tipMember.earnings || 0).toLocaleString() }}</strong></div>
+        <div class="tip-row"><span>Volume</span><strong>₹{{ (tipMember.volume || 0).toLocaleString() }}</strong></div>
+        <div class="tip-row"><span>Package</span><strong>{{ tipMember.pkg }}</strong></div>
+        <div class="tip-row"><span>Online</span><strong>{{ tipMember.online ? '✅ Yes' : '❌ No' }}</strong></div>
+        <div class="tip-footer">Double-click for details</div>
+      </div>
+    }
+  </div>
+
+  <!-- Side panel -->
+  @if (panelVisible && selectedMember) {
+    <div class="side-panel-overlay" (click)="closePanel()"></div>
+    <div class="side-panel">
+      <button class="panel-close" (click)="closePanel()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+
+      <div class="panel-header">
+        <img [src]="selectedMember.img" class="panel-avatar" />
+        <div class="panel-member-info">
+          <h2>{{ selectedMember.name }}</h2>
+          <span class="panel-role-badge {{ roleBadgeClass(selectedMember.role) }}">{{ selectedMember.role }}</span>
+          <span class="panel-id">#{{ selectedMember.id }}</span>
+        </div>
+      </div>
+
+      <div class="panel-body">
+        <div class="panel-section">
+          <h3>Status</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Status</span>
+              <span class="info-value">
+                <span class="status-dot {{ selectedMember.status === 'Active' ? 'active' : 'inactive' }}"></span>
+                {{ selectedMember.status }}
+              </span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Online</span>
+              <span class="info-value">{{ selectedMember.online ? '🟢 Online' : '🔴 Offline' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Package</span>
+              <span class="info-value">{{ selectedMember.pkg }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Placement</span>
+              <span class="info-value">{{ selectedMember.placement || '—' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Level</span>
+              <span class="info-value">{{ selectedMember.level }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Children</span>
+              <span class="info-value">{{ selectedMember.childrenCount || 0 }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h3>Business Volume</h3>
+          <div class="volume-display">₹{{ (selectedMember.volume || 0).toLocaleString() }}</div>
+          <div class="volume-bar-track">
+            <div class="volume-bar-fill" [style.width.%]="Math.min(100, ((selectedMember.volume || 0) / 10000000) * 100)"></div>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h3>Income Progress</h3>
+          <div class="progress-display">{{ selectedMember.income || 0 }}%</div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" [style.width.%]="selectedMember.income || 0"></div>
+          </div>
+        </div>
+
+        @if (selectedMemberUpline.length > 1) {
+          <div class="panel-section">
+            <h3>Upline</h3>
+            <div class="upline-list">
+              @for (u of selectedMemberUpline; track u.id) {
+                <button class="upline-item" (click)="selectRoot(u.id); closePanel()">
+                  <span class="upline-name">{{ u.name }}</span>
+                  <span class="upline-role">{{ u.role }}</span>
+                </button>
+              }
+            </div>
+          </div>
+        }
+
+        <div class="panel-actions">
+          <button class="panel-btn primary" (click)="selectRoot(selectedMember.id); closePanel()">Set as Root</button>
+          <button class="panel-btn" (click)="closePanel()">Close</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Context menu -->
+  @if (ctxVisible && ctxMember) {
+    <div class="ctx-menu" [style.left.px]="ctxX" [style.top.px]="ctxY">
+      <div class="ctx-header">
+        <img [src]="ctxMember.img" />
+        <div>
+          <strong>{{ ctxMember.name }}</strong>
+          <small>#{{ ctxMember.id }} · {{ ctxMember.role }}</small>
+        </div>
+      </div>
+      <div class="ctx-divider"></div>
+      <button class="ctx-item" (click)="ctxSelectRoot()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+        View as Root
+      </button>
+      <button class="ctx-item" (click)="ctxShowDetail()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Show Details
+      </button>
+      <button class="ctx-item" (click)="ctxToggleCollapse()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+        Toggle Collapse
+      </button>
+      <button class="ctx-item" (click)="ctxCopyId()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy ID
+      </button>
+    </div>
+  }
+
+  <div class="shortcuts-hint">
+    <span>Ctrl+Z Back</span>
+    <span>Ctrl+F Search</span>
+    <span>Arrows Navigate</span>
+    <span>Ctrl+E Export</span>
+    <span>Esc Close</span>
+  </div>
+</div>

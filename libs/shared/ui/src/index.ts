@@ -7,6 +7,7 @@ export * from './lib/layout/components/app-footer/app-footer.component';
 export * from './lib/layout/components/backdrop/backdrop.component';
 export * from './lib/shared-ui/components/address-form/address-form.component';
 export * from './lib/shared-ui/components/title-select/title-select.component';
+export * from './lib/shared-ui/components/mlm-tree-vis/mlm-tree-vis.component';
 export * from './lib/shared-ui/services/address-lookup.service';
 export * from './lib/shared-ui/directives/aadhaar-input.directive';
 export * from './lib/shared-ui/directives/pan-card.directive';
