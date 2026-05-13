@@ -23,7 +23,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('searchBox') searchBox!: ElementRef;
   @ViewChild('badgesContainer') badgesContainer!: ElementRef;
 
-  nodeBadges: { id: number; x: number; y: number; name: string; reg: string; active: boolean; pending: boolean; deactivated: boolean }[] = [];
+  nodeBadges: { id: number; x: number; y: number; name: string; reg: string; active: boolean; pending: boolean; deactivated: boolean; empty: boolean }[] = [];
   private badgeSyncTimer: any = null;
 
   private network!: Network;
@@ -567,23 +567,34 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     this.nodeBadges = [];
     for (const idStr of ids) {
       const id = Number(idStr);
-      if (!Number.isFinite(id) || id <= 0) continue;
-      const m = this.getNode(id);
-      if (!m) continue;
-      const level = this.levelOf(id);
+      if (!Number.isFinite(id)) continue;
       const domPt = this.network.canvasToDOM(positions[idStr]);
-      const nSize = Math.max(40, 56 - level * 3) * this.networkScale;
-      const radius = nSize / 2;
-      this.nodeBadges.push({
-        id,
-        x: domPt.x,
-        y: domPt.y + radius + 4,
-        name: m.name || '',
-        reg: m.registrationNumber ? '#' + m.registrationNumber : '',
-        active: String(m.status) === 'Active' || String(m.status) === '1',
-        pending: String(m.status) === 'Pending' || String(m.status) === '2',
-        deactivated: String(m.status) === 'Deactivated' || String(m.status) === '3',
-      });
+      if (id > 0) {
+        const m = this.getNode(id);
+        if (!m) continue;
+        const level = this.levelOf(id);
+        const nSize = Math.max(40, 56 - level * 3) * this.networkScale;
+        const radius = nSize / 2;
+        this.nodeBadges.push({
+          id,
+          x: domPt.x, y: domPt.y + radius + 4,
+          name: m.name || '',
+          reg: m.registrationNumber ? '#' + m.registrationNumber : '',
+          active: String(m.status) === 'Active' || String(m.status) === '1',
+          pending: String(m.status) === 'Pending' || String(m.status) === '2',
+          deactivated: String(m.status) === 'Deactivated' || String(m.status) === '3',
+          empty: false,
+        });
+      } else {
+        this.nodeBadges.push({
+          id,
+          x: domPt.x, y: domPt.y + 16,
+          name: 'Open',
+          reg: '',
+          active: false, pending: false, deactivated: false,
+          empty: true,
+        });
+      }
     }
     this.cdr.detectChanges();
   }
@@ -620,13 +631,15 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
         });
       } else if (!hasLeftChild) {
         const phId = -(id * 10 + 1);
+        const phLevel = this.levelOf(id) + 1;
         phNodes.push({
           id: phId, label: '',
-          shape: 'box', size: 16 * s,
-          borderWidth: 1.5 * s,
-          color: { border: '#cbd5e1', background: 'transparent' },
-          font: { size: 10 * s, color: '#94a3b8' },
-          margin: { top: 2, bottom: 2, left: 2, right: 2 },
+          shape: 'circularImage',
+          image: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#ffffff"/></svg>')}`,
+          size: Math.max(40, 56 - phLevel * 3) * s,
+          borderWidth: 2 * s,
+          borderDashes: [4, 3],
+          color: { border: '#cbd5e1', background: '#ffffff' },
         });
         edgeItems.push({
           from: id, to: phId,
@@ -650,13 +663,15 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
         });
       } else if (!hasRightChild) {
         const phId = -(id * 10 + 2);
+        const phLevel = this.levelOf(id) + 1;
         phNodes.push({
           id: phId, label: '',
-          shape: 'box', size: 16 * s,
-          borderWidth: 1.5 * s,
-          color: { border: '#cbd5e1', background: 'transparent' },
-          font: { size: 10 * s, color: '#94a3b8' },
-          margin: { top: 2, bottom: 2, left: 2, right: 2 },
+          shape: 'circularImage',
+          image: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#ffffff"/></svg>')}`,
+          size: Math.max(40, 56 - phLevel * 3) * s,
+          borderWidth: 2 * s,
+          borderDashes: [4, 3],
+          color: { border: '#cbd5e1', background: '#ffffff' },
         });
         edgeItems.push({
           from: id, to: phId,

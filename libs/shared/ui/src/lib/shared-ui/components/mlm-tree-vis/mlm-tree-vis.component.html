@@ -73,7 +73,7 @@
         <span class="dot" style="background:#60a5fa"></span> L
         <span class="dot" style="background:#34d399"></span> R
         <span class="dot" style="background:#f59e0b"></span> Fold
-        <span class="dot" style="background:#94a3b8;border:1px dashed #64748b;"></span> Ghost
+        <span class="dot" style="background:#94a3b8;border:1px dashed #64748b;"></span> Empty
       </span>
     </div>
 
@@ -137,9 +137,9 @@
 
     <div class="node-badges" #badgesContainer>
       @for (badge of nodeBadges; track badge.id) {
-        <div class="node-badge" [style.left.px]="badge.x" [style.top.px]="badge.y" [class.badge-active]="badge.active" [class.badge-pending]="badge.pending" [class.badge-deactivated]="badge.deactivated" [title]="badge.name + ' ' + badge.reg">
+        <div class="node-badge" [style.left.px]="badge.x" [style.top.px]="badge.y" [class.badge-active]="badge.active" [class.badge-pending]="badge.pending" [class.badge-deactivated]="badge.deactivated" [class.badge-empty]="badge.empty" [title]="badge.name + ' ' + badge.reg">
           <span class="badge-name">{{ badge.name }}</span>
-          <span class="badge-reg">{{ badge.reg }}</span>
+          @if (badge.reg) { <span class="badge-reg">{{ badge.reg }}</span> }
         </div>
       }
     </div>

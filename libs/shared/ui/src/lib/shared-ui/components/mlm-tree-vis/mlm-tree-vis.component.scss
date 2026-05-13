@@ -587,4 +587,5 @@
 .node-badge.badge-active { background: rgba(16, 185, 129, 0.8); }
 .node-badge.badge-pending { background: rgba(245, 158, 11, 0.8); }
 .node-badge.badge-deactivated { background: rgba(239, 68, 68, 0.8); }
-.node-badge:not(.badge-active):not(.badge-pending):not(.badge-deactivated) { background: rgba(99, 102, 241, 0.8); }
+.node-badge.badge-empty { background: rgba(148, 163, 184, 0.8); }
+.node-badge:not(.badge-active):not(.badge-pending):not(.badge-deactivated):not(.badge-empty) { background: rgba(99, 102, 241, 0.8); }
