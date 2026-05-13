@@ -14,6 +14,7 @@ export interface Member {
   parentId: number | null;
   placement: 'left' | 'right' | null;
   level: number;
+  isEmpty: boolean;
   hasChildren: boolean;
   leftChildExists?: boolean;
   rightChildExists?: boolean;
@@ -122,17 +123,19 @@ interface ApiTreeData {
 
 
 function mapMember(api: ApiMember): Member {
+  const isEmpty = api.isEmpty === true;
   return {
     id: toNumberId(api.id),
-    name: api.isEmpty ? '' : api.name,
-    role: api.isEmpty ? '' : String(api.role ?? ''),
-    registrationNumber: api.isEmpty ? '' : (api.registrationNumber ?? ''),
-    pkg: api.isEmpty ? '' : (api.package ?? ''),
-    img: '',
-    status: api.isEmpty ? '' : toStatus(api.status),
+    name: isEmpty ? '' : api.name,
+    role: isEmpty ? '' : String(api.role ?? ''),
+    registrationNumber: isEmpty ? '' : (api.registrationNumber ?? ''),
+    pkg: isEmpty ? '' : (api.package ?? ''),
+    img: isEmpty ? '' : (api.image ?? ''),
+    status: isEmpty ? '' : toStatus(api.status),
     parentId: api.parentId ? toNumberId(api.parentId) : null,
     placement: toPlacement(api.placement),
     level: api.level,
+    isEmpty,
     hasChildren: api.hasChildren,
     leftChildExists: api.leftChildExists,
     rightChildExists: api.rightChildExists,

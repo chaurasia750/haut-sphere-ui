@@ -571,7 +571,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
       const m = this.getNode(id);
       if (!m) continue;
       const domPt = this.network.canvasToDOM(positions[idStr]);
-      if (!m.name) {
+      if (m.isEmpty) {
         this.nodeBadges.push({
           id, empty: true,
           x: domPt.x, y: domPt.y,
@@ -638,8 +638,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
     const allNodeData = filtered.map(m => {
-      const isEmpty = !m.name;
-      if (isEmpty) {
+      if (m.isEmpty) {
         return {
           id: m.id,
           label: '',
@@ -730,7 +729,8 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.network) {
       this.network.setData({ nodes: new DataSet(allNodeData), edges: allEdges });
       this.network.setOptions(opts);
-      this.network.fit({ animation: false });
+      this.network.selectNodes([rootId], false);
+      this.alignTreeNow();
     } else {
       this.network = new Network(this.networkContainer.nativeElement, { nodes: new DataSet(allNodeData), edges: allEdges }, opts);
       this.network.fit({ animation: { duration: 400, easingFunction: 'easeInOutQuad' } });
@@ -751,7 +751,6 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.clickTimer) clearTimeout(this.clickTimer);
         this.clickPending = () => {
           if (id !== this.currentRoot) {
-            this.loadSubtree(id);
             this.selectRoot(id);
           }
         };
