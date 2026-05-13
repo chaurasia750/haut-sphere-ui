@@ -545,7 +545,10 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     const edges = new DataSet(edgeData);
     if (this.minimapNetwork) this.minimapNetwork.destroy();
-    this.minimapNetwork = new Network(this.minimapContainer.nativeElement, { nodes, edges }, {
+    const mc = this.minimapContainer.nativeElement;
+    mc.innerHTML = '';
+    mc.removeAttribute('style');
+    this.minimapNetwork = new Network(mc, { nodes, edges }, {
       physics: false,
       interaction: { dragView: false, zoomView: false, hover: false },
       layout: {
@@ -727,15 +730,14 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     };
 
     if (this.network) {
-      this.network.setData({ nodes: new DataSet(allNodeData), edges: allEdges });
-      this.network.setOptions(opts);
-      this.network.selectNodes([rootId], false);
-      this.alignTreeNow();
-    } else {
-      this.network = new Network(this.networkContainer.nativeElement, { nodes: new DataSet(allNodeData), edges: allEdges }, opts);
-      this.network.fit({ animation: { duration: 400, easingFunction: 'easeInOutQuad' } });
-      this.alignTreeTop();
+      this.network.destroy();
     }
+    const container = this.networkContainer.nativeElement;
+    container.innerHTML = '';
+    this.network = new Network(container, { nodes: new DataSet(allNodeData), edges: allEdges }, opts);
+    requestAnimationFrame(() => {
+      this.network.fit({ animation: false });
+    });
 
     this.network.off('click');
     this.network.off('doubleClick');

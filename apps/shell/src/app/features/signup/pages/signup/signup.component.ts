@@ -267,7 +267,7 @@ export class SignupComponent {
 
     const payload: RegisterMemberPayload = {
       bussinessCategoryId: this.getBusinessCategoryId(formValue.businessCategory ?? ''),
-      introRegNo: this.sponsorRegNo ?? 0 ,
+      introRegNo: Number(formValue.sponsorId),
       personInfo: {
         title: formValue.title ?? '',
         firstName: formValue.firstName ?? '',

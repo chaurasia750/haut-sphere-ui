@@ -45,10 +45,8 @@
         <span class="dot" style="background:#f59e0b"></span> Fold
         <span class="dot" style="background:#94a3b8;border:1px dashed #64748b;"></span> Empty
       </span>
-    </div>
 
-    <div class="tb-row tb-row-search">
-      <div #searchBox class="search-box">
+      <div #searchBox class="search-box tb-search-inline">
         <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
         <input
           type="text"
@@ -78,7 +76,9 @@
           </div>
         }
       </div>
+    </div>
 
+    <div class="tb-row tb-row-breadcrumb">
       <nav class="breadcrumb">
         @for (crumb of breadcrumbPath; track crumb.id; let last = $last) {
           <button class="crumb" [class.crumb-active]="last" (click)="selectRoot(crumb.id)">
