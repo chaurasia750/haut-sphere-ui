@@ -629,9 +629,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
       const heatBg = heatVolumes && m.volume != null ? this.heatmapColor(m.volume) : undefined;
       return {
         id: m.id,
-        label: this.isSmallScreen()
-          ? `${m.name}\n${m.role}${toggleIcon}`
-          : `${m.name}\n${m.role}${m.earnings != null ? ' | ₹' + this.compactAmount(m.earnings) : ''}${toggleIcon}`,
+        label: `${m.name}\n${m.registrationNumber ? '#'+m.registrationNumber : ''}${toggleIcon}`,
         shape: 'circularImage' as const,
         image: this.resolveImg(m),
         size: isHighlighted ? this.nodeSize(m) * 1.25 : this.nodeSize(m),
