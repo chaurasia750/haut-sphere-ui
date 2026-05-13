@@ -1,4 +1,4 @@
-import { OnInit, OnDestroy, AfterViewInit, Component, ElementRef, HostListener, ViewChild, inject, NgZone, ChangeDetectorRef } from '@angular/core';
+import { OnInit, OnDestroy, AfterViewInit, Component, ElementRef, HostListener, ViewChild, inject, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Network, Options } from 'vis-network';
 import { DataSet } from 'vis-data';
@@ -15,7 +15,6 @@ import { MlmTreeService, Member, MemberDetail } from '../../services/mlm-tree.se
 export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
   protected Math = Math;
   private service = inject(MlmTreeService);
-  private ngZone = inject(NgZone);
   private cdr = inject(ChangeDetectorRef);
   private destroy$ = new Subject<void>();
 
@@ -215,8 +214,8 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     ).subscribe(res => {
       if (res && res.path.length > 0) {
         this.breadcrumbPathData = res.path;
-        this.cdr.detectChanges();
       }
+      this.cdr.detectChanges();
     });
 
     this.search$.pipe(
@@ -240,7 +239,9 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     this.destroy$.complete();
     if (this.highlightTimeout) clearTimeout(this.highlightTimeout);
     if (this.clickTimer) clearTimeout(this.clickTimer);
+    if (this.resizeTimer) clearTimeout(this.resizeTimer);
     if (this.minimapNetwork) this.minimapNetwork.destroy();
+    if (this.network) this.network.destroy();
   }
 
   ngAfterViewInit(): void {
@@ -485,6 +486,18 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private networkScale = 1;
+  private resizeTimer: any = null;
+
+  @HostListener('window:resize')
+  onResize() {
+    if (this.resizeTimer) clearTimeout(this.resizeTimer);
+    this.resizeTimer = setTimeout(() => {
+      if (this.network && this.members.length) {
+        this.buildNetwork(this.currentRoot);
+        this.buildMinimap();
+      }
+    }, 200);
+  }
 
   isSmallScreen(): boolean {
     return (this.networkContainer?.nativeElement?.offsetWidth ?? window.innerWidth) < 540;
@@ -682,7 +695,6 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.network) {
       this.network.setData({ nodes: new DataSet(allNodeData), edges: allEdges });
       this.network.setOptions(opts);
-      this.network.fit({ animation: false });
     } else {
       this.network = new Network(this.networkContainer.nativeElement, { nodes: new DataSet(allNodeData), edges: allEdges }, opts);
       this.network.fit({ animation: { duration: 400, easingFunction: 'easeInOutQuad' } });
@@ -724,7 +736,8 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
       if (typeof id !== 'number' || id <= 0) return;
       const m = this.getNode(id);
       if (m) {
-        this.showTip(m, params.pointer.DOM.x + 15, params.pointer.DOM.y - 10);
+        const evt: MouseEvent = params.event;
+        this.showTip(m, evt.clientX + 15, evt.clientY - 10);
       }
     });
     this.network.on('blurNode', () => {
@@ -748,13 +761,28 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     this.tipX = x;
     this.tipY = y;
     this.tipVisible = true;
-    if (this.tipTimeout) clearTimeout(this.tipTimeout);
+    this.cdr.detectChanges();
   }
 
   hideTip() {
     this.tipVisible = false;
     this.tipMember = null;
-    if (this.tipTimeout) clearTimeout(this.tipTimeout);
+    this.cdr.detectChanges();
+  }
+
+  private alignTreeNow() {
+    setTimeout(() => {
+      try {
+        const box = this.network.getBoundingBox(this.currentRoot);
+        if (box && Number.isFinite(box.top)) {
+          const canvas = this.network.canvasToDOM({ x: 0, y: box.top });
+          const offset = canvas.y - 20;
+          if (offset > 0) {
+            this.network.moveTo({ offset: { x: 0, y: -offset }, animation: false });
+          }
+        }
+      } catch {}
+    }, 0);
   }
 
   private alignTreeTop() {
@@ -806,7 +834,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private nodeSize(m: Member): number {
-    return Math.max(26, 36 - this.levelOf(m.id) * 2) * this.networkScale;
+    return Math.max(40, 56 - this.levelOf(m.id) * 3) * this.networkScale;
   }
   private fontSize(m: Member): number {
     return Math.max(13, 17 - this.levelOf(m.id)) * this.networkScale;
@@ -834,7 +862,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     return map[role] || '#6b7280';
   }
 
-  private resolveImg(m: Member): string {
+  resolveImg(m: Member): string {
     if (m.img) return m.img;
     const color = this.roleColor(m.role);
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="${color}"/><path d="M50 48c-8.3 0-15-6.7-15-15s6.7-15 15-15 15 6.7 15 15-6.7 15-15 15zm0 5c-10 0-30 5-30 15v7h60v-7c0-10-20-15-30-15z" fill="white" opacity="0.9"/></svg>`;
@@ -914,6 +942,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     this.currentRoot = id;
     this.renderDepth = 3;
     this.breadcrumbPathData = [];
+    this.cdr.detectChanges();
     this.treeLoad$.next({ rootId: id, depth: this.renderDepth });
     this.breadcrumbLoad$.next(id);
     this.subtreeCache.clear();

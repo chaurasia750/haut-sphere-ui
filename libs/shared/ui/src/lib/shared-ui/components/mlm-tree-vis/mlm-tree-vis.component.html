@@ -140,7 +140,7 @@
     @if (tipVisible && tipMember) {
       <div class="node-tooltip" [style.left.px]="tipX" [style.top.px]="tipY" (mouseenter)="hideTip()">
         <div class="tip-header">
-          <img [src]="tipMember.img" />
+          <img [src]="tipMember.img || resolveImg(tipMember)" />
           <div>
             <strong>{{ tipMember.name }}</strong>
             <span class="tip-id">#{{ tipMember.id }}</span>
