@@ -577,7 +577,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
       this.nodeBadges.push({
         id,
         x: domPt.x,
-        y: domPt.y + radius - 20,
+        y: domPt.y + radius + 4,
         name: m.name || '',
         reg: m.registrationNumber ? '#' + m.registrationNumber : '',
         active: String(m.status) === 'Active' || String(m.status) === '1',
