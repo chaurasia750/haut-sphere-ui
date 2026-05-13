@@ -638,7 +638,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
         borderWidth: (m.id === rootId ? 5 : collapsed ? 3 : isHighlighted ? 4 : this.isActiveMember(m) ? 3 : this.isPending(m) ? 2.5 : 1.5) * s,
         borderDashes: collapsed ? [4, 3] : isLeafAtLimit ? [2, 2] : false,
         color: {
-          border: heatBg || (m.id === rootId ? '#f97316' : collapsed ? '#f59e0b' : isLeafAtLimit ? '#94a3b8' : this.memberBorderColor(m)),
+          border: heatBg || (m.id === rootId ? '#f97316' : collapsed ? '#f59e0b' : this.memberBorderColor(m)),
           background: heatBg || (m.id === rootId ? this.memberBgColor(m) : collapsed ? '#fef3c7' : isLeafAtLimit ? '#f1f5f9' : this.memberBgColor(m)),
           hover: {
             border: this.memberBorderColor(m),
@@ -853,18 +853,14 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private memberBorderColor(m: Member): string {
     const s = String(m.status);
-    if (s === 'Active' || s === '1') return this.roleColor(m.role);
-    if (s === 'Pending' || s === '2') return '#d97706';
-    if (s === 'Deactivated' || s === '3') return '#dc2626';
-    return this.fadedColor(this.roleColor(m.role));
+    if (s === 'Active' || s === '1') return '#10b981';
+    if (s === 'Pending' || s === '2') return '#f59e0b';
+    if (s === 'Deactivated' || s === '3') return '#ef4444';
+    return '#94a3b8';
   }
 
   private memberBgColor(m: Member): string {
-    const s = String(m.status);
-    if (s === 'Active' || s === '1') return this.roleColor(m.role);
-    if (s === 'Pending' || s === '2') return '#fef3c7';
-    if (s === 'Deactivated' || s === '3') return '#fee2e2';
-    return this.fadedColor(this.roleColor(m.role));
+    return '#f1f5f9';
   }
 
   private memberStatus(m: Member): string {
@@ -875,25 +871,27 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     return String(m.status);
   }
 
-  private fadedColor(hex: string): string {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    const mix = 180;
-    return `rgb(${Math.round((r + mix) / 2)},${Math.round((g + mix) / 2)},${Math.round((b + mix) / 2)})`;
-  }
-
-  roleColor(role: string): string {
-    const map: Record<string, string> = {
+  roleColor(role: string, id?: number): string {
+    const nameMap: Record<string, string> = {
       Crown: '#8b5cf6', Emerald: '#10b981', Diamond: '#6366f1',
       Gold: '#f59e0b', Silver: '#8b9dc3', Bronze: '#cd7f32', Basic: '#6b7280',
     };
-    return map[role] || '#6b7280';
+    const rankMap: Record<string, string> = {
+      '1': '#8b5cf6', '2': '#10b981', '3': '#6366f1',
+      '4': '#f59e0b', '5': '#8b9dc3', '6': '#cd7f32', '7': '#6b7280',
+    };
+    const c = nameMap[role] || rankMap[role];
+    if (c) return c;
+    if (id != null) {
+      const palette = ['#8b5cf6', '#10b981', '#6366f1', '#f59e0b', '#ec4899', '#14b8a6', '#f97316', '#06b6d4'];
+      return palette[id % palette.length];
+    }
+    return '#14b8a6';
   }
 
   resolveImg(m: Member): string {
     if (m.img) return m.img;
-    const color = this.roleColor(m.role);
+    const color = '#cbd5e1';
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="${color}"/><path d="M50 48c-8.3 0-15-6.7-15-15s6.7-15 15-15 15 6.7 15 15-6.7 15-15 15zm0 5c-10 0-30 5-30 15v7h60v-7c0-10-20-15-30-15z" fill="white" opacity="0.9"/></svg>`;
     return `data:image/svg+xml,${encodeURIComponent(svg)}`;
   }

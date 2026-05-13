@@ -82,11 +82,12 @@ function toPlacement(placement: string | null): 'left' | 'right' | null {
   return placement as 'left' | 'right' | null;
 }
 
-function toStatus(status: string): string {
-  if (status === '1') return 'Active';
-  if (status === '2') return 'Pending';
-  if (status === '3') return 'Deactivated';
-  return status;
+function toStatus(status: any): string {
+  const s = String(status);
+  if (s === '1') return 'Active';
+  if (s === '2') return 'Pending';
+  if (s === '3') return 'Deactivated';
+  return s;
 }
 
 interface ApiMember {
@@ -124,7 +125,7 @@ function mapMember(api: ApiMember): Member {
   return {
     id: toNumberId(api.id),
     name: api.name,
-    role: api.role ?? '',
+    role: String(api.role ?? ''),
     registrationNumber: api.registrationNumber ?? '',
     pkg: api.package ?? '',
     img: api.image ?? '',
