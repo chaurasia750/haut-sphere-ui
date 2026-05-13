@@ -635,27 +635,31 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
         shape: 'circularImage' as const,
         image: this.resolveImg(m),
         size: isHighlighted ? this.nodeSize(m) * 1.25 : this.nodeSize(m),
-        borderWidth: (m.id === rootId ? 5 : collapsed ? 3 : isHighlighted ? 4 : m.status === 'Active' ? 3 : 1.5) * s,
+        borderWidth: (m.id === rootId ? 5 : collapsed ? 3 : isHighlighted ? 4 : this.isActiveMember(m) ? 3 : this.isPending(m) ? 2.5 : 1.5) * s,
         borderDashes: collapsed ? [4, 3] : isLeafAtLimit ? [2, 2] : false,
         color: {
-          border: heatBg || (m.id === rootId ? '#f97316' : collapsed ? '#f59e0b' : isLeafAtLimit ? '#94a3b8' : m.status === 'Active' ? this.roleColor(m.role) : this.fadedColor(this.roleColor(m.role))),
-          background: heatBg || (m.status === 'Active' ? this.roleColor(m.role) : this.fadedColor(this.roleColor(m.role))),
+          border: heatBg || (m.id === rootId ? '#f97316' : collapsed ? '#f59e0b' : isLeafAtLimit ? '#94a3b8' : this.memberBorderColor(m)),
+          background: heatBg || (m.id === rootId ? this.memberBgColor(m) : collapsed ? '#fef3c7' : isLeafAtLimit ? '#f1f5f9' : this.memberBgColor(m)),
+          hover: {
+            border: this.memberBorderColor(m),
+            background: this.memberBgColor(m),
+          },
         },
         shadow: {
-          enabled: m.status === 'Active',
-          color: isHighlighted ? 'rgba(249,115,22,0.8)' : m.id === rootId ? 'rgba(249,115,22,0.6)' : collapsed ? 'rgba(245,158,11,0.5)' : m.status === 'Active' ? this.roleShadow(m.role) : 'rgba(0,0,0,0.05)',
-          size: isHighlighted ? 35 : m.id === rootId ? 25 : collapsed ? 18 : m.status === 'Active' ? this.shadowSize(m) : 2,
+          enabled: !this.isDeactivated(m),
+          color: isHighlighted ? 'rgba(249,115,22,0.8)' : m.id === rootId ? 'rgba(249,115,22,0.6)' : collapsed ? 'rgba(245,158,11,0.5)' : this.isActiveMember(m) ? this.roleShadow(m.role) : this.isPending(m) ? 'rgba(217,119,6,0.3)' : 'rgba(0,0,0,0.05)',
+          size: isHighlighted ? 35 : m.id === rootId ? 25 : collapsed ? 18 : this.isActiveMember(m) ? this.shadowSize(m) : this.isPending(m) ? 10 : 2,
           x: 0, y: 4,
         },
         font: {
-          color: m.status === 'Active' ? '#1f2937' : '#9ca3af',
+          color: this.isActiveMember(m) || this.isPending(m) ? '#1f2937' : '#9ca3af',
           size: this.fontSize(m),
           face: 'Inter, system-ui, sans-serif',
           align: 'center' as const,
           multi: true,
-          bold: { color: m.status === 'Active' ? '#111827' : '#9ca3af', size: this.boldSize(m) },
+          bold: { color: this.isActiveMember(m) || this.isPending(m) ? '#111827' : '#9ca3af', size: this.boldSize(m) },
         },
-        title: `${m.name}\n${m.role} | Earnings: ₹${(m.earnings || 0).toLocaleString()}\nVolume: ₹${(m.volume || 0).toLocaleString()}\nPackage: ${m.pkg} | Status: ${m.status}\nOnline: ${m.online ? '✅ Yes' : '❌ No'} | Level: ${this.levelOf(m.id)}`,
+        title: `${m.name}\n${m.role} | Earnings: ₹${(m.earnings || 0).toLocaleString()}\nVolume: ₹${(m.volume || 0).toLocaleString()}\nPackage: ${m.pkg} | Status: ${this.memberStatus(m)}\nOnline: ${m.online ? '✅ Yes' : '❌ No'} | Level: ${this.levelOf(m.id)}`,
         margin: { top: 6, bottom: 12, left: 8, right: 8 },
         membership: m,
       };
@@ -695,6 +699,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.network) {
       this.network.setData({ nodes: new DataSet(allNodeData), edges: allEdges });
       this.network.setOptions(opts);
+      this.network.fit({ animation: false });
     } else {
       this.network = new Network(this.networkContainer.nativeElement, { nodes: new DataSet(allNodeData), edges: allEdges }, opts);
       this.network.fit({ animation: { duration: 400, easingFunction: 'easeInOutQuad' } });
@@ -758,8 +763,8 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private showTip(m: Member, x: number, y: number) {
     this.tipMember = m;
-    this.tipX = x;
-    this.tipY = y;
+    this.tipX = Math.min(x, window.innerWidth - 210);
+    this.tipY = Math.min(y, window.innerHeight - 260);
     this.tipVisible = true;
     this.cdr.detectChanges();
   }
@@ -846,6 +851,30 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     return Math.max(6, 14 - this.levelOf(m.id)) * this.networkScale;
   }
 
+  private memberBorderColor(m: Member): string {
+    const s = String(m.status);
+    if (s === 'Active' || s === '1') return this.roleColor(m.role);
+    if (s === 'Pending' || s === '2') return '#d97706';
+    if (s === 'Deactivated' || s === '3') return '#dc2626';
+    return this.fadedColor(this.roleColor(m.role));
+  }
+
+  private memberBgColor(m: Member): string {
+    const s = String(m.status);
+    if (s === 'Active' || s === '1') return this.roleColor(m.role);
+    if (s === 'Pending' || s === '2') return '#fef3c7';
+    if (s === 'Deactivated' || s === '3') return '#fee2e2';
+    return this.fadedColor(this.roleColor(m.role));
+  }
+
+  private memberStatus(m: Member): string {
+    const s = String(m.status);
+    if (s === 'Active' || s === '1') return 'Active';
+    if (s === 'Pending' || s === '2') return 'Pending';
+    if (s === 'Deactivated' || s === '3') return 'Deactivated';
+    return String(m.status);
+  }
+
   private fadedColor(hex: string): string {
     const r = parseInt(hex.slice(1, 3), 16);
     const g = parseInt(hex.slice(3, 5), 16);
@@ -885,6 +914,37 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
       Gold: 'badge-gold', Silver: 'badge-silver', Bronze: 'badge-bronze', Basic: 'badge-basic',
     };
     return map[role] || 'badge-basic';
+  }
+
+  statusLabel(s: string | number): string {
+    const v = String(s);
+    if (v === '1' || v === 'Active') return 'Active';
+    if (v === '2' || v === 'Pending') return 'Pending';
+    if (v === '3' || v === 'Deactivated') return 'Deactivated';
+    return v;
+  }
+
+  statusClass(s: string | number): string {
+    const v = String(s);
+    if (v === '1' || v === 'Active') return 'status-active';
+    if (v === '2' || v === 'Pending') return 'status-pending';
+    if (v === '3' || v === 'Deactivated') return 'status-deactivated';
+    return 'status-inactive';
+  }
+
+  private isActiveMember(m: Member): boolean {
+    const s = String(m.status);
+    return s === 'Active' || s === '1';
+  }
+
+  private isPending(m: Member): boolean {
+    const s = String(m.status);
+    return s === 'Pending' || s === '2';
+  }
+
+  private isDeactivated(m: Member): boolean {
+    const s = String(m.status);
+    return s === 'Deactivated' || s === '3';
   }
 
   get breadcrumbPath(): { id: number; name: string; role: string }[] {

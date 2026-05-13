@@ -143,13 +143,16 @@
           <img [src]="tipMember.img || resolveImg(tipMember)" />
           <div>
             <strong>{{ tipMember.name }}</strong>
-            <span class="tip-id">#{{ tipMember.id }}</span>
+            <span class="tip-id">#{{ tipMember.id }}@if (tipMember.registrationNumber) { · {{ tipMember.registrationNumber }} }</span>
           </div>
         </div>
         <div class="tip-body">
           <span class="tip-role {{ roleBadgeClass(tipMember.role) }}">{{ tipMember.role }}</span>
-          <span class="tip-status {{ tipMember.status === 'Active' ? 'active' : 'inactive' }}">{{ tipMember.status }}</span>
+          <span class="tip-status {{ statusClass(tipMember.status) }}">{{ statusLabel(tipMember.status) }}</span>
         </div>
+        @if (tipMember.registrationNumber) {
+          <div class="tip-row"><span>Reg No.</span><strong>{{ tipMember.registrationNumber }}</strong></div>
+        }
         <div class="tip-row"><span>Earnings</span><strong>₹{{ (tipMember.earnings || 0).toLocaleString() }}</strong></div>
         <div class="tip-row"><span>Volume</span><strong>₹{{ (tipMember.volume || 0).toLocaleString() }}</strong></div>
         <div class="tip-row"><span>Package</span><strong>{{ tipMember.pkg }}</strong></div>

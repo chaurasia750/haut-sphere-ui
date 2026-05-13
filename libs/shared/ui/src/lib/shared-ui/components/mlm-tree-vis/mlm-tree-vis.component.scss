@@ -6,7 +6,6 @@
   background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
   font-family: 'Inter', system-ui, sans-serif;
   position: relative;
-  transition: all 0.3s ease;
 }
 .vis-wrapper.fullscreen {
   position: fixed;
@@ -449,8 +448,9 @@
 .node-tooltip .tip-body { display: flex; gap: 6px; margin-bottom: 6px; align-items: center; }
 .node-tooltip .tip-role { font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 4px; }
 .node-tooltip .tip-status { font-size: 10px; font-weight: 500; padding: 1px 6px; border-radius: 4px; background: #f1f5f9; color: #64748b; }
-.node-tooltip .tip-status.active { background: #d1fae5; color: #059669; }
-.node-tooltip .tip-status.inactive { background: #fee2e2; color: #dc2626; }
+.node-tooltip .tip-status.status-active { background: #d1fae5; color: #059669; }
+.node-tooltip .tip-status.status-pending { background: #fef3c7; color: #d97706; }
+.node-tooltip .tip-status.status-deactivated { background: #fee2e2; color: #dc2626; }
 .node-tooltip .tip-row { display: flex; justify-content: space-between; align-items: center; padding: 2px 0; font-size: 11px; }
 .node-tooltip .tip-row span { color: #94a3b8; }
 .node-tooltip .tip-row strong { color: #1e293b; font-weight: 600; }

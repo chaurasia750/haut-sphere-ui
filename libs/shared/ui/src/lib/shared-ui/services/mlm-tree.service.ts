@@ -10,6 +10,7 @@ export interface Member {
   pkg: string;
   img: string;
   status: string;
+  registrationNumber?: string;
   parentId: number | null;
   placement: 'left' | 'right' | null;
   level: number;
@@ -83,8 +84,8 @@ function toPlacement(placement: string | null): 'left' | 'right' | null {
 
 function toStatus(status: string): string {
   if (status === '1') return 'Active';
-  if (status === '0') return 'Inactive';
-  if (status === '2') return 'Suspended';
+  if (status === '2') return 'Pending';
+  if (status === '3') return 'Deactivated';
   return status;
 }
 
@@ -124,6 +125,7 @@ function mapMember(api: ApiMember): Member {
     id: toNumberId(api.id),
     name: api.name,
     role: api.role ?? '',
+    registrationNumber: api.registrationNumber ?? '',
     pkg: api.package ?? '',
     img: api.image ?? '',
     status: toStatus(api.status),
