@@ -21,6 +21,9 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('networkContainer') networkContainer!: ElementRef;
   @ViewChild('minimapContainer') minimapContainer!: ElementRef;
   @ViewChild('searchBox') searchBox!: ElementRef;
+  @ViewChild('badgesContainer') badgesContainer!: ElementRef;
+
+  nodeBadges: { id: number; x: number; y: number; name: string; reg: string; active: boolean; pending: boolean; deactivated: boolean }[] = [];
 
   private network!: Network;
   private minimapNetwork: Network | null = null;
@@ -542,6 +545,31 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
+  private syncNodeBadges() {
+    if (!this.network || !this.badgesContainer) return;
+    const positions = this.network.getPositions();
+    const ids = Object.keys(positions);
+    this.nodeBadges = [];
+    for (const idStr of ids) {
+      const id = Number(idStr);
+      if (!Number.isFinite(id) || id <= 0) continue;
+      const m = this.getNode(id);
+      if (!m) continue;
+      const domPt = this.network.canvasToDOM(positions[idStr]);
+      this.nodeBadges.push({
+        id,
+        x: domPt.x,
+        y: domPt.y,
+        name: m.name || '',
+        reg: m.registrationNumber ? '#' + m.registrationNumber : '',
+        active: String(m.status) === 'Active' || String(m.status) === '1',
+        pending: String(m.status) === 'Pending' || String(m.status) === '2',
+        deactivated: String(m.status) === 'Deactivated' || String(m.status) === '3',
+      });
+    }
+    this.cdr.detectChanges();
+  }
+
   private buildNetwork(rootId: number) {
     if (!this.members.length) return;
     this.networkScale = this.getNetworkScale();
@@ -757,6 +785,9 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
     });
+    this.network.on('dragEnd', () => this.syncNodeBadges());
+    this.network.on('zoom', () => this.syncNodeBadges());
+    setTimeout(() => this.syncNodeBadges(), 100);
   }
 
   private showTip(m: Member, x: number, y: number) {

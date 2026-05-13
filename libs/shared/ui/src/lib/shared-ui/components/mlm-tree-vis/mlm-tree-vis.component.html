@@ -135,6 +135,15 @@
       }
     </div>
 
+    <div class="node-badges" #badgesContainer>
+      @for (badge of nodeBadges; track badge.id) {
+        <div class="node-badge" [style.left.px]="badge.x" [style.top.px]="badge.y" [class.badge-active]="badge.active" [class.badge-pending]="badge.pending" [class.badge-deactivated]="badge.deactivated" [title]="badge.name + ' ' + badge.reg">
+          <span class="badge-name">{{ badge.name }}</span>
+          <span class="badge-reg">{{ badge.reg }}</span>
+        </div>
+      }
+    </div>
+
     <div class="minimap-container" #minimapContainer></div>
 
     @if (tipVisible && tipMember) {
