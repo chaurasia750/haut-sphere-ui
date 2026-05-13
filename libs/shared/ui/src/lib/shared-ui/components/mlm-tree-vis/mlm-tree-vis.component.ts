@@ -567,32 +567,30 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     this.nodeBadges = [];
     for (const idStr of ids) {
       const id = Number(idStr);
-      if (!Number.isFinite(id)) continue;
+      if (!Number.isFinite(id) || id <= 0) continue;
+      const m = this.getNode(id);
+      if (!m) continue;
       const domPt = this.network.canvasToDOM(positions[idStr]);
-      if (id > 0) {
-        const m = this.getNode(id);
-        if (!m) continue;
+      if (!m.name) {
+        this.nodeBadges.push({
+          id, empty: true,
+          x: domPt.x, y: domPt.y,
+          name: 'Open',
+          reg: '',
+          active: false, pending: false, deactivated: false,
+        });
+      } else {
         const level = this.levelOf(id);
         const nSize = Math.max(40, 56 - level * 3) * this.networkScale;
         const radius = nSize / 2;
         this.nodeBadges.push({
-          id,
+          id, empty: false,
           x: domPt.x, y: domPt.y + radius + 4,
           name: m.name || '',
           reg: m.registrationNumber ? '#' + m.registrationNumber : '',
           active: String(m.status) === 'Active' || String(m.status) === '1',
           pending: String(m.status) === 'Pending' || String(m.status) === '2',
           deactivated: String(m.status) === 'Deactivated' || String(m.status) === '3',
-          empty: false,
-        });
-      } else {
-        this.nodeBadges.push({
-          id,
-          x: domPt.x, y: domPt.y + 16,
-          name: 'Open',
-          reg: '',
-          active: false, pending: false, deactivated: false,
-          empty: true,
         });
       }
     }
@@ -612,13 +610,10 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     const heatVolumes = this.heatmapMode ? this.getVolumeRange() : null;
 
     const edgeItems: any[] = [];
-    const phNodes: any[] = [];
     for (const id of validIds) {
       const m = this.getNode(id);
       const left = this.getLeftChildId(id);
       const right = this.getRightChildId(id);
-      const hasLeftChild = m?.leftChildExists ?? false;
-      const hasRightChild = m?.rightChildExists ?? false;
       if (left) {
         edgeItems.push({
           from: id, to: left,
@@ -628,27 +623,6 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
           arrows: { to: { enabled: true, scaleFactor: 0.5 * s } },
           label: 'L',
           font: { size: 10 * s, color: '#3b82f6', background: '#ffffff', strokeWidth: 0 },
-        });
-      } else if (!hasLeftChild) {
-        const phId = -(id * 10 + 1);
-        const phLevel = this.levelOf(id) + 1;
-        phNodes.push({
-          id: phId, label: '',
-          shape: 'circularImage',
-          image: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#ffffff"/></svg>')}`,
-          size: Math.max(40, 56 - phLevel * 3) * s,
-          borderWidth: 2 * s,
-          borderDashes: [4, 3],
-          color: { border: '#cbd5e1', background: '#ffffff' },
-        });
-        edgeItems.push({
-          from: id, to: phId,
-          color: { color: '#cbd5e1', opacity: 0.4 },
-          width: 1 * s,
-          smooth: { enabled: true, type: 'curvedCCW', roundness: 0.25 * s },
-          dashes: [4, 3],
-          label: 'L',
-          font: { size: 8 * s, color: '#94a3b8', background: '#ffffff', strokeWidth: 0 },
         });
       }
       if (right) {
@@ -661,30 +635,25 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
           label: 'R',
           font: { size: 10 * s, color: '#10b981', background: '#ffffff', strokeWidth: 0 },
         });
-      } else if (!hasRightChild) {
-        const phId = -(id * 10 + 2);
-        const phLevel = this.levelOf(id) + 1;
-        phNodes.push({
-          id: phId, label: '',
-          shape: 'circularImage',
+      }
+    }
+    const allNodeData = filtered.map(m => {
+      const isEmpty = !m.name;
+      if (isEmpty) {
+        return {
+          id: m.id,
+          label: '',
+          shape: 'circularImage' as const,
           image: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#ffffff"/></svg>')}`,
-          size: Math.max(40, 56 - phLevel * 3) * s,
+          size: this.nodeSize(m),
           borderWidth: 2 * s,
           borderDashes: [4, 3],
           color: { border: '#cbd5e1', background: '#ffffff' },
-        });
-        edgeItems.push({
-          from: id, to: phId,
-          color: { color: '#cbd5e1', opacity: 0.4 },
-          width: 1 * s,
-          smooth: { enabled: true, type: 'curvedCW', roundness: 0.25 * s },
-          dashes: [4, 3],
-          label: 'R',
-          font: { size: 8 * s, color: '#94a3b8', background: '#ffffff', strokeWidth: 0 },
-        });
+          shadow: { enabled: false },
+          margin: { top: 6, bottom: 12, left: 8, right: 8 },
+          membership: m,
+        };
       }
-    }
-    const allNodeData = [...filtered.map(m => {
       const hasKids = this.hasChildren(m.id);
       const collapsed = this.collapsedIds.has(m.id);
       const toggleIcon = collapsed ? ' ▶' : hasKids ? ' ▼' : '';
@@ -725,7 +694,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
         margin: { top: 6, bottom: 12, left: 8, right: 8 },
         membership: m,
       };
-    }), ...phNodes];
+    });
     const allEdges = new DataSet(edgeItems);
 
     const opts: Options = {

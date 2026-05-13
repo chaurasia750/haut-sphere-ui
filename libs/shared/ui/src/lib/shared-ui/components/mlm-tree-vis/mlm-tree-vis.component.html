@@ -137,7 +137,7 @@
 
     <div class="node-badges" #badgesContainer>
       @for (badge of nodeBadges; track badge.id) {
-        <div class="node-badge" [style.left.px]="badge.x" [style.top.px]="badge.y" [class.badge-active]="badge.active" [class.badge-pending]="badge.pending" [class.badge-deactivated]="badge.deactivated" [class.badge-empty]="badge.empty" [title]="badge.name + ' ' + badge.reg">
+        <div class="node-badge" [style.left.px]="badge.x" [style.top.px]="badge.y" [style.transform]="badge.empty ? 'translate(-50%, -50%)' : 'translate(-50%, 0)'" [class.badge-active]="badge.active" [class.badge-pending]="badge.pending" [class.badge-deactivated]="badge.deactivated" [class.badge-empty]="badge.empty" [title]="badge.name + ' ' + badge.reg">
           <span class="badge-name">{{ badge.name }}</span>
           @if (badge.reg) { <span class="badge-reg">{{ badge.reg }}</span> }
         </div>

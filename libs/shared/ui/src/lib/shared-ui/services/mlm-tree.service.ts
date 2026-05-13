@@ -124,30 +124,30 @@ interface ApiTreeData {
 function mapMember(api: ApiMember): Member {
   return {
     id: toNumberId(api.id),
-    name: api.name,
-    role: String(api.role ?? ''),
-    registrationNumber: api.registrationNumber ?? '',
-    pkg: api.package ?? '',
-    img: api.image ?? '',
-    status: toStatus(api.status),
+    name: api.isEmpty ? '' : api.name,
+    role: api.isEmpty ? '' : String(api.role ?? ''),
+    registrationNumber: api.isEmpty ? '' : (api.registrationNumber ?? ''),
+    pkg: api.isEmpty ? '' : (api.package ?? ''),
+    img: '',
+    status: api.isEmpty ? '' : toStatus(api.status),
     parentId: api.parentId ? toNumberId(api.parentId) : null,
     placement: toPlacement(api.placement),
     level: api.level,
-    hasChildren: api.isEmpty ? false : api.hasChildren,
-    leftChildExists: api.isEmpty ? false : api.leftChildExists,
-    rightChildExists: api.isEmpty ? false : api.rightChildExists,
-    volume: api.volume ?? 0,
-    earnings: api.earnings ?? 0,
-    online: api.online ?? false,
-    income: api.income ?? 0,
-    rankIndex: api.rankIndex ?? 0,
-    childrenCount: api.isEmpty ? 0 : api.childrenCount,
+    hasChildren: api.hasChildren,
+    leftChildExists: api.leftChildExists,
+    rightChildExists: api.rightChildExists,
+    volume: 0,
+    earnings: 0,
+    online: false,
+    income: 0,
+    rankIndex: 0,
+    childrenCount: api.childrenCount,
   };
 }
 
 function mapTreeData(api: ApiTreeData): TreeResponse {
   const root = mapMember(api.root);
-  const members = api.members.filter(m => !m.isEmpty && m.id !== api.root.id).map(mapMember);
+  const members = api.members.filter(m => m.id !== api.root.id).map(mapMember);
   return {
     root,
     members: [root, ...members],
@@ -186,7 +186,7 @@ export class MlmTreeService {
       .get<any>(`${this.baseUrl}/subtree`, { params: { parentId, depth } })
       .pipe(map((res) => {
         const d = this.unwrap<ApiTreeData>(res);
-        return { parentId, depth: d?.meta?.depth ?? depth, members: d?.members?.filter(m => !m.isEmpty)?.map(mapMember) ?? [], returned: d?.meta?.returned ?? 0 };
+        return { parentId, depth: d?.meta?.depth ?? depth, members: d?.members?.map(mapMember) ?? [], returned: d?.meta?.returned ?? 0 };
       }));
   }
 
