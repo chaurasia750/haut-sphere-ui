@@ -1,4 +1,4 @@
-import { OnInit, OnDestroy, AfterViewInit, Component, ElementRef, HostListener, ViewChild, inject } from '@angular/core';
+import { OnInit, OnDestroy, AfterViewInit, Component, ElementRef, HostListener, ViewChild, inject, NgZone, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Network, Options } from 'vis-network';
 import { DataSet } from 'vis-data';
@@ -15,6 +15,8 @@ import { MlmTreeService, Member, MemberDetail } from '../../services/mlm-tree.se
 export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
   protected Math = Math;
   private service = inject(MlmTreeService);
+  private ngZone = inject(NgZone);
+  private cdr = inject(ChangeDetectorRef);
   private destroy$ = new Subject<void>();
 
   @ViewChild('networkContainer') networkContainer!: ElementRef;
@@ -165,14 +167,13 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
       this.totalMemberCount = res.meta.rootTotal;
       this.loading = false;
       if (this.breadcrumbPathData.length === 0) {
-        setTimeout(() => {
-          this.breadcrumbPathData = [{ id: res.root.id, name: res.root.name, role: res.root.role }];
-        });
+        this.breadcrumbPathData = [{ id: res.root.id, name: res.root.name, role: res.root.role }];
       }
       if (this.networkContainer) {
         this.buildNetwork(this.currentRoot);
         this.buildMinimap();
       }
+      this.cdr.detectChanges();
     });
 
     this.subtreeLoad$.pipe(
@@ -214,6 +215,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     ).subscribe(res => {
       if (res && res.path.length > 0) {
         this.breadcrumbPathData = res.path;
+        this.cdr.detectChanges();
       }
     });
 
@@ -617,8 +619,8 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
         label: this.isSmallScreen()
           ? `${m.name}\n${m.role}${toggleIcon}`
           : `${m.name}\n${m.role}${m.earnings != null ? ' | ₹' + this.compactAmount(m.earnings) : ''}${toggleIcon}`,
-        shape: m.img ? 'circularImage' as const : 'dot' as const,
-        ...(m.img ? { image: m.img } : {}),
+        shape: 'circularImage' as const,
+        image: this.resolveImg(m),
         size: isHighlighted ? this.nodeSize(m) * 1.25 : this.nodeSize(m),
         borderWidth: (m.id === rootId ? 5 : collapsed ? 3 : isHighlighted ? 4 : m.status === 'Active' ? 3 : 1.5) * s,
         borderDashes: collapsed ? [4, 3] : isLeafAtLimit ? [2, 2] : false,
@@ -680,6 +682,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.network) {
       this.network.setData({ nodes: new DataSet(allNodeData), edges: allEdges });
       this.network.setOptions(opts);
+      this.network.fit({ animation: false });
     } else {
       this.network = new Network(this.networkContainer.nativeElement, { nodes: new DataSet(allNodeData), edges: allEdges }, opts);
       this.network.fit({ animation: { duration: 400, easingFunction: 'easeInOutQuad' } });
@@ -803,7 +806,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private nodeSize(m: Member): number {
-    return Math.max(36, 56 - this.levelOf(m.id) * 3) * this.networkScale;
+    return Math.max(26, 36 - this.levelOf(m.id) * 2) * this.networkScale;
   }
   private fontSize(m: Member): number {
     return Math.max(13, 17 - this.levelOf(m.id)) * this.networkScale;
@@ -829,6 +832,13 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
       Gold: '#f59e0b', Silver: '#8b9dc3', Bronze: '#cd7f32', Basic: '#6b7280',
     };
     return map[role] || '#6b7280';
+  }
+
+  private resolveImg(m: Member): string {
+    if (m.img) return m.img;
+    const color = this.roleColor(m.role);
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="${color}"/><path d="M50 48c-8.3 0-15-6.7-15-15s6.7-15 15-15 15 6.7 15 15-6.7 15-15 15zm0 5c-10 0-30 5-30 15v7h60v-7c0-10-20-15-30-15z" fill="white" opacity="0.9"/></svg>`;
+    return `data:image/svg+xml,${encodeURIComponent(svg)}`;
   }
 
   private roleShadow(role: string): string {
