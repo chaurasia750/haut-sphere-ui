@@ -19,7 +19,6 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
   private destroy$ = new Subject<void>();
 
   @ViewChild('networkContainer') networkContainer!: ElementRef;
-  @ViewChild('minimapContainer') minimapContainer!: ElementRef;
   @ViewChild('searchBox') searchBox!: ElementRef;
   @ViewChild('badgesContainer') badgesContainer!: ElementRef;
 
@@ -27,7 +26,6 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
   private badgeSyncTimer: any = null;
 
   private network!: Network;
-  private minimapNetwork: Network | null = null;
   currentRoot = 1;
   maxRenderDepthValue = 0;
   renderDepth = 3;
@@ -165,16 +163,15 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     ).subscribe(res => {
       this.members = res.members;
       this.currentRoot = res.meta.rootId;
-      this.maxRenderDepthValue = res.meta.maxDepth;
-      this.renderDepth = Math.min(this.renderDepth, this.maxRenderDepthValue);
       this.totalMemberCount = res.meta.rootTotal;
+      this.maxRenderDepthValue = Math.min(res.meta.maxDepth, Math.max(3, Math.ceil(Math.log2(Math.max(1, this.totalMemberCount)))));
+      this.renderDepth = Math.min(this.renderDepth, this.maxRenderDepthValue);
       this.loading = false;
       if (this.breadcrumbPathData.length === 0) {
         this.breadcrumbPathData = [{ id: res.root.id, name: res.root.name, role: res.root.role }];
       }
       if (this.networkContainer) {
         this.buildNetwork(this.currentRoot);
-        this.buildMinimap();
       }
       this.cdr.detectChanges();
     });
@@ -195,7 +192,6 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       if (this.networkContainer) {
         this.buildNetwork(this.currentRoot);
-        this.buildMinimap();
       }
     });
 
@@ -245,14 +241,12 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.clickTimer) clearTimeout(this.clickTimer);
     if (this.resizeTimer) clearTimeout(this.resizeTimer);
     if (this.badgeSyncTimer) clearTimeout(this.badgeSyncTimer);
-    if (this.minimapNetwork) this.minimapNetwork.destroy();
     if (this.network) this.network.destroy();
   }
 
   ngAfterViewInit(): void {
     if (this.members.length) {
       this.buildNetwork(1);
-      this.buildMinimap();
     }
   }
 
@@ -507,7 +501,6 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     this.resizeTimer = setTimeout(() => {
       if (this.network && this.members.length) {
         this.buildNetwork(this.currentRoot);
-        this.buildMinimap();
       }
     }, 200);
   }
@@ -523,39 +516,6 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     if (w < 640) return 0.7;
     if (w < 900) return 0.85;
     return 1;
-  }
-
-  private buildMinimap() {
-    if (!this.minimapContainer) return;
-    if (!this.members.length) return;
-    const rootLevel = this.levelOf(this.currentRoot);
-    const validIds = this.getDescendants(this.currentRoot, false);
-    const allMembers = this.members.filter(m => validIds.has(m.id) || m.id === this.currentRoot);
-    const nodes = new DataSet(allMembers.map(m => ({
-      id: m.id,
-      label: '',
-      shape: 'dot' as const,
-      size: 3,
-      borderWidth: m.id === this.currentRoot ? 2 : 0.5,
-      color: { background: m.id === this.currentRoot ? '#f97316' : '#94a3b8', border: '#f97316' },
-    })));
-    const edgeData: any[] = [];
-    for (const m of allMembers) {
-      if (m.parentId) edgeData.push({ from: m.parentId, to: m.id, color: { color: '#cbd5e1', opacity: 0.4 }, width: 0.5 });
-    }
-    const edges = new DataSet(edgeData);
-    if (this.minimapNetwork) this.minimapNetwork.destroy();
-    const mc = this.minimapContainer.nativeElement;
-    mc.innerHTML = '';
-    mc.removeAttribute('style');
-    this.minimapNetwork = new Network(mc, { nodes, edges }, {
-      physics: false,
-      interaction: { dragView: false, zoomView: false, hover: false },
-      layout: {
-        hierarchical: { enabled: true, direction: 'UD', sortMethod: 'directed', levelSeparation: 8, nodeSpacing: 10, treeSpacing: 12, parentCentralization: true },
-      },
-      edges: { smooth: { enabled: true, type: 'curvedCW', roundness: 0.2 } },
-    });
   }
 
   private syncNodeBadges() {
