@@ -68,7 +68,7 @@ export interface StatsResponse {
 
 function toNumberId(id: string): number {
   const n = Number(id);
-  return Number.isFinite(n) ? n : hashId(id);
+  return Number.isFinite(n) ? n : hashId(id) >>> 0;
 }
 
 function hashId(id: string): number {

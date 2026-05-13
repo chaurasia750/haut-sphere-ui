@@ -567,7 +567,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     this.nodeBadges = [];
     for (const idStr of ids) {
       const id = Number(idStr);
-      if (!Number.isFinite(id) || id <= 0) continue;
+      if (!Number.isFinite(id)) continue;
       const m = this.getNode(id);
       if (!m) continue;
       const domPt = this.network.canvasToDOM(positions[idStr]);
@@ -744,8 +744,9 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     this.network.on('click', (params) => {
       if (params.nodes.length > 0) {
         const id = params.nodes[0];
-        if (typeof id !== 'number' || id <= 0) return;
+        if (typeof id !== 'number') return;
         const node = this.getNode(id);
+        if (!node) return;
         this.network.selectNodes([id], false);
         const atEdge = node && node.hasChildren && this.levelOf(id) - this.levelOf(rootId) >= this.renderDepth;
         if (this.clickTimer) clearTimeout(this.clickTimer);
@@ -760,7 +761,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     this.network.on('doubleClick', (params) => {
       if (params.nodes.length > 0) {
         const id = params.nodes[0];
-        if (typeof id !== 'number' || id <= 0) return;
+        if (typeof id !== 'number') return;
         if (this.clickTimer) clearTimeout(this.clickTimer);
         this.clickPending = null;
         this.showMemberDetail(id);
@@ -768,7 +769,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     this.network.on('hoverNode', (params: any) => {
       const id = params.node;
-      if (typeof id !== 'number' || id <= 0) return;
+      if (typeof id !== 'number') return;
       const m = this.getNode(id);
       if (m) {
         const evt: MouseEvent = params.event;
@@ -781,7 +782,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     this.network.on('oncontext', (params) => {
       if (params.nodes.length > 0) {
         const id = params.nodes[0];
-        if (typeof id !== 'number' || id <= 0) return;
+        if (typeof id !== 'number') return;
         const member = this.getNode(id);
         if (member) {
           const rect = this.networkContainer.nativeElement.getBoundingClientRect();

@@ -13,39 +13,9 @@
       <button (click)="fit()" class="tb-btn" title="Fit to screen">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
       </button>
-      <button (click)="zoomIn()" class="tb-btn hide-mobile" title="Zoom in">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
-      </button>
-      <button (click)="zoomOut()" class="tb-btn hide-mobile" title="Zoom out">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/></svg>
-      </button>
 
       <span class="divider hide-mobile"></span>
 
-      <button (click)="expandAll()" class="tb-btn hide-mobile" title="Expand all">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
-        <span class="label">Expand</span>
-      </button>
-      <button (click)="collapseAll()" class="tb-btn hide-mobile" title="Collapse all">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
-        <span class="label">Collapse</span>
-      </button>
-
-      <span class="divider hide-mobile"></span>
-
-      <button (click)="toggleHeatmap()" class="tb-btn hide-mobile" [class.active]="heatmapMode" title="Toggle heatmap (Ctrl+M)">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 12 2.992z"/></svg>
-        <span class="label">Heatmap</span>
-      </button>
-      <button (click)="toggleFullscreen()" class="tb-btn hide-mobile" title="Fullscreen (Esc)">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          @if (!isFullscreen) {
-            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
-          } @else {
-            <path d="M8 3v3a2 2 0 0 1-2 2H3m0 0h5M3 3v5m18 0v-3a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3m0-5H3m5 5v-5"/>
-          }
-        </svg>
-      </button>
       <button (click)="exportPNG()" class="tb-btn hide-mobile" title="Export PNG (Ctrl+E)">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         <span class="label">Export</span>
