@@ -24,6 +24,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('badgesContainer') badgesContainer!: ElementRef;
 
   nodeBadges: { id: number; x: number; y: number; name: string; reg: string; active: boolean; pending: boolean; deactivated: boolean }[] = [];
+  private badgeSyncTimer: any = null;
 
   private network!: Network;
   private minimapNetwork: Network | null = null;
@@ -243,6 +244,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.highlightTimeout) clearTimeout(this.highlightTimeout);
     if (this.clickTimer) clearTimeout(this.clickTimer);
     if (this.resizeTimer) clearTimeout(this.resizeTimer);
+    if (this.badgeSyncTimer) clearTimeout(this.badgeSyncTimer);
     if (this.minimapNetwork) this.minimapNetwork.destroy();
     if (this.network) this.network.destroy();
   }
@@ -456,9 +458,15 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     return ids;
   }
 
+  private clearBadges() {
+    this.nodeBadges = [];
+    this.cdr.detectChanges();
+  }
+
   increaseDepth() {
     if (this.renderDepth < this.maxRenderDepth) {
       this.renderDepth++;
+      this.clearBadges();
       this.treeLoad$.next({ rootId: this.currentRoot, depth: this.renderDepth });
     }
   }
@@ -467,6 +475,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.renderDepth > 0) {
       this.renderDepth--;
       this.collapsedIds.clear();
+      this.clearBadges();
       this.treeLoad$.next({ rootId: this.currentRoot, depth: this.renderDepth });
     }
   }
@@ -474,6 +483,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
   setDepth(d: number) {
     this.renderDepth = Math.max(0, Math.min(d, this.maxRenderDepth));
     this.collapsedIds.clear();
+    this.clearBadges();
     this.treeLoad$.next({ rootId: this.currentRoot, depth: this.renderDepth });
   }
 
@@ -547,6 +557,11 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private syncNodeBadges() {
     if (!this.network || !this.badgesContainer) return;
+    if (this.renderDepth >= 5) {
+      this.nodeBadges = [];
+      this.cdr.detectChanges();
+      return;
+    }
     const positions = this.network.getPositions();
     const ids = Object.keys(positions);
     this.nodeBadges = [];
@@ -555,11 +570,14 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
       if (!Number.isFinite(id) || id <= 0) continue;
       const m = this.getNode(id);
       if (!m) continue;
+      const level = this.levelOf(id);
       const domPt = this.network.canvasToDOM(positions[idStr]);
+      const nSize = Math.max(40, 56 - level * 3) * this.networkScale;
+      const radius = nSize / 2;
       this.nodeBadges.push({
         id,
         x: domPt.x,
-        y: domPt.y,
+        y: domPt.y + radius - 20,
         name: m.name || '',
         reg: m.registrationNumber ? '#' + m.registrationNumber : '',
         active: String(m.status) === 'Active' || String(m.status) === '1',
@@ -572,6 +590,9 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private buildNetwork(rootId: number) {
     if (!this.members.length) return;
+    this.nodeBadges = [];
+    this.cdr.detectChanges();
+    if (this.badgeSyncTimer) clearTimeout(this.badgeSyncTimer);
     this.networkScale = this.getNetworkScale();
     const s = this.networkScale;
     const validIds = this.getDescendants(rootId, true);
@@ -657,7 +678,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
       const heatBg = heatVolumes && m.volume != null ? this.heatmapColor(m.volume) : undefined;
       return {
         id: m.id,
-        label: `${m.name}\n${m.registrationNumber ? '#'+m.registrationNumber : ''}${toggleIcon}`,
+        label: toggleIcon,
         shape: 'circularImage' as const,
         image: this.resolveImg(m),
         size: isHighlighted ? this.nodeSize(m) * 1.25 : this.nodeSize(m),
@@ -787,7 +808,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     this.network.on('dragEnd', () => this.syncNodeBadges());
     this.network.on('zoom', () => this.syncNodeBadges());
-    setTimeout(() => this.syncNodeBadges(), 100);
+    this.badgeSyncTimer = setTimeout(() => this.syncNodeBadges(), 100);
   }
 
   private showTip(m: Member, x: number, y: number) {
@@ -1029,6 +1050,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     this.currentRoot = id;
     this.renderDepth = 3;
     this.breadcrumbPathData = [];
+    this.clearBadges();
     this.cdr.detectChanges();
     this.treeLoad$.next({ rootId: id, depth: this.renderDepth });
     this.breadcrumbLoad$.next(id);
