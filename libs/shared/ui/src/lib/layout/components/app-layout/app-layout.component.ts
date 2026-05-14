@@ -19,7 +19,34 @@ import { BackdropComponent } from '../backdrop/backdrop.component';
     SharedAppFooterComponent,
     BackdropComponent,
   ],
-  templateUrl: './app-layout.component.html',
+  template: `<div class="min-h-screen xl:flex">
+  <div>
+    <shared-app-sidebar [config]="config"></shared-app-sidebar>
+    <shared-backdrop></shared-backdrop>
+  </div>
+
+  <div
+    class="flex-1 transition-all duration-300 ease-in-out"
+    [ngClass]="{
+      'xl:ml-[290px]': (isExpanded$ | async),
+      'xl:ml-[90px]': (!(isExpanded$ | async) && !(isHovered$ | async)) || (isHovered$ | async),
+      'ml-0': (isMobileOpen$ | async)
+    }"
+  >
+    <shared-app-header
+      [brandName]="config.brandName || config.appName"
+      [userName]="config.user?.name || 'Member User'"
+      [userRole]="config.user?.role || config.appName"
+      [notifications]="config.notifications || []"
+    ></shared-app-header>
+    <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
+      <router-outlet></router-outlet>
+    </div>
+    @if (config.footerText) {
+      <shared-app-footer [text]="config.footerText"></shared-app-footer>
+    }
+  </div>
+</div>`,
 })
 export class SharedAppLayoutComponent {
   @Input({ required: true }) config!: AppLayoutConfig;
