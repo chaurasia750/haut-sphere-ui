@@ -20,7 +20,7 @@ export const remoteConfig: RemoteConfig[] = [
   },
   {
     key: 'member',
-    entry: 'https://staging-cdn.company.com/member/remoteEntry.js',
+    entry: 'https://aronemember.bankatm.in/member/remoteEntry.js',
     exposedModule: './Module',
     route: '/member',
     displayName: 'Member Portal',

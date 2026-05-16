@@ -41,6 +41,14 @@ export class AppComponent implements OnInit {
           { name: 'Audit Logs', path: '/dashboard' },
         ],
       },
+      {
+        label: 'MLM Tree',
+        icon: 'T',
+        subItems: [
+          { name: 'Matching Tree', path: '/tree/matching-tree' },
+          { name: 'Matrix Tree', path: '/tree/matrix-tree' },
+        ],
+      },
     ],
   };
 

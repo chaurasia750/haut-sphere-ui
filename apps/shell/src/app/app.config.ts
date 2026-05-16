@@ -1,7 +1,7 @@
 import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer } from '@angular/core';
 import { provideRouter, Route } from '@angular/router';
 import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
-import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { ToastrModule } from 'ngx-toastr';
 import { firstValueFrom } from 'rxjs';
 import { RemoteLoaderService } from './services/remote-loader.service';
@@ -171,7 +171,7 @@ export const appRoutes: Route[] = [
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(appRoutes),
-    provideAnimations(),
+    provideAnimationsAsync(),
     provideHttpClient(withInterceptorsFromDi()),
     importProvidersFrom(
       ToastrModule.forRoot({

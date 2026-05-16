@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { catchError, debounceTime, distinctUntilChanged, finalize, of, switchMap, tap } from 'rxjs';
@@ -11,8 +11,9 @@ import {
   PanCardDirective,
   PhoneFormatDirective,
   SharedAddressFormComponent,
+  SharedTitleSelectComponent,
 } from '@shared/ui/src';
-import { SignupService } from '../../services/signup.service';
+import { SignupService, RegisterMemberPayload } from '../../services/signup.service';
 
 @Component({
   selector: 'app-signup',
@@ -23,6 +24,7 @@ import { SignupService } from '../../services/signup.service';
     RouterLink,
     TranslateModule,
     SharedAddressFormComponent,
+    SharedTitleSelectComponent,
     AadhaarInputDirective,
     PanCardDirective,
     PhoneFormatDirective,
@@ -35,11 +37,12 @@ export class SignupComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly signupService = inject(SignupService);
 
-  isSubmitting = false;
   positionOpen = false;
   readonly sponsorPrefix = this.i18n.instant('app.sponsorPrefix', 'ANON');
   sponsorLookupName = '';
   isSponsorLookupPending = false;
+  isLoading = false;
+  sponsorRegNo: number | null = null;
 
   selectPosition(value: string): void {
     this.signupForm.get('position')?.setValue(value);
@@ -55,8 +58,10 @@ export class SignupComponent {
   }
 
   readonly signupForm = this.fb.group({
+    title: ['', [Validators.required]],
     firstName: ['', [Validators.required, Validators.pattern(/^\S+$/)]],
     lastName: ['', [Validators.required, Validators.pattern(/^\S+$/)]],
+    gender: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
     phone: ['', [Validators.required, Validators.pattern(/^\d{4} \d{4} \d{2}$/)]],
     businessCategory: ['', [Validators.required]],
@@ -94,20 +99,38 @@ export class SignupComponent {
   getError(controlName: string): string {
     const control: AbstractControl | null = this.signupForm.get(controlName);
     if (!control?.touched || !control?.errors) return '';
-    if (control.errors['required']) return this.i18n.instant('signup.validation.required', 'This field is required.');
-    if (control.errors['email']) return this.i18n.instant('signup.validation.email', 'Enter a valid email address.');
-    if (control.errors['pattern']) {
-      if (controlName === 'firstName' || controlName === 'lastName') return this.i18n.instant('signup.validation.noSpaces', 'Name cannot contain spaces.');
-      if (controlName === 'phone') return this.i18n.instant('signup.validation.phone', 'Enter a valid 10-digit mobile number.');
-      if (controlName === 'aadhaarNo') return this.i18n.instant('signup.validation.aadhaar', 'Aadhaar must be 12 digits (XXXX XXXX XXXX).');
-      if (controlName === 'panCard') return this.i18n.instant('signup.validation.pan', 'PAN format must be ABCDE1234F.');
+    if (control.errors['required']) {
+      const fieldNames: Record<string, string> = {
+        'title': 'Title',
+        'firstName': 'First Name',
+        'lastName': 'Last Name',
+        'gender': 'Gender',
+        'email': 'Email',
+        'phone': 'Phone',
+        'aadhaarNo': 'Aadhaar Number',
+        'panCard': 'PAN Card',
+        'businessCategory': 'Business Category',
+        'sponsorId': 'Sponsor ID',
+        'position': 'Position',
+      };
+      const fieldName = fieldNames[controlName] || controlName;
+      return `${fieldName} is required.`;
     }
-    if (controlName === 'businessCategory') return this.i18n.instant('signup.validation.businessCategory', 'Please select a business category.');
-    if (control.errors['invalidSponsor']) return this.i18n.instant('signup.sponsor.notFound', 'Sponsor ID was not found.');
+    if (controlName === 'title') return 'Please select a title.';
+    if (controlName === 'gender') return 'Please select gender.';
+    if (control.errors['email']) return 'Enter a valid email address.';
+    if (control.errors['pattern']) {
+      if (controlName === 'firstName' || controlName === 'lastName') return 'Name cannot contain spaces.';
+      if (controlName === 'phone') return 'Enter a valid 10-digit mobile number.';
+      if (controlName === 'aadhaarNo') return 'Aadhaar must be 12 digits (XXXX XXXX XXXX).';
+      if (controlName === 'panCard') return 'PAN format must be ABCDE1234F.';
+    }
+    if (controlName === 'businessCategory') return 'Please select a business category.';
+    if (control.errors['invalidSponsor']) return 'Sponsor ID was not found.';
     if (control.errors['minlength'] || control.errors['maxlength'])
-      return this.i18n.instant('signup.validation.sponsorIdLength', 'Sponsor ID must be exactly 6 characters.');
-    if (controlName === 'position') return this.i18n.instant('signup.validation.position', 'Please select a position.');
-    return this.i18n.instant('signup.validation.invalid', 'Invalid input.');
+      return 'Sponsor ID must be exactly 6 characters.';
+    if (controlName === 'position') return 'Please select a position.';
+    return 'Invalid input.';
   }
 
   getPositionLabel(value: string | null | undefined): string {
@@ -120,6 +143,24 @@ export class SignupComponent {
     }
 
     return this.i18n.instant('signup.position.placeholder', 'Select...');
+  }
+
+  onFirstNameInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const upper = input.value.toUpperCase();
+    if (upper !== input.value) {
+      const control = this.signupForm.get('firstName');
+      control?.setValue(upper, { emitEvent: false });
+    }
+  }
+
+  onLastNameInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const upper = input.value.toUpperCase();
+    if (upper !== input.value) {
+      const control = this.signupForm.get('lastName');
+      control?.setValue(upper, { emitEvent: false });
+    }
   }
 
   private setupSponsorValidation(): void {
@@ -155,9 +196,13 @@ export class SignupComponent {
           return this.signupService
             .validateSponsor(fullSponsorId)
             .pipe(
-              tap((sponsorName) => {
-                this.sponsorLookupName = sponsorName;
-                if (!sponsorName) {
+              tap((response) => {
+                this.sponsorRegNo = response?.regNo ?? null;
+                this.sponsorLookupName = [response?.title, response?.fName, response?.lName]
+                  .filter((part): part is string => !!part)
+                  .join(' ')
+                  .trim();
+                if (!this.sponsorLookupName) {
                   this.setSponsorLookupError();
                 }
               }),
@@ -202,12 +247,75 @@ export class SignupComponent {
   }
 
   submit(): void {
-    if (this.signupForm.invalid || this.isSubmitting) {
+    if (this.signupForm.invalid) {
       this.signupForm.markAllAsTouched();
+      const addressGroup = this.signupForm.get('address') as FormGroup;
+      if (addressGroup) {
+        Object.keys(addressGroup.controls).forEach(key => {
+          const control = addressGroup.controls[key];
+          if (control) {
+            control.markAsTouched();
+          }
+        });
+      }
       return;
     }
-    this.isSubmitting = true;
-    this.router.navigate(['/login']);
+
+    this.isLoading = true;
+    const formValue = this.signupForm.getRawValue();
+    const addressValue = formValue.address;
+
+    const payload: RegisterMemberPayload = {
+      bussinessCategoryId: this.getBusinessCategoryId(formValue.businessCategory ?? ''),
+      introRegNo: Number(formValue.sponsorId),
+      personInfo: {
+        title: formValue.title ?? '',
+        firstName: formValue.firstName ?? '',
+        lastName: formValue.lastName ?? '',
+        gender: formValue.gender === 'male' ? 1 : 2,
+        primaryContactNumber: (formValue.phone ?? '').replace(/\s/g, ''),
+        aadhaarNo: (formValue.aadhaarNo ?? '').replace(/\s/g, ''),
+        panCard: formValue.panCard ?? '',
+        emailId: formValue.email ?? '',
+      },
+      address: {
+        houseNo: addressValue?.addressLine1 ?? '',
+        street: addressValue?.addressLine2 || '',
+        city: addressValue?.city ?? '',
+        state: addressValue?.state ?? '',
+        countryId: 0,
+        stateId: 0,
+        cityId: 0,
+        zipCode: addressValue?.postalCode ?? '',
+        distId: 0,
+      },
+      introSide: formValue.position === 'left' ? 'L' : 'R',
+    };
+
+    this.signupService
+      .registerMember(payload)
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/login']);
+        },
+        error: () => {
+          // Handle error - could show toast notification
+        },
+      });
+  }
+
+  private getBusinessCategoryId(category: string): number {
+    const categoryMap: Record<string, number> = {
+      'real-estate': 1,
+      construction: 2,
+      'interior-decor': 3,
+    };
+    return categoryMap[category] || 0;
   }
 }
 

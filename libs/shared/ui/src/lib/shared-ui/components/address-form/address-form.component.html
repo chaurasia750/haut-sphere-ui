@@ -69,6 +69,12 @@
         Fetching location...
       </p>
     }
+    @if (formGroup.get('postalCode')?.touched && formGroup.get('postalCode')?.errors?.['required']) {
+      <p class="mt-1.5 flex items-center gap-1 text-xs text-red-500">
+        <svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+        Postal Code is required.
+      </p>
+    }
   </div>
 
   <!-- City (auto-filled options from postal lookup) -->
@@ -76,7 +82,7 @@
     <select
       id="city"
       formControlName="city"
-      class="peer block w-full appearance-none rounded-xl border border-slate-300 bg-white px-4 pb-2.5 pt-5 text-sm text-slate-900 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+      class="peer block w-full appearance-none rounded-xl border px-4 pb-2.5 pt-5 text-sm text-slate-900 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
     >
       <option value="" disabled>Select City</option>
       @for (city of cityList; track city) {
@@ -89,6 +95,12 @@
     >
       City <span class="text-red-400">*</span>
     </label>
+    @if (formGroup.get('city')?.touched && formGroup.get('city')?.errors?.['required']) {
+      <p class="mt-1.5 flex items-center gap-1 text-xs text-red-500">
+        <svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+        City is required.
+      </p>
+    }
   </div>
 
   <!-- Country (auto-filled from postal lookup) -->

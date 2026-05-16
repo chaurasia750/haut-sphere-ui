@@ -1,5 +1,5 @@
 export const apiConfig = {
-  baseUrl: 'https://qa-api.yourdomain.com',
+  baseUrl: 'https://aroneapi.bankatm.in',
   authCookies: {
     accessToken: 'ANON_qa_accessToken',
     refreshToken: 'ANON_qa_refreshToken',

@@ -7,6 +7,34 @@ export interface SponsorValidationResponse {
   title?: string | null;
   fName?: string | null;
   lName?: string | null;
+  regNo?: number | null;
+}
+
+export interface RegisterMemberPayload {
+  bussinessCategoryId: number;
+  introRegNo: number;
+  personInfo: {
+    title: string;
+    firstName: string;
+    lastName: string;
+    gender: number;
+    primaryContactNumber: string;
+    aadhaarNo: string;
+    panCard: string;
+    emailId: string;
+  };
+  address: {
+    houseNo: string;
+    street: string;
+    city: string;
+    state: string;
+    countryId: number;
+    stateId: number;
+    cityId: number;
+    zipCode: string;
+    distId: number;
+  };
+  introSide: string;
 }
 
 @Injectable({
@@ -16,18 +44,14 @@ export class SignupService {
   private readonly http = inject(HttpClient);
   private readonly apiBaseUrl = apiConfig.baseUrl;
 
-  validateSponsor(sponsorId: string): Observable<string> {
+  validateSponsor(sponsorId: string): Observable<SponsorValidationResponse> {
     return this.http
       .get<SponsorValidationResponse>(
         `${this.apiBaseUrl}/registration-validation/sponser?sponsonrId=${encodeURIComponent(sponsorId)}`
-      )
-      .pipe(
-        map((response) =>
-          [response?.title, response?.fName, response?.lName]
-            .filter((part): part is string => !!part)
-            .join(' ')
-            .trim()
-        )
       );
+  }
+
+  registerMember(payload: RegisterMemberPayload): Observable<void> {
+    return this.http.post<void>(`${this.apiBaseUrl}/members/registration`, payload);
   }
 }
