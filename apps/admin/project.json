@@ -7,11 +7,10 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/webpack:webpack",
+      "executor": "@nx/angular:webpack-browser",
       "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
       "options": {
-        "target": "web",
-        "compiler": "tsc",
         "outputPath": "dist/admin",
         "index": "apps/admin/src/index.html",
         "baseHref": "/",
@@ -34,11 +33,11 @@
           "apps/admin/src/tailwind.css",
           "apps/admin/src/styles.scss"
         ],
-        "scripts": []
-      ,
-        "webpackConfig": "apps/admin/webpack.config.ts"
+        "scripts": [],
+        "customWebpackConfig": {
+          "path": "apps/admin/webpack.config.ts"
+        }
       },
-      "defaultConfiguration": "production",
       "configurations": {
         "production": {
           "optimization": true,
@@ -70,20 +69,22 @@
         },
         "development": {
           "optimization": false,
-          "aot": false,
+          "aot": true,
           "vendorChunk": true,
           "sourceMap": true
         }
       }
     },
     "serve": {
-      "executor": "@nx/webpack:dev-server",
+      "executor": "@nx/angular:dev-server",
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "admin:build",
         "host": "localhost",
         "port": 4101,
-        "hmr": false
+        "hmr": false,
+        "liveReload": false,
+        "publicHost": "http://localhost:4101"
       },
       "configurations": {
         "production": {

@@ -74,21 +74,6 @@ export class RemoteLoaderService {
           const factory = await mod.get(exposed);
           const remoteExports = factory();
 
-          // If the remote exposed an NgModule, attempt to locate a declared component
-          // and return the component class so host can create it directly.
-          try {
-            const appModule = remoteExports?.AppModule || remoteExports?.default?.AppModule;
-            const decls = appModule?.ɵmod?.declarations;
-            if (Array.isArray(decls) && decls.length) {
-              const cmp = decls.find((d: any) => d && typeof d === 'function' && !!d.ɵcmp);
-              if (cmp) {
-                return cmp;
-              }
-            }
-          } catch (e) {
-            // ignore and fall back to returning the raw exports
-          }
-
           return remoteExports;
         } catch (e) {
           console.warn(`[RemoteLoader] Failed to get exposed module ${exposed} from ${config.key}`, e);

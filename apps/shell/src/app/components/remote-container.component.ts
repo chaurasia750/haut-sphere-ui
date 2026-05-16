@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewContainerRef, Input, NgModuleFactory, NgModuleRef, Injector, EnvironmentInjector } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, Input, NgModuleFactory, NgModuleRef, Injector, EnvironmentInjector, createNgModuleRef, createEnvironmentInjector } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { RemoteConfig } from '@shared/types';
@@ -77,6 +78,110 @@ export class RemoteContainerComponent implements OnInit {
       const container = this.viewContainer.element?.nativeElement;
       if (container && container.parentNode) {
         container.parentNode.appendChild(placeholder);
+      }
+      // Try rendering the remote's primary component (if one was exported)
+      try {
+        const componentType = this.extractComponent(module);
+        if (componentType) {
+          // If the remote exposes an NgModule, create an NgModuleRef to provide proper
+          // environment injector so `inject()` calls in factories/field initializers work.
+          const ngModuleType = this.extractNgModule(module);
+          if (ngModuleType) {
+            try {
+              const moduleRef = createNgModuleRef(ngModuleType, this.injector);
+              // Try to obtain an EnvironmentInjector from the moduleRef first
+              let moduleEnv: EnvironmentInjector | null = null as any;
+              try {
+                moduleEnv = (moduleRef.injector as any).get?.(EnvironmentInjector, null) as any;
+              } catch (e) {
+                // ignore
+              }
+
+              // Fallback: try to get host view's EnvironmentInjector
+              let hostEnv: EnvironmentInjector | null = null as any;
+              try {
+                hostEnv = (this.viewContainer.injector as any).get?.(EnvironmentInjector, null) as any;
+              } catch (e) {
+                try {
+                  hostEnv = (this.injector as any).get?.(EnvironmentInjector, null) as any;
+                } catch (e2) {
+                  hostEnv = null as any;
+                }
+              }
+
+              const envToUse = moduleEnv || hostEnv;
+
+              this.viewContainer.clear();
+              if (envToUse) {
+                this.viewContainer.createComponent(componentType as any, {
+                  environmentInjector: envToUse as any,
+                } as any);
+              } else {
+                // Create a minimal environment injector that provides `Title` from host
+                try {
+                  const hostTitle = this.injector.get(Title);
+                  const fallbackEnv = createEnvironmentInjector([{ provide: Title, useValue: hostTitle }], this.injector as any);
+                  this.viewContainer.createComponent(componentType as any, {
+                    environmentInjector: fallbackEnv as any,
+                  } as any);
+                } catch (titleErr) {
+                  // Last resort: use plain injector
+                  this.viewContainer.createComponent(componentType as any, {
+                    injector: this.injector as any,
+                  } as any);
+                }
+              }
+            } catch (moduleErr) {
+              console.warn('Failed to create NgModuleRef for remote, falling back to host injector', moduleErr);
+              try {
+                const hostEnv = (this.viewContainer.injector as any).get?.(EnvironmentInjector, null) as any;
+                if (hostEnv) {
+                  this.viewContainer.clear();
+                  this.viewContainer.createComponent(componentType as any, {
+                    environmentInjector: hostEnv as any,
+                  } as any);
+                } else {
+                  try {
+                    const hostTitle = this.injector.get(Title);
+                    const fallbackEnv = createEnvironmentInjector([{ provide: Title, useValue: hostTitle }], this.injector as any);
+                    this.viewContainer.clear();
+                    this.viewContainer.createComponent(componentType as any, {
+                      environmentInjector: fallbackEnv as any,
+                    } as any);
+                  } catch (titleErr) {
+                    this.viewContainer.clear();
+                    this.viewContainer.createComponent(componentType as any, {
+                      injector: this.injector as any,
+                    } as any);
+                  }
+                }
+              } catch (hostErr) {
+                this.viewContainer.clear();
+                this.viewContainer.createComponent(componentType as any, {
+                  injector: this.injector as any,
+                } as any);
+              }
+            }
+          } else {
+            // No NgModule exported — create an EnvironmentInjector from the host injector
+            // so that `inject()` calls inside the component factory (used by AOT) work.
+            try {
+              const envInj = createEnvironmentInjector([], this.injector as any);
+              this.viewContainer.clear();
+              this.viewContainer.createComponent(componentType as any, {
+                environmentInjector: envInj as any,
+              } as any);
+            } catch (envErr) {
+              console.warn('Failed to create environment injector fallback, using injector fallback', envErr);
+              this.viewContainer.clear();
+              this.viewContainer.createComponent(componentType as any, {
+                injector: this.injector as any,
+              } as any);
+            }
+          }
+        }
+      } catch (renderErr) {
+        console.error('Error rendering remote component:', renderErr);
       }
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
