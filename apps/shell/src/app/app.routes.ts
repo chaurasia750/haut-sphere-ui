@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
 import { RemoteContainerComponent } from './components/remote-container.component';
-import { remoteConfig } from '../environments/remotes.dev.config';
+import { remoteConfig } from '@shared/environments/remotes.dev';
 
 export const appRoutes: Route[] = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },

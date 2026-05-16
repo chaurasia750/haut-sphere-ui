@@ -1,50 +1,43 @@
 import { RemoteConfig } from '@shared/types';
 
-/**
- * Production Environment Remote Configuration
- * Remotes served from production CDN
- */
 export const remoteConfig: RemoteConfig[] = [
   {
     key: 'admin',
-    entry: 'https://cdn.company.com/admin/remoteEntry.js',
+    entry: 'http://localhost:4101/remoteEntry.mjs',
     exposedModule: './Module',
     route: '/admin',
     displayName: 'Admin Portal',
-    preload: true,
-    loadTimeout: 10000,
+    preload: false,
+    loadTimeout: 5000,
     metadata: {
       version: '1.0.0',
-      environment: 'production',
-      cache: true
+      description: 'Administration management interface'
     }
   },
   {
     key: 'member',
-    entry: 'https://cdn.company.com/member/remoteEntry.js',
+    entry: 'http://localhost:4102/remoteEntry.mjs',
     exposedModule: './Module',
     route: '/member',
     displayName: 'Member Portal',
-    preload: true,
-    loadTimeout: 10000,
+    preload: false,
+    loadTimeout: 5000,
     metadata: {
       version: '1.0.0',
-      environment: 'production',
-      cache: true
+      description: 'Member dashboard and profile'
     }
   },
   {
     key: 'management',
-    entry: 'https://cdn.company.com/management/remoteEntry.js',
+    entry: 'http://localhost:4103/remoteEntry.mjs',
     exposedModule: './Module',
     route: '/management',
     displayName: 'Management Dashboard',
     preload: false,
-    loadTimeout: 10000,
+    loadTimeout: 5000,
     metadata: {
       version: '1.0.0',
-      environment: 'production',
-      cache: true
+      description: 'Management and analytics'
     }
   }
 ];

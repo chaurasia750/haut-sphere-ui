@@ -6,7 +6,12 @@ import { SidebarService } from '../../services/sidebar.service';
   selector: 'shared-backdrop',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './backdrop.component.html',
+  template: `@if (isMobileOpen$ | async) {
+  <div
+    class="fixed inset-0 z-[999999] bg-gray-900/50 lg:hidden"
+    (click)="closeSidebar()"
+  ></div>
+}`,
 })
 export class BackdropComponent {
   readonly isMobileOpen$;

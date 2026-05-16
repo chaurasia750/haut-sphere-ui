@@ -28,46 +28,10 @@
             "output": "assets/i18n"
           },
           {
-            "glob": "app-layout.component.html",
-            "input": "libs/shared/ui/src/lib/layout/components/app-layout",
-            "output": "."
-          },
-          {
-            "glob": "app-header.component.html",
-            "input": "libs/shared/ui/src/lib/layout/components/app-header",
-            "output": "."
-          },
-          {
-            "glob": "app-sidebar.component.html",
-            "input": "libs/shared/ui/src/lib/layout/components/app-sidebar",
-            "output": "."
-          },
-          {
-            "glob": "app-footer.component.html",
-            "input": "libs/shared/ui/src/lib/layout/components/app-footer",
-            "output": "."
-          },
-          {
-            "glob": "backdrop.component.html",
-            "input": "libs/shared/ui/src/lib/layout/components/backdrop",
-            "output": "."
-          },
-          {
-            "glob": "notification-dropdown.component.html",
-            "input": "libs/shared/ui/src/lib/layout/components/notification-dropdown",
-            "output": "."
-          },
-          {
-            "glob": "theme-toggle-button.component.html",
-            "input": "libs/shared/ui/src/lib/layout/components/theme-toggle-button",
-            "output": "."
-          },
-          {
-            "glob": "user-dropdown.component.html",
-            "input": "libs/shared/ui/src/lib/layout/components/user-dropdown",
-            "output": "."
-          },
-          "apps/member/src/public"
+            "glob": "web.config",
+            "input": "apps/member/src",
+            "output": ""
+          }
         ],
         "styles": [
           "apps/member/src/tailwind.css",
@@ -85,7 +49,27 @@
           "namedChunks": false,
           "aot": true,
           "extractLicenses": true,
-          "vendorChunk": false
+          "vendorChunk": false,
+          "fileReplacements": [
+            {
+              "replace": "libs/shared/environments/src/api.dev.ts",
+              "with": "libs/shared/environments/src/api.prod.ts"
+            }
+          ]
+        },
+        "staging": {
+          "optimization": true,
+          "outputHashing": "all",
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "fileReplacements": [
+            {
+              "replace": "libs/shared/environments/src/api.dev.ts",
+              "with": "libs/shared/environments/src/api.staging.ts"
+            }
+          ]
         },
         "development": {
           "optimization": false,
@@ -107,6 +91,9 @@
       "configurations": {
         "production": {
           "buildTarget": "member:build:production"
+        },
+        "staging": {
+          "buildTarget": "member:build:staging"
         },
         "development": {
           "buildTarget": "member:build:development"

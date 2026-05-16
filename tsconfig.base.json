@@ -30,7 +30,8 @@
       "@ui/*": ["libs/ui/src/*"],
       "@auth/*": ["libs/auth/src/*"],
       "@libs/shared/auth": ["libs/shared/auth/src/index.ts"],
-      "@libs/shared/auth/*": ["libs/shared/auth/src/*"]
+      "@libs/shared/auth/*": ["libs/shared/auth/src/*"],
+      "@shared/environments/*": ["libs/shared/environments/src/*"]
     }
   },
   "angularCompilerOptions": {

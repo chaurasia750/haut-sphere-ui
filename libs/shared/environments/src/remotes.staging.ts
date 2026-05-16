@@ -1,9 +1,5 @@
 import { RemoteConfig } from '@shared/types';
 
-/**
- * Staging Environment Remote Configuration
- * Remotes served from staging CDN
- */
 export const remoteConfig: RemoteConfig[] = [
   {
     key: 'admin',
@@ -20,7 +16,7 @@ export const remoteConfig: RemoteConfig[] = [
   },
   {
     key: 'member',
-    entry: 'https://aronemember.bankatm.in/member/remoteEntry.js',
+    entry: 'https://aronemember.bankatm.in/remoteEntry.mjs',
     exposedModule: './Module',
     route: '/member',
     displayName: 'Member Portal',

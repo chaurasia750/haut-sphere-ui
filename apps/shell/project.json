@@ -49,12 +49,12 @@
           "outputHashing": "all",
           "fileReplacements": [
             {
-              "replace": "apps/shell/src/environments/remotes.dev.config.ts",
-              "with": "apps/shell/src/environments/remotes.prod.config.ts"
+              "replace": "libs/shared/environments/src/remotes.dev.ts",
+              "with": "libs/shared/environments/src/remotes.prod.ts"
             },
             {
-              "replace": "apps/shell/src/environments/api.dev.config.ts",
-              "with": "apps/shell/src/environments/api.prod.config.ts"
+              "replace": "libs/shared/environments/src/api.dev.ts",
+              "with": "libs/shared/environments/src/api.prod.ts"
             }
           ]
         },
@@ -74,12 +74,12 @@
           "outputHashing": "all",
           "fileReplacements": [
             {
-              "replace": "apps/shell/src/environments/remotes.dev.config.ts",
-              "with": "apps/shell/src/environments/remotes.staging.config.ts"
+              "replace": "libs/shared/environments/src/remotes.dev.ts",
+              "with": "libs/shared/environments/src/remotes.staging.ts"
             },
             {
-              "replace": "apps/shell/src/environments/api.dev.config.ts",
-              "with": "apps/shell/src/environments/api.staging.config.ts"
+              "replace": "libs/shared/environments/src/api.dev.ts",
+              "with": "libs/shared/environments/src/api.staging.ts"
             }
           ]
         },
