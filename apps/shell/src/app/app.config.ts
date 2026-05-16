@@ -7,7 +7,7 @@ import { firstValueFrom } from 'rxjs';
 import { RemoteLoaderService } from './services/remote-loader.service';
 import { RemoteContainerComponent } from './components/remote-container.component';
 import { RemoteUnavailableComponent } from './components/remote-unavailable.component';
-import { remoteConfig } from '../environments/remotes.dev.config';
+import { remoteConfig } from '@shared/environments/remotes.dev';
 import { LoginComponent } from './features/login/pages/login/login.component';
 import { SignupComponent } from './features/signup/pages/signup/signup.component';
 import { UnauthorizedComponent } from './features/error/pages/unauthorized/unauthorized.component';
@@ -20,7 +20,7 @@ import { HttpResponseInterceptor } from './core/http-response.interceptor';
 import { createSharedTranslateLoader, SharedTranslationService } from '@shared/i18n';
 import { ADDRESS_LOOKUP_API_BASE_URL } from '@shared/ui/src';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { apiConfig } from '../environments/api.dev.config';
+import { apiConfig } from '@shared/environments/api.dev';
 
 export const appRoutes: Route[] = [
   // Public login route

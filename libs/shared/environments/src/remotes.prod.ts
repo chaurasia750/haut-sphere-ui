@@ -1,47 +1,46 @@
 import { RemoteConfig } from '@shared/types';
 
-/**
- * Development Environment Remote Configuration
- * All remotes run locally on different ports
- */
 export const remoteConfig: RemoteConfig[] = [
   {
     key: 'admin',
-    entry: 'http://localhost:4101/remoteEntry.mjs',
+    entry: 'https://cdn.company.com/admin/remoteEntry.js',
     exposedModule: './Module',
     route: '/admin',
     displayName: 'Admin Portal',
-    preload: false,
-    loadTimeout: 5000,
+    preload: true,
+    loadTimeout: 10000,
     metadata: {
       version: '1.0.0',
-      description: 'Administration management interface'
+      environment: 'production',
+      cache: true
     }
   },
   {
     key: 'member',
-    entry: 'http://localhost:4102/remoteEntry.mjs',
+    entry: 'https://cdn.company.com/member/remoteEntry.js',
     exposedModule: './Module',
     route: '/member',
     displayName: 'Member Portal',
-    preload: false,
-    loadTimeout: 5000,
+    preload: true,
+    loadTimeout: 10000,
     metadata: {
       version: '1.0.0',
-      description: 'Member dashboard and profile'
+      environment: 'production',
+      cache: true
     }
   },
   {
     key: 'management',
-    entry: 'http://localhost:4103/remoteEntry.mjs',
+    entry: 'https://cdn.company.com/management/remoteEntry.js',
     exposedModule: './Module',
     route: '/management',
     displayName: 'Management Dashboard',
     preload: false,
-    loadTimeout: 5000,
+    loadTimeout: 10000,
     metadata: {
       version: '1.0.0',
-      description: 'Management and analytics'
+      environment: 'production',
+      cache: true
     }
   }
 ];

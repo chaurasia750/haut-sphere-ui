@@ -1,47 +1,43 @@
 import { RemoteConfig } from '@shared/types';
 
-/**
- * Staging Environment Remote Configuration
- * Remotes served from staging CDN
- */
 export const remoteConfig: RemoteConfig[] = [
   {
     key: 'admin',
-    entry: 'https://staging-cdn.company.com/admin/remoteEntry.js',
+    entry: 'http://localhost:4101/remoteEntry.mjs',
     exposedModule: './Module',
     route: '/admin',
     displayName: 'Admin Portal',
     preload: false,
-    loadTimeout: 8000,
+    loadTimeout: 5000,
     metadata: {
       version: '1.0.0',
-      environment: 'staging'
+      description: 'Administration management interface'
     }
   },
   {
     key: 'member',
-    entry: 'https://aronemember.bankatm.in/member/remoteEntry.mjs',
+    entry: 'http://localhost:4102/remoteEntry.mjs',
     exposedModule: './Module',
     route: '/member',
     displayName: 'Member Portal',
     preload: false,
-    loadTimeout: 8000,
+    loadTimeout: 5000,
     metadata: {
       version: '1.0.0',
-      environment: 'staging'
+      description: 'Member dashboard and profile'
     }
   },
   {
     key: 'management',
-    entry: 'https://staging-cdn.company.com/management/remoteEntry.js',
+    entry: 'http://localhost:4103/remoteEntry.mjs',
     exposedModule: './Module',
     route: '/management',
     displayName: 'Management Dashboard',
     preload: false,
-    loadTimeout: 8000,
+    loadTimeout: 5000,
     metadata: {
       version: '1.0.0',
-      environment: 'staging'
+      description: 'Management and analytics'
     }
   }
 ];

@@ -1,7 +1,7 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
 import { AUTH_API_BASE_URL } from '@libs/shared/auth';
-import { apiConfig } from '@app/shell/environments/api.dev.config';
+import { apiConfig } from '@shared/environments/api.dev';
 
 platformBrowserDynamic([
   {

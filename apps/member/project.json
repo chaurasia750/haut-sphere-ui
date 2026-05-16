@@ -27,7 +27,11 @@
             "input": "libs/shared/i18n/assets",
             "output": "assets/i18n"
           },
-          "apps/member/src/public"
+          {
+            "glob": "web.config",
+            "input": "apps/member/src",
+            "output": ""
+          }
         ],
         "styles": [
           "apps/member/src/tailwind.css",
@@ -45,7 +49,27 @@
           "namedChunks": false,
           "aot": true,
           "extractLicenses": true,
-          "vendorChunk": false
+          "vendorChunk": false,
+          "fileReplacements": [
+            {
+              "replace": "libs/shared/environments/src/api.dev.ts",
+              "with": "libs/shared/environments/src/api.prod.ts"
+            }
+          ]
+        },
+        "staging": {
+          "optimization": true,
+          "outputHashing": "all",
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "fileReplacements": [
+            {
+              "replace": "libs/shared/environments/src/api.dev.ts",
+              "with": "libs/shared/environments/src/api.staging.ts"
+            }
+          ]
         },
         "development": {
           "optimization": false,
@@ -67,6 +91,9 @@
       "configurations": {
         "production": {
           "buildTarget": "member:build:production"
+        },
+        "staging": {
+          "buildTarget": "member:build:staging"
         },
         "development": {
           "buildTarget": "member:build:development"

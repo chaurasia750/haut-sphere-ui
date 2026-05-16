@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
-import { apiConfig } from '@app/shell/environments/api.dev.config';
+import { apiConfig } from '@shared/environments/api.dev';
 
 export interface SponsorValidationResponse {
   title?: string | null;

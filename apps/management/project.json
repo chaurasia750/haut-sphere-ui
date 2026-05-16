@@ -46,7 +46,27 @@
           "namedChunks": false,
           "aot": true,
           "extractLicenses": true,
-          "vendorChunk": false
+          "vendorChunk": false,
+          "fileReplacements": [
+            {
+              "replace": "libs/shared/environments/src/api.dev.ts",
+              "with": "libs/shared/environments/src/api.prod.ts"
+            }
+          ]
+        },
+        "staging": {
+          "optimization": true,
+          "outputHashing": "all",
+          "namedChunks": false,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "fileReplacements": [
+            {
+              "replace": "libs/shared/environments/src/api.dev.ts",
+              "with": "libs/shared/environments/src/api.staging.ts"
+            }
+          ]
         },
         "development": {
           "optimization": false,
@@ -68,6 +88,9 @@
       "configurations": {
         "production": {
           "buildTarget": "management:build:production"
+        },
+        "staging": {
+          "buildTarget": "management:build:staging"
         },
         "development": {
           "buildTarget": "management:build:development"

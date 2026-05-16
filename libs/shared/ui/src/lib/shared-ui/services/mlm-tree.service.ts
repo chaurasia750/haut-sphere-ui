@@ -1,7 +1,7 @@
 import { inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
-import { apiConfig } from '@app/shell/environments/api.dev.config';
+import { apiConfig } from '@shared/environments/api.dev';
 
 export interface Member {
   id: number;
