@@ -16,6 +16,24 @@ export interface MemberProfileAddress {
   districtId: number | null;
 }
 
+export interface UpdateProfilePayload {
+  title: string;
+  firstName: string;
+  lastName: string;
+  gender: number;
+  primaryContactNumber: string;
+  emailId: string;
+  aadhaarNo: string;
+  panCard: string;
+  address: {
+    houseNo: string;
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+  };
+}
+
 export interface MemberProfile {
   id: number;
   registrationNumber: string | null;
@@ -29,6 +47,8 @@ export interface MemberProfile {
   primaryContactNumber: string | null;
   secondaryContactNumber: string | null;
   emailId: string | null;
+  aadhaarNo: string | null;
+  panCard: string | null;
   introRegNo: string | null;
   introSide: string | null;
   address: MemberProfileAddress | null;
@@ -45,6 +65,11 @@ export class MemberProfileService {
     return this.http
       .get<unknown>(`${this.baseUrl}/profile`, { withCredentials: true })
       .pipe(map((response) => this.normalizeProfileResponse(response)));
+  }
+
+  updateProfile(profile: UpdateProfilePayload): Observable<{ success: boolean }> {
+    return this.http
+      .put<{ success: boolean }>(`${this.baseUrl}/update-profile`, profile, { withCredentials: true });
   }
 
   private normalizeProfileResponse(response: unknown): MemberProfile {
@@ -69,6 +94,8 @@ export class MemberProfileService {
         payload.secondaryContactNumber ?? payload.secondary_contact_number ?? payload.altMobile
       ),
       emailId: this.toString(payload.emailId ?? payload.email_id ?? payload.email),
+      aadhaarNo: this.toString(payload.aadhaarNo ?? payload.aadharNo ?? payload.adharNo),
+      panCard: this.toString(payload.memPan ?? payload.panCard ?? payload.pan),
       introRegNo: this.toString(payload.introRegNo ?? payload.intro_reg_no),
       introSide: this.toString(payload.introSide ?? payload.intro_side),
       address: this.isEmptyObject(address)

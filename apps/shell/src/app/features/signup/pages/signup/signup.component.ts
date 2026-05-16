@@ -15,6 +15,8 @@ import {
 } from '@shared/ui/src';
 import { SignupService, RegisterMemberPayload } from '../../services/signup.service';
 
+import { apiConfig } from '../../../../../environments/api.dev.config';
+
 @Component({
   selector: 'app-signup',
   standalone: true,
@@ -38,6 +40,7 @@ export class SignupComponent {
   private readonly signupService = inject(SignupService);
 
   positionOpen = false;
+  readonly apiBaseUrl = apiConfig.baseUrl;
   readonly sponsorPrefix = this.i18n.instant('app.sponsorPrefix', 'ANON');
   sponsorLookupName = '';
   isSponsorLookupPending = false;

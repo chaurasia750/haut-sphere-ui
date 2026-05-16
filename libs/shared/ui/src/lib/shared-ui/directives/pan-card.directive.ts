@@ -1,15 +1,20 @@
-import { Directive, HostListener, inject } from '@angular/core';
+import { Directive, ElementRef, inject } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 @Directive({
   selector: '[sharedPanCard]',
+  host: { '(input)': 'onInput($event)' },
   standalone: true,
 })
 export class PanCardDirective {
   private control = inject(NgControl);
+  private el = inject(ElementRef);
 
-  @HostListener('input', ['$event'])
   onInput(event: Event) {
+    this.formatValue(event);
+  }
+
+  private formatValue(event: Event): void {
     const input = event.target as HTMLInputElement;
     const value = input.value.toUpperCase();
     let corrected = '';

@@ -5,6 +5,12 @@
     "changeOrigin": true,
     "logLevel": "debug"
   },
+  "/members": {
+    "target": "https://localhost:7056",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
   "/registration-validation": {
     "target": "https://localhost:7056",
     "secure": false,

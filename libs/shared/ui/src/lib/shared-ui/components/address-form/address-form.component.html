@@ -82,6 +82,7 @@
     <select
       id="city"
       formControlName="city"
+      [value] = "formGroup.get('city')?.value"
       class="peer block w-full appearance-none rounded-xl border px-4 pb-2.5 pt-5 text-sm text-slate-900 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
     >
       <option value="" disabled>Select City</option>
@@ -126,6 +127,7 @@
     <select
       id="state"
       formControlName="state"
+      [value] = "formGroup.get('state')?.value"
       class="peer block w-full appearance-none rounded-xl border border-slate-300 bg-white px-4 pb-2.5 pt-5 text-sm text-slate-900 transition-colors focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
     >
       <option value="" disabled>Select State</option>
