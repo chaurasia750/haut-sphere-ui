@@ -14,6 +14,13 @@ const routes: Routes = [
         (m) => m.DashboardModule
       ),
   },
+  {
+    path: 'tree',
+    loadChildren: () =>
+      import('./modules/tree-visualization/tree-visualization.module').then(
+        (m) => m.TreeVisualizationModule
+      ),
+  },
 ];
 
 @NgModule({
