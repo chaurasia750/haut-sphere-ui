@@ -364,7 +364,7 @@ nx build management --configuration=production
 
 ### Development (localhost)
 
-**File**: `shell/src/environments/remotes.dev.config.ts`
+**File**: `libs/shared/environments/src/remotes.dev.ts` (shared across all apps)
 
 ```typescript
 export const remotes = {
@@ -376,7 +376,7 @@ export const remotes = {
 
 ### Staging
 
-**File**: `shell/src/environments/remotes.staging.config.ts`
+**File**: `libs/shared/environments/src/remotes.staging.ts`
 
 ```typescript
 export const remotes = {
@@ -388,7 +388,7 @@ export const remotes = {
 
 ### Production
 
-**File**: `shell/src/environments/remotes.prod.config.ts`
+**File**: `libs/shared/environments/src/remotes.prod.ts`
 
 ```typescript
 export const remotes = {

@@ -49,7 +49,7 @@ shell/src/app/app.module.ts          - Removed bootstrap, added ngDoBootstrap
 shell/src/app/app.config.ts          - Configuration with routes
 shell/src/app/components/remote-container.component.ts - Remote loading UI
 shell/src/app/services/remote-loader.service.ts - Dynamic remote loader with error handling
-shell/src/environments/remotes.dev.config.ts - Runtime remote configuration
+libs/shared/environments/src/remotes.dev.ts - Runtime remote configuration (shared across all apps)
 admin/src/ws-stub.ts                 - Stub for ws module
 member/src/ws-stub.ts                - Stub for ws module
 management/src/ws-stub.ts            - Stub for ws module

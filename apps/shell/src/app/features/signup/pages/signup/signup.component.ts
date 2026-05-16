@@ -15,7 +15,7 @@ import {
 } from '@shared/ui/src';
 import { SignupService, RegisterMemberPayload } from '../../services/signup.service';
 
-import { apiConfig } from '../../../../../environments/api.dev.config';
+import { apiConfig } from '@shared/environments/api.dev';
 
 @Component({
   selector: 'app-signup',

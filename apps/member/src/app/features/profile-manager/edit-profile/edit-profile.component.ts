@@ -6,7 +6,7 @@ import {
   SharedAddressFormComponent,
   SharedTitleSelectComponent,
 } from '@shared/ui/src';
-import { apiConfig } from '@app/shell/environments/api.dev.config';
+import { apiConfig } from '@shared/environments/api.dev';
 import { PageBreadcrumbComponent } from '../../../shared/components/common/page-breadcrumb/page-breadcrumb.component';
 import { MemberProfile, MemberProfileService, UpdateProfilePayload } from '../../../shared/services/member-profile.service';
 

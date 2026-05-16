@@ -71,12 +71,12 @@ Tasks are organized into phases aligned with user story completion:
   - shared: Angular core, RxJS, shared libraries
   - NO remote module definitions (remotes are dynamic)
 - [ ] T018 Update shell/webpack.config.js to use Module Federation plugin with custom webpack config
-- [ ] T019 Create shell/src/environments/remotes.dev.config.ts with dev remote URLs:
+- [x] T019 Create libs/shared/environments/src/remotes.dev.ts with dev remote URLs (shared config):
   - admin: http://localhost:4101/remoteEntry.js
   - member: http://localhost:4102/remoteEntry.js
   - management: http://localhost:4103/remoteEntry.js
-- [ ] T020 Create shell/src/environments/remotes.prod.config.ts with production remote URLs (CDN paths - replace with actual values)
-- [ ] T021 Create shell/src/environments/remotes.staging.config.ts with staging URLs
+- [x] T020 Create libs/shared/environments/src/remotes.prod.ts with production remote URLs (shared config)
+- [x] T021 Create libs/shared/environments/src/remotes.staging.ts with staging URLs (shared config)
 
 ### Module Federation Configuration (Remotes)
 
@@ -456,11 +456,11 @@ Tasks are organized into phases aligned with user story completion:
 
 ### Deployment Configuration
 
-- [ ] T126 Create shell/src/environments/remotes.prod.config.ts with production CDN URLs:
+- [x] T126 Create libs/shared/environments/src/remotes.prod.ts with production CDN URLs:
   - admin: https://cdn.company.com/admin/remoteEntry.js
   - member: https://cdn.company.com/member/remoteEntry.js
   - management: https://cdn.company.com/management/remoteEntry.js
-- [ ] T127 Create shell/src/environments/remotes.staging.config.ts with staging URLs
+- [x] T127 Create libs/shared/environments/src/remotes.staging.ts with staging URLs
 - [ ] T128 Implement environment-aware config loading in Shell:
   - Load correct remotes.config.ts based on environment
   - No code changes between environments

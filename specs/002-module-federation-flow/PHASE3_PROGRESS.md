@@ -212,7 +212,7 @@ this.remoteLoader.getMetadata$() → state observable
 
 ### Remote Config Source
 ```typescript
-// File: shell/src/environments/remotes.dev.config.ts
+// File: libs/shared/environments/src/remotes.dev.ts (shared config)
 // Array of RemoteConfig with entry points:
 {
   key: 'admin',
