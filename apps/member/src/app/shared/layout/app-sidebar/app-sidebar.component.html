@@ -33,7 +33,7 @@
     <nav class="px-3.5">
       @for (nav of navItems; track $index; let i = $index) {
         @if (nav.section && ((isExpanded$ | async) || (isHovered$ | async) || (isMobileOpen$ | async))) {
-          <p class="px-4 pt-3 pb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-secondary-fg select-none">{{ nav.section }}</p>
+          <p class="px-4 pt-3 pb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-sidebar-secondary select-none">{{ nav.section }}</p>
         }
         <div class="mb-0.5">
           @if (nav.subItems) {
@@ -42,21 +42,21 @@
               class="group flex w-full items-center gap-3 px-4 py-2.5 rounded-xl text-[14px] font-medium transition-all duration-150 cursor-pointer"
               [ngClass]="{
                 'bg-[#FFD000]/10 text-[#FFD000]': openSubmenu === 'main-' + i || nav.subItems.some(subItem => isActive(subItem.path)),
-                'text-secondary-fg hover:text-white hover:bg-surface-hover': openSubmenu !== 'main-' + i && !nav.subItems.some(subItem => isActive(subItem.path))
+                'text-sidebar-primary hover:text-white hover:bg-surface-hover': openSubmenu !== 'main-' + i && !nav.subItems.some(subItem => isActive(subItem.path))
               }"
             >
               <span
                 class="flex-shrink-0 flex items-center justify-center w-[34px] h-[34px] rounded-md [&>svg]:w-[18px] [&>svg]:h-[18px] transition-colors duration-150"
                 [ngClass]="{
                   'bg-[#FFD000] text-black': openSubmenu === 'main-' + i || nav.subItems.some(subItem => isActive(subItem.path)),
-                  'bg-surface-hover text-secondary-fg group-hover:text-white': openSubmenu !== 'main-' + i && !nav.subItems.some(subItem => isActive(subItem.path))
+                  'bg-surface-hover text-secondary-fg group-hover:bg-[#FFD000]/10 group-hover:text-[#FFD000]': openSubmenu !== 'main-' + i && !nav.subItems.some(subItem => isActive(subItem.path))
                 }"
                 [innerHTML]="nav.icon | safeHtml"
               ></span>
               @if ((isExpanded$ | async) || (isHovered$ | async) || (isMobileOpen$ | async)) {
-                <span class="flex-1 text-left truncate leading-none">{{ nav.name }}</span>
+                <span class="flex-1 text-left truncate leading-none text-sidebar-primary">{{ nav.name }}</span>
                 <svg
-                  class="flex-shrink-0 w-3.5 h-3.5 transition-transform duration-200 text-muted-fg"
+                  class="flex-shrink-0 w-3.5 h-3.5 transition-transform duration-200 text-sidebar-muted"
                   [ngClass]="{ 'rotate-90': openSubmenu === 'main-' + i }"
                   viewBox="0 0 20 20" fill="none"
                 >
@@ -79,14 +79,14 @@
                       class="flex items-center gap-2 pl-3 pr-2 py-2 rounded-lg text-[13px] font-medium transition-all duration-150"
                       [ngClass]="{
                         'bg-[#FFD000]/10 text-[#FFD000]': isActive(subItem.path),
-                        'text-secondary-fg hover:text-white hover:bg-surface-hover': !isActive(subItem.path)
+                        'text-sidebar-primary hover:text-white hover:bg-surface-hover': !isActive(subItem.path)
                       }"
                     >
                       <span
                         class="flex-shrink-0 w-1.5 h-1.5 rounded-full"
                         [ngClass]="{
                           'bg-[#FFD000]': isActive(subItem.path),
-                          'bg-muted-fg': !isActive(subItem.path)
+                          'bg-sidebar-muted': !isActive(subItem.path)
                         }"
                       ></span>
                       <span class="truncate">{{ subItem.name }}</span>
@@ -102,7 +102,7 @@
                 class="group relative flex items-center gap-3 px-4 py-2.5 rounded-xl text-[14px] font-medium transition-all duration-150"
                 [ngClass]="{
                   'bg-[#FFD000]/10 text-[#FFD000]': isActive(nav.path),
-                  'text-secondary-fg hover:text-white hover:bg-surface-hover': !isActive(nav.path)
+                  'text-sidebar-primary hover:text-white hover:bg-surface-hover': !isActive(nav.path)
                 }"
               >
                 @if (isActive(nav.path)) {
@@ -112,12 +112,12 @@
                   class="flex-shrink-0 flex items-center justify-center w-[34px] h-[34px] rounded-md [&>svg]:w-[18px] [&>svg]:h-[18px] transition-colors duration-150"
                   [ngClass]="{
                     'bg-[#FFD000] text-black': isActive(nav.path),
-                    'bg-surface-hover text-secondary-fg group-hover:text-white': !isActive(nav.path)
+                    'bg-surface-hover text-secondary-fg group-hover:bg-[#FFD000]/10 group-hover:text-[#FFD000]': !isActive(nav.path)
                   }"
                   [innerHTML]="nav.icon | safeHtml"
                 ></span>
                 @if ((isExpanded$ | async) || (isHovered$ | async) || (isMobileOpen$ | async)) {
-                  <span class="truncate leading-none">{{ nav.name }}</span>
+                  <span class="truncate leading-none text-sidebar-primary">{{ nav.name }}</span>
                 }
               </a>
             }
