@@ -1,29 +1,29 @@
 <app-page-breadcrumb pageTitle="Edit Profile" />
 
 @if (isLoading) {
-  <div class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
+  <div class="rounded-2xl border border-default bg-surface p-5 lg:p-6">
     <div class="animate-pulse space-y-6">
-      <div class="h-7 w-40 bg-gray-200 dark:bg-gray-700 rounded"></div>
+      <div class="h-7 w-40 bg-default rounded"></div>
       <div class="grid grid-cols-12 gap-4 md:gap-6">
         <div class="col-span-12 lg:col-span-6">
-          <div class="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6 space-y-4">
-            <div class="h-6 w-36 bg-gray-200 dark:bg-gray-700 rounded"></div>
+          <div class="p-5 border border-default rounded-2xl lg:p-6 space-y-4">
+            <div class="h-6 w-36 bg-default rounded"></div>
             <div class="grid grid-cols-2 gap-4">
-              <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
-              <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
-              <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
-              <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              <div class="h-10 bg-default rounded"></div>
+              <div class="h-10 bg-default rounded"></div>
+              <div class="h-10 bg-default rounded"></div>
+              <div class="h-10 bg-default rounded"></div>
             </div>
           </div>
         </div>
         <div class="col-span-12 lg:col-span-6">
-          <div class="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6 space-y-4">
-            <div class="h-6 w-36 bg-gray-200 dark:bg-gray-700 rounded"></div>
+          <div class="p-5 border border-default rounded-2xl lg:p-6 space-y-4">
+            <div class="h-6 w-36 bg-default rounded"></div>
             <div class="grid grid-cols-2 gap-4">
-              <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
-              <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
-              <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
-              <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              <div class="h-10 bg-default rounded"></div>
+              <div class="h-10 bg-default rounded"></div>
+              <div class="h-10 bg-default rounded"></div>
+              <div class="h-10 bg-default rounded"></div>
             </div>
           </div>
         </div>
@@ -31,8 +31,8 @@
     </div>
   </div>
 } @else {
-  <div class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
-    <h3 class="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-7">
+  <div class="rounded-2xl border border-default bg-surface p-5 lg:p-6">
+    <h3 class="mb-5 text-lg font-semibold text-primary-fg lg:mb-7">
       Edit Profile
     </h3>
 
@@ -55,38 +55,38 @@
       <div class="grid grid-cols-12 gap-4 md:gap-6">
         <!-- ════════════ PERSONAL DETAILS ════════════ -->
         <div class="col-span-12 lg:col-span-6">
-          <div class="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
-            <h4 class="text-lg font-semibold text-gray-800 dark:text-white/90 mb-6">Personal Details</h4>
+          <div class="p-5 border border-default rounded-2xl lg:p-6">
+            <h4 class="text-lg font-semibold text-primary-fg mb-6">Personal Details</h4>
 
             <div class="space-y-4">
 
               <!-- Title + First Name | Last Name -->
               <div class="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_1fr] items-start">
-                <div class="flex flex-row rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/30">
+                <div class="flex flex-row rounded-xl border border-default bg-surface focus-within:border-[#FFD000] focus-within:ring-2 focus-within:ring-[#FFD000]/20">
                   <div class="shrink-0 w-20">
                     <shared-title-select formControlName="title"></shared-title-select>
                   </div>
-                  <div class="w-px self-stretch bg-gray-300 dark:bg-gray-600"></div>
+                  <div class="w-px self-stretch bg-default"></div>
                   <div class="relative min-w-0 flex-1">
                     <input #formInput id="editFirstName" type="text" formControlName="firstName" placeholder=" " (input)="onInputName($event, 'firstName')"
-                      class="peer block w-full border-0 bg-transparent px-4 pb-2.5 pt-5 text-sm text-slate-900 dark:text-white placeholder:text-slate-300 focus:outline-none"
+                      class="peer block w-full border-0 bg-transparent px-4 pb-2.5 pt-5 text-sm text-primary-fg placeholder:text-muted-fg focus:outline-none"
                     />
-                    <label for="editFirstName" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600">
+                    <label for="editFirstName" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-[#FFD000]">
                       First Name <span class="text-red-400">*</span>
                     </label>
                   </div>
                 </div>
                 <div class="relative">
                   <input #formInput id="editLastName" type="text" formControlName="lastName" placeholder=" " (input)="onInputName($event, 'lastName')"
-                    class="peer block w-full appearance-none rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 pb-2.5 pt-5 text-sm text-slate-900 dark:text-white transition-colors focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/30"
+                    class="peer block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-[#FFD000] focus:outline-none focus:ring-2 focus:ring-[#FFD000]/20"
                   />
-                  <label for="editLastName" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600">
+                  <label for="editLastName" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-[#FFD000]">
                     Last Name <span class="text-red-400">*</span>
                   </label>
                 </div>
               </div>
 
-              <!-- Errors row -->
+              @if (isInvalid('title') || isInvalid('firstName') || isInvalid('lastName')) {
               <div class="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_1fr]">
                 <div>
                   @if (isInvalid('title')) {
@@ -102,19 +102,20 @@
                   }
                 </div>
               </div>
+              }
 
               <!-- Gender -->
               <div>
-                <p class="mb-2 text-xs font-medium text-slate-500 dark:text-gray-400">Gender <span class="text-red-400">*</span></p>
+                <p class="mb-2 text-xs font-medium text-primary-fg/50">Gender <span class="text-red-400">*</span></p>
                 <div class="grid grid-cols-2 gap-3">
                   @for (g of [{ value: 'male', label: 'Male' }, { value: 'female', label: 'Female' }]; track g.value) {
                     <label
                       class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm transition-colors"
                       [ngClass]="editForm.get('gender')?.value === g.value
-                        ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 font-medium'
-                        : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-slate-700 dark:text-gray-300 hover:border-indigo-300 hover:bg-indigo-50/50 dark:hover:bg-indigo-500/5'"
+                        ? 'border-[#FFD000] bg-[#FFD000]/25 text-[#FFD000] font-semibold'
+                        : 'border-default bg-surface text-primary-fg hover:border-[#FFD000] hover:bg-[#FFD000]/5 hover:text-[#FFD000]'"
                     >
-                      <input type="radio" formControlName="gender" [value]="g.value" class="h-4 w-4 accent-indigo-500" />
+                      <input type="radio" formControlName="gender" [value]="g.value" class="h-4 w-4 accent-[#FFD000]" />
                       {{ g.label }}
                     </label>
                   }
@@ -128,10 +129,10 @@
               <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div class="relative">
                   <input #formInput id="editEmail" type="email" formControlName="email" placeholder=" "
-                    class="peer block w-full appearance-none rounded-xl border px-4 pb-2.5 pt-5 text-sm text-slate-900 dark:text-white transition-colors focus:outline-none focus:ring-2"
-                    [ngClass]="isInvalid('email') ? 'border-red-400 bg-red-50/40 dark:bg-red-500/10 focus:border-red-400 focus:ring-red-400/20' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:border-indigo-500 focus:ring-indigo-500/30'"
+                    class="peer block w-full appearance-none rounded-xl border px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:outline-none focus:ring-2"
+                    [ngClass]="isInvalid('email') ? 'border-red-400 bg-red-50/40 dark:bg-red-500/10 focus:border-red-400 focus:ring-red-400/20' : 'border-default bg-surface focus:border-[#FFD000] focus:ring-[#FFD000]/20'"
                   />
-                  <label for="editEmail" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600">
+                  <label for="editEmail" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-[#FFD000]">
                     Email <span class="text-red-400">*</span>
                   </label>
                   @if (isInvalid('email')) {
@@ -140,12 +141,12 @@
                 </div>
                 <div>
                   <div class="relative">
-                    <span class="pointer-events-none absolute left-4 top-5 bottom-2.5 z-10 flex items-center select-none text-sm font-semibold text-slate-500">+91</span>
+                    <span class="pointer-events-none absolute left-4 top-5 bottom-2.5 z-10 flex items-center select-none text-sm font-semibold text-primary-fg/50">+91</span>
                     <input #formInput id="editPhone" type="text" maxlength="12" formControlName="phone" placeholder=" " (input)="onInputPhone($event)"
-                      class="peer block w-full appearance-none rounded-xl border pl-12 pr-4 pb-2.5 pt-5 text-sm text-slate-900 dark:text-white transition-colors focus:outline-none focus:ring-2"
-                      [ngClass]="isInvalid('phone') ? 'border-red-400 bg-red-50/40 dark:bg-red-500/10 focus:border-red-400 focus:ring-red-400/20' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:border-indigo-500 focus:ring-indigo-500/30'"
+                      class="peer block w-full appearance-none rounded-xl border pl-12 pr-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:outline-none focus:ring-2"
+                      [ngClass]="isInvalid('phone') ? 'border-red-400 bg-red-50/40 dark:bg-red-500/10 focus:border-red-400 focus:ring-red-400/20' : 'border-default bg-surface focus:border-[#FFD000] focus:ring-[#FFD000]/20'"
                     />
-                    <label for="editPhone" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-5 peer-placeholder-shown:left-12 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:left-4 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600">
+                    <label for="editPhone" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-5 peer-placeholder-shown:left-12 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:left-4 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-[#FFD000]">
                       Phone <span class="text-red-400">*</span>
                     </label>
                   </div>
@@ -160,10 +161,10 @@
                 <!-- Aadhaar -->
                 <div class="relative">
                   <input #formInput id="editAadhaar" type="text" maxlength="14" formControlName="adharNo" placeholder=" " 
-                    class="peer block w-full appearance-none rounded-xl border px-4 pb-2.5 pt-5 text-sm tracking-widest text-slate-900 dark:text-white transition-colors focus:outline-none focus:ring-2"
-                    [ngClass]="isInvalid('aadhaarNo') ? 'border-red-400 bg-red-50/40 dark:bg-red-500/10 focus:border-red-400 focus:ring-red-400/20' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:border-indigo-500 focus:ring-indigo-500/30'"
+                    class="peer block w-full appearance-none rounded-xl border px-4 pb-2.5 pt-5 text-sm tracking-widest text-primary-fg transition-colors focus:outline-none focus:ring-2"
+                    [ngClass]="isInvalid('aadhaarNo') ? 'border-red-400 bg-red-50/40 dark:bg-red-500/10 focus:border-red-400 focus:ring-red-400/20' : 'border-default bg-surface focus:border-[#FFD000] focus:ring-[#FFD000]/20'"
                   />
-                  <label for="editAadhaar" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600">
+                  <label for="editAadhaar" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-[#FFD000]">
                     Aadhaar Number
                   </label>
                   @if (isInvalid('aadhaarNo')) {
@@ -173,10 +174,10 @@
                 <!-- PAN -->
                 <div class="relative">
                   <input #formInput id="editPan" type="text" maxlength="10" formControlName="memPan" placeholder=" " 
-                    class="peer block w-full appearance-none rounded-xl border px-4 pb-2.5 pt-5 text-sm uppercase tracking-widest text-slate-900 dark:text-white transition-colors focus:outline-none focus:ring-2"
-                    [ngClass]="isInvalid('memPan') ? 'border-red-400 bg-red-50/40 dark:bg-red-500/10 focus:border-red-400 focus:ring-red-400/20' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:border-indigo-500 focus:ring-indigo-500/30'"
+                    class="peer block w-full appearance-none rounded-xl border px-4 pb-2.5 pt-5 text-sm uppercase tracking-widest text-primary-fg transition-colors focus:outline-none focus:ring-2"
+                    [ngClass]="isInvalid('memPan') ? 'border-red-400 bg-red-50/40 dark:bg-red-500/10 focus:border-red-400 focus:ring-red-400/20' : 'border-default bg-surface focus:border-[#FFD000] focus:ring-[#FFD000]/20'"
                   />
-                  <label for="editPan" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-indigo-600">
+                  <label for="editPan" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-[#FFD000]">
                     PAN Card
                   </label>
                   @if (isInvalid('memPan')) {
@@ -191,18 +192,18 @@
 
         <!-- ════════════ ADDRESS DETAILS ════════════ -->
         <div class="col-span-12 lg:col-span-6">
-          <div class="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
-            <h4 class="text-lg font-semibold text-gray-800 dark:text-white/90 mb-6">Address Details</h4>
+          <div class="p-5 border border-default rounded-2xl lg:p-6">
+            <h4 class="text-lg font-semibold text-primary-fg mb-6">Address Details</h4>
             <div class="flex items-center gap-3 py-1 mb-4">
-              <div class="h-px flex-1 bg-gray-200 dark:bg-gray-700"></div>
-              <span class="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <div class="h-px flex-1 bg-default"></div>
+              <span class="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary-fg/50">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
                 Address
               </span>
-              <div class="h-px flex-1 bg-gray-200 dark:bg-gray-700"></div>
+              <div class="h-px flex-1 bg-default"></div>
             </div>
             <shared-address-form [formGroup]="addressGroup" [apiBaseUrl]="apiBaseUrl"></shared-address-form>
           </div>
