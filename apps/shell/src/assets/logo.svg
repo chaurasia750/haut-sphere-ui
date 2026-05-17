@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" role="img" aria-label="ANON INDIA logo">
-  <g fill="#ffffff">
+  <g fill="#000000">
     <polygon points="32,376 210,82 248,82 72,376"/>
     <polygon points="250,82 338,229 294,229 210,82"/>
     <polygon points="230,275 360,275 374,315 216,315"/>
@@ -9,7 +9,7 @@
     x="250"
     y="465"
     text-anchor="middle"
-    fill="#ffffff"
+    fill="#000000"
     font-family="Times New Roman, Georgia, serif"
     font-size="66"
     font-weight="700"

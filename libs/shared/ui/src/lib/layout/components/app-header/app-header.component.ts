@@ -18,16 +18,16 @@ import { UserDropdownComponent } from '../user-dropdown/user-dropdown.component'
     UserDropdownComponent,
   ],
   template: `<header
-  class="sticky top-0 flex w-full bg-white border-gray-200 z-99999 dark:border-gray-800 dark:bg-[#171f2f] xl:border-b"
+  class="sticky top-0 flex w-full bg-[#0B0B0B] border-[#2A2A2A] z-99999 xl:border-b"
 >
   <div class="flex flex-col items-center justify-between grow xl:flex-row xl:px-6">
     <div
-      class="flex items-center justify-between w-full gap-2 px-3 py-3 border-b border-gray-200 dark:border-gray-800 sm:gap-4 xl:justify-normal xl:border-b-0 xl:px-0 lg:py-4"
+      class="flex items-center justify-between w-full gap-2 px-3 py-3 border-b border-[#2A2A2A] sm:gap-4 xl:justify-normal xl:border-b-0 xl:px-0 lg:py-4"
     >
       <button
-        class="items-center justify-center w-10 h-10 text-gray-500 border-gray-200 rounded-lg z-99999 dark:border-gray-800 flex dark:text-gray-400 lg:h-11 lg:w-11 xl:border"
+        class="items-center justify-center w-10 h-10 text-[#BDBDBD] border-[#333] rounded-lg z-99999 flex lg:h-11 lg:w-11 xl:border"
         [ngClass]="{
-          'bg-gray-100 dark:bg-white/[0.03]': isMobileOpen$ | async
+          'bg-[#FFD000]/10': isMobileOpen$ | async
         }"
         (click)="handleToggle()"
         aria-label="Toggle Sidebar"
@@ -53,11 +53,11 @@ import { UserDropdownComponent } from '../user-dropdown/user-dropdown.component'
         }
       </button>
       <a routerLink="/" class="xl:hidden">
-        <h1 class="text-[#101828] dark:text-white text-[25px] font-semibold dark:font-medium">{{ brandName }}</h1>
+        <h1 class="text-[#FFD000] text-[25px] font-semibold">{{ brandName }}</h1>
       </a>
       <button
         (click)="toggleApplicationMenu()"
-        class="flex items-center justify-center w-10 h-10 text-gray-700 rounded-lg z-99999 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 xl:hidden"
+        class="flex items-center justify-center w-10 h-10 text-[#BDBDBD] rounded-lg z-99999 hover:bg-[#1A1A1A] xl:hidden"
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
           <path
@@ -72,7 +72,7 @@ import { UserDropdownComponent } from '../user-dropdown/user-dropdown.component'
         <form>
           <div class="relative">
             <span class="absolute -translate-y-1/2 pointer-events-none left-4 top-1/2">
-              <svg class="fill-gray-500 dark:fill-gray-400" width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <svg class="fill-[#666]" width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path
                   fill-rule="evenodd"
                   clip-rule="evenodd"
@@ -85,10 +85,10 @@ import { UserDropdownComponent } from '../user-dropdown/user-dropdown.component'
               #searchInput
               type="text"
               placeholder="Search or type command..."
-              class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-200 bg-transparent py-2.5 pl-12 pr-14 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-800 dark:bg-gray-900 dark:bg-white/[0.03] dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 xl:w-[430px]"
+              class="h-11 w-full rounded-lg border border-[#333] bg-[#151515] py-2.5 pl-12 pr-14 text-sm text-white/90 placeholder:text-[#666] focus:border-[#FFD000] focus:outline-hidden focus:ring-3 focus:ring-[#FFD000]/20 xl:w-[430px]"
             />
             <button
-              class="absolute right-2.5 top-1/2 inline-flex -translate-y-1/2 items-center gap-0.5 rounded-lg border border-gray-200 bg-gray-50 px-[7px] py-[4.5px] text-xs -tracking-[0.2px] text-gray-500 dark:border-gray-800 dark:bg-white/[0.03] dark:text-gray-400"
+              class="absolute right-2.5 top-1/2 inline-flex -translate-y-1/2 items-center gap-0.5 rounded-lg border border-[#333] bg-[#1A1A1A] px-[7px] py-[4.5px] text-xs -tracking-[0.2px] text-[#666]"
             >
               <span>⌘</span>
               <span>K</span>
@@ -100,7 +100,7 @@ import { UserDropdownComponent } from '../user-dropdown/user-dropdown.component'
 
     <div
       [ngClass]="isApplicationMenuOpen ? 'flex' : 'hidden'"
-      class="items-center justify-between w-full gap-4 px-5 py-4 xl:flex shadow-theme-md xl:justify-end xl:px-0 xl:shadow-none"
+      class="items-center justify-between w-full gap-4 px-5 py-4 xl:flex xl:justify-end xl:px-0"
     >
       <div class="flex items-center gap-2 2xsm:gap-3">
         <app-theme-toggle-button />

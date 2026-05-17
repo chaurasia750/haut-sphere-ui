@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   standalone: true,
   template: `<button
   type="button"
-  class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-100"
+  class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[#333] text-[#BDBDBD] hover:bg-[#FFD000]/10 hover:text-[#FFD000]"
   [attr.aria-label]="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
   (click)="toggleTheme()"
 >

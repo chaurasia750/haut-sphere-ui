@@ -10,7 +10,7 @@ export class ThemeService {
   theme$ = this.themeSubject.asObservable();
 
   constructor() {
-    const savedTheme = (localStorage.getItem('theme') as Theme) || 'light';
+    const savedTheme = (localStorage.getItem('theme') as Theme) || 'dark';
     this.setTheme(savedTheme);
   }
 
@@ -24,10 +24,8 @@ export class ThemeService {
     localStorage.setItem('theme', theme);
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
-      document.body.classList.add('dark:bg-gray-900');
     } else {
       document.documentElement.classList.remove('dark');
-      document.body.classList.remove('dark:bg-gray-900');
     }
   }
 }

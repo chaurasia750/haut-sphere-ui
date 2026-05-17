@@ -8,7 +8,22 @@ module.exports = {
     './libs/shared/i18n/src/**/*.{html,ts,scss}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+          brand: {
+           50: '#FFF7CC',
+           100: '#FFEF99',
+           200: '#FFE766',
+           300: '#FFDF33',
+           400: '#FFD700',
+           500: '#FFD000',
+           600: '#F0C000',
+           700: '#D4A800',
+           800: '#B89000',
+           900: '#9C7800',
+         },
+      },
+    },
   },
   plugins: [],
 };

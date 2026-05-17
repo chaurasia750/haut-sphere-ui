@@ -104,13 +104,6 @@ export class AppSidebarComponent {
     }
   ];
 
-  social = {
-    facebook: "https://www.facebook.com/",
-    x: "https://x.com/PimjoHQ",
-    linkedin: "https://www.linkedin.com/",
-    instagram: "https://instagram.com/",
-  };
-
   openSubmenu: string | null | number = null;
   subMenuHeights: { [key: string]: number } = {};
   @ViewChildren("subMenu") subMenuRefs!: QueryList<ElementRef>;

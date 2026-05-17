@@ -1,7 +1,7 @@
-<header class="bg-primary text-white p-4">
+<header class="bg-[#151515] text-white p-4 border-b border-[#2A2A2A]">
   <div class="flex justify-between items-center">
     <h1 class="text-2xl font-bold">Haut Spare UI</h1>
-    <button (click)="toggleSidebar()" class="px-4 py-2 bg-secondary rounded">
+    <button (click)="toggleSidebar()" class="px-4 py-2 bg-[#FFD000] rounded text-black font-semibold hover:bg-[#FFD000]/90 shadow-lg shadow-[#FFD000]/20">
       {{ sidebarOpen ? 'Hide' : 'Show' }} Menu
     </button>
   </div>
@@ -9,12 +9,12 @@
 
 <div class="flex flex-1">
   @if (sidebarOpen) {
-  <nav class="w-64 bg-gray-100 p-4">
+  <nav class="w-64 bg-[#151515] p-4 border-r border-[#2A2A2A]">
     <ul class="space-y-2">
-      <li><a href="/dashboard" class="text-primary hover:underline">Dashboard</a></li>
-      <li><a href="/admin" class="text-primary hover:underline">Admin</a></li>
-      <li><a href="/member" class="text-primary hover:underline">Member</a></li>
-      <li><a href="/management" class="text-primary hover:underline">Management</a></li>
+      <li><a href="/dashboard" class="text-[#BDBDBD] font-semibold hover:text-[#FFD000]">Dashboard</a></li>
+      <li><a href="/admin" class="text-[#BDBDBD] font-semibold hover:text-[#FFD000]">Admin</a></li>
+      <li><a href="/member" class="text-[#BDBDBD] font-semibold hover:text-[#FFD000]">Member</a></li>
+      <li><a href="/management" class="text-[#BDBDBD] font-semibold hover:text-[#FFD000]">Management</a></li>
     </ul>
   </nav>
   }

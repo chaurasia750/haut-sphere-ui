@@ -14,7 +14,7 @@ import { SharedTranslationService } from '@shared/i18n';
     @if (isLoginPage) {
       <router-outlet></router-outlet>
     } @else {
-      <div style="width: 100%; height: 100%; background: white;">
+      <div style="width: 100%; height: 100%;">
         <router-outlet></router-outlet>
       </div>
     }

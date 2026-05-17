@@ -26,13 +26,6 @@ export class SharedAppSidebarComponent {
   readonly isMobileOpen$;
   readonly isHovered$;
 
-  social = {
-    facebook: 'https://www.facebook.com/',
-    x: 'https://x.com/PimjoHQ',
-    linkedin: 'https://www.linkedin.com/',
-    instagram: 'https://instagram.com/',
-  };
-
   navItems: Array<{
     name: string;
     icon: string;
