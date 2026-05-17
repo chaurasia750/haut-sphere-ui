@@ -3,7 +3,7 @@
   (change)="onValueChange($any($event.target).value || null)"
   (blur)="onBlur()"
   [disabled]="disabled()"
-  class="h-full border-0 bg-transparent px-3 py-3 text-sm text-white focus:outline-none"
+  class="h-full w-full cursor-pointer appearance-none bg-surface px-3 py-3 text-sm text-primary-fg focus:outline-none"
 >
   <option value="" disabled>{{ placeholder() }}</option>
   @for (title of titleOptions; track title) {

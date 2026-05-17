@@ -100,13 +100,13 @@
 
           <div>
             <p class="mb-2 text-xs font-medium text-primary-fg">Business Category <span class="text-red-400">*</span></p>
-            <div class="grid grid-cols-3 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
               @for (cat of [{ value: 'real-estate', label: 'Real Estate' }, { value: 'construction', label: 'Construction' }, { value: 'interior-decor', label: 'Interior D\u00e9cor' }]; track cat.value) {
                 <label
-                  class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm transition-colors"
+                   class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border px-3 sm:px-4 py-2.5 text-xs sm:text-sm transition-colors text-center"
                   [ngClass]="signupForm.get('businessCategory')?.value === cat.value
-                    ? 'border-[#FFD000] bg-[#FFD000]/10 text-[#FFD000] font-medium'
-                    : 'border-default bg-surface text-secondary-fg hover:border-[#FFD000] hover:bg-[#FFD000]/5 hover:text-[#FFD000]'"
+                    ? 'border-[#FFD000] bg-[#FFD000]/25 text-[#FFD000] font-semibold'
+                    : 'border-default bg-surface text-primary-fg hover:border-[#FFD000] hover:bg-[#FFD000]/5 hover:text-[#FFD000]'"
                 >
                   <input
                     type="radio"
@@ -138,7 +138,7 @@
                 : 'border-default bg-surface focus-within:border-[#FFD000] focus-within:ring-2 focus-within:ring-[#FFD000]/20'"
             >
               <div class="flex min-w-0 flex-1 items-center border-0 bg-transparent">
-                <span class="select-none whitespace-nowrap pl-3 sm:pl-4 text-sm font-semibold text-muted-fg">{{ sponsorPrefix }}</span>
+                <span class="select-none whitespace-nowrap pl-3 sm:pl-4 text-sm font-semibold text-primary-fg/50">{{ sponsorPrefix }}</span>
                 <input
                   id="sponsorId"
                   type="text"
@@ -156,7 +156,7 @@
                   type="button"
                   (click)="positionOpen = !positionOpen"
                   class="flex w-full items-center justify-between gap-1 px-3 sm:px-4 py-3 text-sm focus:outline-none"
-                  [ngClass]="signupForm.get('position')?.value ? 'text-primary-fg' : 'text-muted-fg'"
+                  [ngClass]="signupForm.get('position')?.value ? 'text-primary-fg' : 'text-primary-fg/50'"
                 >
                   <span>{{ getPositionLabel(signupForm.get('position')?.value) }}</span>
                   <svg class="h-4 w-4 shrink-0 text-muted-fg transition-transform duration-200"
@@ -168,13 +168,13 @@
                 @if (positionOpen) {
                   <div class="absolute right-0 top-full z-50 mt-1 w-28 sm:w-36 overflow-hidden rounded-xl border border-default bg-surface shadow-lg">
                     <button type="button"
-                      class="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-secondary-fg hover:bg-[#FFD000]/10 hover:text-[#FFD000] transition-colors"
+                      class="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-primary-fg hover:bg-[#FFD000]/10 hover:text-[#FFD000] transition-colors"
                       (click)="selectPosition('left')">
                       <span class="h-2 w-2 rounded-full bg-[#FFD000] shrink-0"></span> {{ 'signup.position.left' | translate }}
                     </button>
                     <div class="mx-3 h-px bg-default"></div>
                     <button type="button"
-                      class="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-secondary-fg hover:bg-[#FFD000]/10 hover:text-[#FFD000] transition-colors"
+                      class="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-primary-fg hover:bg-[#FFD000]/10 hover:text-[#FFD000] transition-colors"
                       (click)="selectPosition('right')">
                       <span class="h-2 w-2 rounded-full bg-[#FFD000] shrink-0"></span> {{ 'signup.position.right' | translate }}
                     </button>
@@ -231,7 +231,7 @@
                 <input id="firstName" type="text" formControlName="firstName" placeholder=" " (input)="onFirstNameInput($event)"
                   class="peer block w-full border-0 bg-transparent px-4 pb-2.5 pt-5 text-sm text-primary-fg placeholder:text-muted-fg focus:outline-none"
                 />
-                <label for="firstName" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-muted-fg transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-muted-fg peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-secondary-fg">
+                <label for="firstName" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-primary-fg">
                   {{ 'signup.fields.firstName' | translate }} <span class="text-red-400">*</span>
                 </label>
               </div>
@@ -241,39 +241,41 @@
               <input id="lastName" type="text" formControlName="lastName" placeholder=" "
                   class="peer block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-[#FFD000] focus:outline-none focus:ring-2 focus:ring-[#FFD000]/20"
               />
-              <label for="lastName" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-muted-fg transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-muted-fg peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-secondary-fg">
+              <label for="lastName" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-primary-fg">
                 {{ 'signup.fields.lastName' | translate }} <span class="text-red-400">*</span>
               </label>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_1fr]">
-            <div>
-              @if (isInvalid('title')) {
-                <p class="flex items-center gap-1 text-xs text-red-400">
-                  <svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
-                  {{ getError('title') }}
-                </p>
-              }
-              @if (isInvalid('firstName')) {
-                <p class="flex items-center gap-1 text-xs text-red-400"><svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>{{ getError('firstName') }}</p>
-              }
+          @if (isInvalid('title') || isInvalid('firstName') || isInvalid('lastName')) {
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_1fr]">
+              <div>
+                @if (isInvalid('title')) {
+                  <p class="flex items-center gap-1 text-xs text-red-400">
+                    <svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                    {{ getError('title') }}
+                  </p>
+                }
+                @if (isInvalid('firstName')) {
+                  <p class="flex items-center gap-1 text-xs text-red-400"><svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>{{ getError('firstName') }}</p>
+                }
+              </div>
+              <div>
+                @if (isInvalid('lastName')) {
+                  <p class="flex items-center gap-1 text-xs text-red-400"><svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>{{ getError('lastName') }}</p>
+                }
+              </div>
             </div>
-            <div>
-              @if (isInvalid('lastName')) {
-                <p class="flex items-center gap-1 text-xs text-red-400"><svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>{{ getError('lastName') }}</p>
-              }
-            </div>
-          </div>
+          }
 
           <div>
-            <div class="grid grid-cols-2 gap-3 mt-0">
+            <div class="grid grid-cols-2 gap-4">
               @for (g of [{ value: 'male', label: 'Male' }, { value: 'female', label: 'Female' }]; track g.value) {
                 <label
-                  class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm transition-colors"
+                   class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border px-3 sm:px-4 py-2.5 text-xs sm:text-sm transition-colors text-center"
                   [ngClass]="signupForm.get('gender')?.value === g.value
-                    ? 'border-[#FFD000] bg-[#FFD000]/10 text-[#FFD000] font-medium'
-                    : 'border-default bg-surface text-secondary-fg hover:border-[#FFD000] hover:bg-[#FFD000]/5 hover:text-[#FFD000]'"
+                    ? 'border-[#FFD000] bg-[#FFD000]/25 text-[#FFD000] font-semibold'
+                    : 'border-default bg-surface text-primary-fg hover:border-[#FFD000] hover:bg-[#FFD000]/5 hover:text-[#FFD000]'"
                 >
                   <input
                     type="radio"
@@ -285,13 +287,13 @@
                 </label>
               }
             </div>
+            @if (isInvalid('gender')) {
+              <p class="mt-1.5 flex items-center gap-1 text-xs text-red-400">
+                <svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                {{ getError('gender') }}
+              </p>
+            }
           </div>
-          @if (isInvalid('gender')) {
-            <p class="mt-1.5 flex items-center gap-1 text-xs text-red-400">
-              <svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
-              {{ getError('gender') }}
-            </p>
-          }
 
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div class="relative">
@@ -299,7 +301,7 @@
                 class="peer block w-full appearance-none rounded-xl border px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:outline-none focus:ring-2"
                 [ngClass]="isInvalid('email') ? 'border-red-500 bg-red-500/5 focus:border-red-500 focus:ring-red-500/20' : 'border-default bg-surface focus:border-[#FFD000] focus:ring-[#FFD000]/20'"
               />
-              <label for="email" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-muted-fg transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-muted-fg peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-secondary-fg">
+              <label for="email" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-primary-fg">
                 {{ 'signup.fields.email' | translate }} <span class="text-red-400">*</span>
               </label>
               @if (isInvalid('email')) {
@@ -308,12 +310,12 @@
             </div>
             <div>
               <div class="relative">
-                <span class="pointer-events-none absolute left-4 top-5 bottom-2.5 z-10 flex items-center select-none text-sm font-semibold text-muted-fg">+91</span>
+                <span class="pointer-events-none absolute left-4 top-5 bottom-2.5 z-10 flex items-center select-none text-sm font-semibold text-primary-fg/50">+91</span>
                 <input id="phone" type="text" maxlength="12" formControlName="phone" placeholder=" " sharedPhoneFormat
                   class="peer block w-full appearance-none rounded-xl border pl-12 pr-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:outline-none focus:ring-2"
                   [ngClass]="isInvalid('phone') ? 'border-red-500 bg-red-500/5 focus:border-red-500 focus:ring-red-500/20' : 'border-default bg-surface focus:border-[#FFD000] focus:ring-[#FFD000]/20'"
                 />
-                <label for="phone" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-muted-fg transition-all duration-200 peer-placeholder-shown:top-5 peer-placeholder-shown:left-12 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-muted-fg peer-focus:top-1 peer-focus:left-4 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-secondary-fg">
+                <label for="phone" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-5 peer-placeholder-shown:left-12 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:left-4 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-primary-fg">
                   {{ 'signup.fields.phone' | translate }} <span class="text-red-400">*</span>
                 </label>
               </div>
@@ -329,7 +331,7 @@
                 class="peer block w-full appearance-none rounded-xl border px-4 pb-2.5 pt-5 text-sm tracking-widest text-primary-fg transition-colors focus:outline-none focus:ring-2"
                 [ngClass]="isInvalid('aadhaarNo') ? 'border-red-500 bg-red-500/5 focus:border-red-500 focus:ring-red-500/20' : 'border-default bg-surface focus:border-[#FFD000] focus:ring-[#FFD000]/20'"
               />
-              <label for="aadhaarNo" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-muted-fg transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-muted-fg peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-secondary-fg">
+              <label for="aadhaarNo" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-primary-fg">
                 {{ 'signup.fields.aadhaar' | translate }} <span class="text-red-400">*</span>
               </label>
               @if (isInvalid('aadhaarNo')) {
@@ -341,7 +343,7 @@
                 class="peer block w-full appearance-none rounded-xl border px-4 pb-2.5 pt-5 text-sm uppercase tracking-widest text-primary-fg transition-colors focus:outline-none focus:ring-2"
                 [ngClass]="isInvalid('panCard') ? 'border-red-500 bg-red-500/5 focus:border-red-500 focus:ring-red-500/20' : 'border-default bg-surface focus:border-[#FFD000] focus:ring-[#FFD000]/20'"
               />
-              <label for="panCard" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-muted-fg transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-muted-fg peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-secondary-fg">
+              <label for="panCard" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-primary-fg">
                 {{ 'signup.fields.pan' | translate }} <span class="text-red-400">*</span>
               </label>
               @if (isInvalid('panCard')) {
@@ -352,7 +354,7 @@
 
           <div class="flex items-center gap-3 py-1">
             <div class="h-px flex-1 bg-default"></div>
-            <span class="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-fg">
+            <span class="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary-fg/50">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
