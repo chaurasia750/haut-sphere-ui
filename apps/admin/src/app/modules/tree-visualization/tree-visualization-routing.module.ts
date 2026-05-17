@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { ROUTES, Routes } from '@angular/router';
 import { MatchingTreePageComponent } from './pages/matching-tree-page/matching-tree-page.component';
 import { MatrixTreePageComponent } from './pages/matrix-tree-page/matrix-tree-page.component';
 
@@ -10,7 +10,8 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  providers: [
+    { provide: ROUTES, multi: true, useValue: routes },
+  ],
 })
 export class TreeVisualizationRoutingModule {}

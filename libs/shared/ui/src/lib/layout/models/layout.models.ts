@@ -2,6 +2,7 @@ export interface AppLayoutMenuItem {
   label: string;
   route?: string;
   icon?: string;
+  section?: string;
   subItems?: { name: string; path: string; pro?: boolean }[];
 }
 

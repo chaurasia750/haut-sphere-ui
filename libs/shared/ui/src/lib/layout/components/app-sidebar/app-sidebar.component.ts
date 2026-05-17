@@ -37,14 +37,17 @@ export class SharedAppSidebarComponent {
     name: string;
     icon: string;
     path?: string;
+    section?: string;
     subItems?: { name: string; path: string; pro?: boolean }[];
   }> = [];
 
   openSubmenu: string | null | number = null;
   subMenuHeights: Record<string, number> = {};
   private readonly subscription = new Subscription();
+  configData: AppLayoutConfig | null = null;
 
   @Input() set config(value: AppLayoutConfig | null) {
+    this.configData = value;
     if (value?.menu?.length) {
       this.navItems = value.menu.map((item) => this.toNavItem(item));
       return;
@@ -158,6 +161,7 @@ export class SharedAppSidebarComponent {
       return {
         name: item.label,
         icon: item.icon || this.defaultIcon(),
+        section: item.section,
         subItems: item.subItems,
       };
     }
@@ -165,6 +169,7 @@ export class SharedAppSidebarComponent {
     return {
       name: item.label,
       icon: item.icon || this.defaultIcon(),
+      section: item.section,
       path: item.route || '/',
     };
   }

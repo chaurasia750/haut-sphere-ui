@@ -1,42 +1,48 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { ROUTES, Routes } from '@angular/router';
+import { AdminLayoutComponent } from './admin-layout.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
-    pathMatch: 'full',
-  },
-  {
-    path: 'dashboard',
-    loadChildren: () =>
-      import('./modules/dashboard/dashboard.module').then(
-        (m) => m.DashboardModule
-      ),
-  },
-  {
-    path: 'users',
-    loadChildren: () =>
-      import('./modules/users/users.module').then((m) => m.UsersModule),
-  },
-  {
-    path: 'projects',
-    loadChildren: () =>
-      import('./modules/projects/projects.module').then(
-        (m) => m.ProjectsModule
-      ),
-  },
-  {
-    path: 'tree',
-    loadChildren: () =>
-      import('./modules/tree-visualization/tree-visualization.module').then(
-        (m) => m.TreeVisualizationModule
-      ),
+    component: AdminLayoutComponent,
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'dashboard',
+        loadChildren: () =>
+          import('./modules/dashboard/dashboard.module').then(
+            (m) => m.DashboardModule
+          ),
+      },
+      {
+        path: 'users',
+        loadChildren: () =>
+          import('./modules/users/users.module').then((m) => m.UsersModule),
+      },
+      {
+        path: 'projects',
+        loadChildren: () =>
+          import('./modules/projects/projects.module').then(
+            (m) => m.ProjectsModule
+          ),
+      },
+      {
+        path: 'tree',
+        loadChildren: () =>
+          import('./modules/tree-visualization/tree-visualization.module').then(
+            (m) => m.TreeVisualizationModule
+          ),
+      },
+    ],
   },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
+  providers: [
+    { provide: ROUTES, multi: true, useValue: routes },
+  ],
 })
 export class AppRoutingModule {}
+
+export { routes };

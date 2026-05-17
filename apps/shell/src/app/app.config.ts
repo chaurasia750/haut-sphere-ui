@@ -5,7 +5,6 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { ToastrModule } from 'ngx-toastr';
 import { firstValueFrom } from 'rxjs';
 import { RemoteLoaderService } from './services/remote-loader.service';
-import { RemoteContainerComponent } from './components/remote-container.component';
 import { RemoteUnavailableComponent } from './components/remote-unavailable.component';
 import { remoteConfig } from '@shared/environments/remotes.dev';
 import { LoginComponent } from './features/login/pages/login/login.component';
@@ -49,12 +48,74 @@ export const appRoutes: Route[] = [
   // Module federation routes (protected)
   {
     path: 'admin',
-    component: RemoteContainerComponent,
     canActivate: [authGuard],
-    data: {
-      remoteConfig: remoteConfig.find((c: any) => c.key === 'admin'),
-      roles: [RoleId.SYSTEM_ADMIN, RoleId.ADMIN]
-    }
+    data: { roles: [RoleId.SYSTEM_ADMIN, RoleId.ADMIN] },
+    loadChildren: async () => {
+      const adminConfig = remoteConfig.find((c: any) => c.key === 'admin');
+      const adminEntry = adminConfig?.entry ?? 'http://localhost:4101/remoteEntry.mjs';
+      if (!adminConfig) return [{ path: '', redirectTo: '/dashboard', pathMatch: 'full' }];
+      try {
+        const [
+          ngCore, ngCorePrimitivesDi, ngCorePrimitivesSignals,
+          ngCommon, ngCommonHttp, ngRouter, ngForms, ngPlatformBrowser,
+          rxjs, rxjsOperators, sharedI18n,
+        ] = await Promise.all([
+          import('@angular/core'),
+          import('@angular/core/primitives/di'),
+          import('@angular/core/primitives/signals'),
+          import('@angular/common'),
+          import('@angular/common/http'),
+          import('@angular/router'),
+          import('@angular/forms'),
+          import('@angular/platform-browser'),
+          import('rxjs'),
+          import('rxjs/operators'),
+          import('@shared/i18n'),
+        ]);
+
+        const w = window as any;
+        w.__webpack_share_scopes__ = w.__webpack_share_scopes__ || { default: {} };
+        const shareScope = w.__webpack_share_scopes__.default;
+
+        const registerShare = (pkg: string, value: any, version: string) => {
+          const versions = shareScope[pkg] || (shareScope[pkg] = {});
+          versions[version] = { get: () => () => value, from: 'shell', eager: true, loaded: 1 };
+        };
+
+        registerShare('@angular/core', ngCore, '21.2.10');
+        registerShare('@angular/core/primitives/di', ngCorePrimitivesDi, '21.2.10');
+        registerShare('@angular/core/primitives/signals', ngCorePrimitivesSignals, '21.2.10');
+        registerShare('@angular/common', ngCommon, '21.2.10');
+        registerShare('@angular/common/http', ngCommonHttp, '21.2.10');
+        registerShare('@angular/router', ngRouter, '21.2.10');
+        registerShare('@angular/forms', ngForms, '21.2.10');
+        registerShare('@angular/platform-browser', ngPlatformBrowser, '21.2.10');
+        registerShare('rxjs', rxjs, '7.8.2');
+        registerShare('rxjs/operators', rxjsOperators, '7.8.2');
+        registerShare('@shared/i18n', sharedI18n, '0.0.0');
+
+        if (typeof w.__webpack_init_sharing__ !== 'function') {
+          w.__webpack_init_sharing__ = async () => undefined;
+        }
+
+        const container: any = await import(/* @vite-ignore */ adminEntry);
+        if (typeof w.__webpack_init_sharing__ === 'function') {
+          await w.__webpack_init_sharing__('default');
+        }
+        try { await container.init(shareScope); } catch {}
+
+        const factory = await container.get('./Module');
+        const mod = factory();
+        return mod.AppModule;
+      } catch (error: any) {
+        console.error('[shell] Admin remote load FAILED:', error?.message || error);
+        return [{
+          path: '',
+          component: RemoteUnavailableComponent,
+          data: { title: 'Admin Unavailable', message: `Admin remote could not be loaded from ${adminEntry}.` },
+        }];
+      }
+    },
   },
   {
     path: 'member',
@@ -149,12 +210,25 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'management',
-    component: RemoteContainerComponent,
     canActivate: [authGuard],
-    data: {
-      remoteConfig: remoteConfig.find((c: any) => c.key === 'management'),
-      roles: [RoleId.MANAGER]
-    }
+    data: { roles: [RoleId.MANAGER] },
+    loadChildren: async () => {
+      const mgmtConfig = remoteConfig.find((c: any) => c.key === 'management');
+      if (!mgmtConfig) return [{ path: '', redirectTo: '/dashboard', pathMatch: 'full' }];
+      try {
+        const loader = inject(RemoteLoaderService);
+        const module = await loader.load(mgmtConfig);
+        const mgmtRoutes = module?.mgmtRoutes || module?.routes || module?.default?.mgmtRoutes || module?.default?.routes;
+        return mgmtRoutes || [{ path: '', redirectTo: '/dashboard', pathMatch: 'full' }];
+      } catch (error: any) {
+        console.error('[shell] Management remote load FAILED:', error?.message || error);
+        return [{
+          path: '',
+          component: RemoteUnavailableComponent,
+          data: { title: 'Management Unavailable', message: 'Management remote could not be loaded.' },
+        }];
+      }
+    },
   },
   
   // Default redirect to local dashboard so shell remains usable if remotes are down

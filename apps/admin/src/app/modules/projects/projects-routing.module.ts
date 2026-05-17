@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { ROUTES, Routes } from '@angular/router';
 import { ProjectsPageComponent } from './pages/projects-page/projects-page.component';
 
 const routes: Routes = [
@@ -10,7 +10,8 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  providers: [
+    { provide: ROUTES, multi: true, useValue: routes },
+  ],
 })
 export class ProjectsRoutingModule {}

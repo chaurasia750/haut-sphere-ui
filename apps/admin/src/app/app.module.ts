@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 import { SharedLayoutModule } from '@shared';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { createSharedTranslateLoader } from '@shared';
@@ -8,11 +8,13 @@ import { AUTH_API_BASE_URL } from '@libs/shared/auth';
 import { apiConfig } from '@shared/environments/api.dev';
 
 import { AppComponent } from './app.component';
+import { AdminLayoutComponent } from './admin-layout.component';
 import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [
     AppComponent,
+    AdminLayoutComponent,
   ],
   imports: [
     TranslateModule.forRoot({
@@ -23,11 +25,10 @@ import { AppRoutingModule } from './app-routing.module';
       },
     }),
     SharedLayoutModule,
+    RouterModule,
     AppRoutingModule,
   ],
   providers: [
-    provideAnimationsAsync(),
-    provideHttpClient(withInterceptorsFromDi()),
     {
       provide: AUTH_API_BASE_URL,
       useValue: `${apiConfig.baseUrl}/auth`,

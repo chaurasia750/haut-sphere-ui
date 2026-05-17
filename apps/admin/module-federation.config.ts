@@ -21,7 +21,11 @@ const config = {
   name: 'admin',
   filename: 'remoteEntry.mjs',
   exposes: {
-    './Module': 'apps/admin/src/app/app.module.ts'
+    // Expose a minimal component-only remote entry so hosts import a small
+    // standalone root instead of the full AppModule/AppComponent. This
+    // avoids heavy injected services (Title, Router root providers) being
+    // executed when the shell creates the remote component.
+    './Module': 'apps/admin/src/app/remote-entry.ts'
   },
   shared: (packageName: string, defaultSharedConfig: any) => {
     // Exclude platform-browser-dynamic — it brings in the JIT compiler
