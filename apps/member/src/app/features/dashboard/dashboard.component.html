@@ -1,3 +1,17 @@
+<div class="flex items-center justify-between mb-4">
+  <div></div>
+  <button
+    (click)="openPanel()"
+    class="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-2.5 text-sm font-semibold text-black shadow-lg shadow-accent/20 transition hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-surface"
+  >
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19" />
+      <line x1="5" y1="12" x2="19" y2="12" />
+    </svg>
+    Quick Actions
+  </button>
+</div>
+
 <div class="grid grid-cols-12 gap-4 md:gap-6">
   <div class="col-span-12 space-y-12 xl:col-span-12">
     <div>
@@ -13,7 +27,7 @@
 
   <div class="col-span-12 xl:col-span-7 flex">
     <div
-      class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] w-full"
+      class="rounded-2xl border border-default bg-surface w-full"
     >
       <app-sponsor-members />
     </div>
@@ -21,13 +35,13 @@
 
   <div class="col-span-12 xl:col-span-5">
     <div
-      class="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6"
+      class="overflow-hidden rounded-2xl border border-default bg-surface px-4 pb-3 pt-4 sm:px-6"
     >
       <div
         class="flex flex-col gap-2 mb-4 sm:flex-row sm:items-center sm:justify-between"
       >
         <div>
-          <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
+          <h3 class="text-lg font-semibold text-primary-fg">
             Advertising
           </h3>
         </div>
@@ -39,3 +53,64 @@
     </div>
   </div>
 </div>
+
+<shared-side-panel
+  [isOpen]="isPanelOpen"
+  title="Quick Actions"
+  (closed)="onPanelClosed()"
+>
+  <div class="space-y-6">
+    <p class="text-sm text-secondary-fg">Select an action to perform:</p>
+
+    <div class="grid grid-cols-1 gap-3">
+      <button
+        class="flex w-full items-center gap-3 rounded-xl border border-default bg-surface-hover px-4 py-3 text-sm font-medium text-primary-fg transition hover:bg-accent/10 hover:border-accent/30 hover:text-accent text-left"
+      >
+        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+        </span>
+        <span>View Profile</span>
+      </button>
+
+      <button
+        class="flex w-full items-center gap-3 rounded-xl border border-default bg-surface-hover px-4 py-3 text-sm font-medium text-primary-fg transition hover:bg-accent/10 hover:border-accent/30 hover:text-accent text-left"
+      >
+        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+        </span>
+        <span>Change Password</span>
+      </button>
+
+      <button
+        class="flex w-full items-center gap-3 rounded-xl border border-default bg-surface-hover px-4 py-3 text-sm font-medium text-primary-fg transition hover:bg-accent/10 hover:border-accent/30 hover:text-accent text-left"
+      >
+        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+          </svg>
+        </span>
+        <span>View Reports</span>
+      </button>
+    </div>
+
+    <div class="rounded-xl border border-default bg-surface-hover p-4">
+      <h4 class="text-sm font-semibold text-primary-fg mb-2">Statistics</h4>
+      <div class="grid grid-cols-2 gap-3">
+        <div class="rounded-lg bg-surface px-3 py-2 border border-default">
+          <p class="text-xs text-secondary-fg">Total Members</p>
+          <p class="text-lg font-bold text-accent">1,284</p>
+        </div>
+        <div class="rounded-lg bg-surface px-3 py-2 border border-default">
+          <p class="text-xs text-secondary-fg">Active Today</p>
+          <p class="text-lg font-bold text-accent">47</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</shared-side-panel>

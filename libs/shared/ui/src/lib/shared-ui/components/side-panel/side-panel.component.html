@@ -1,0 +1,26 @@
+@if (isOpen) {
+  <div class="fixed inset-0 z-[9999] flex justify-end">
+    <div class="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300" (click)="onOverlayClick()"></div>
+
+    <div
+      class="relative h-full w-full bg-surface border-l border-default shadow-modal flex flex-col animate-slide-in"
+      [style.max-width]="panelWidth"
+    >
+      <div class="flex items-center justify-between px-6 py-4 border-b border-default shrink-0">
+        <h3 class="text-lg font-semibold text-primary-fg truncate pr-4">{{ title }}</h3>
+        <button
+          (click)="close()"
+          class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-default text-secondary-fg hover:bg-surface-hover hover:text-primary-fg transition-colors duration-150"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto px-6 py-5">
+        <ng-content></ng-content>
+      </div>
+    </div>
+  </div>
+}
