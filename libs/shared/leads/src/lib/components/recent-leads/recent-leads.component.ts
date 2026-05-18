@@ -11,6 +11,7 @@ import { Lead } from '../../models/lead.model';
 export class RecentLeadsComponent {
   @Input({ required: true }) leads: Lead[] = [];
 
+  readonly avatarColors = ['bg-[#FFC107]/20', 'bg-[#339AF0]/20', 'bg-[#51CF66]/20', 'bg-[#CC5DE8]/20', 'bg-[#FF6B6B]/20', 'bg-[#20C997]/20', 'bg-[#F06595]/20', 'bg-[#FF922B]/20'];
   readonly badgeClass: Record<string, string> = {
     new: 'bg-blue-50 text-blue-600 border-blue-200',
     hot: 'bg-red-50 text-red-500 border-red-200',
@@ -22,6 +23,10 @@ export class RecentLeadsComponent {
 
   initials(name: string): string {
     return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  }
+
+  avatarColor(index: number): string {
+    return this.avatarColors[index % this.avatarColors.length];
   }
 
   formatCurrency(val: number): string {
