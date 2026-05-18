@@ -1,0 +1,27 @@
+<div class="space-y-5">
+  <lib-lead-header (addLead)="onAddLead()"/>
+
+  <lib-kpi-cards [cards]="kpiCards"/>
+
+  <div class="grid grid-cols-1 gap-5 xl:grid-cols-4">
+    <div class="xl:col-span-3">
+      <lib-leads-charts [leadStatuses]="leadStatuses" [monthlyTrends]="monthlyTrends"/>
+    </div>
+    <div class="xl:col-span-1">
+      <lib-recent-leads [leads]="recentLeads"/>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <div class="flex items-center justify-between">
+      <h2 class="text-lg font-semibold text-[#111111]">All Leads</h2>
+      <button (click)="viewList.emit()"
+        class="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:border-[#FFC107] hover:bg-[#FFC107]/5 hover:text-[#FFC107]">
+        View All
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+    <lib-leads-filters [allLeads]="allLeads" (filterChange)="onFilterChange($event)"/>
+    <lib-leads-table [leads]="filteredLeads" (editLead)="onEditLead($event)"/>
+  </div>
+</div>

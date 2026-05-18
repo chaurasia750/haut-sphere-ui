@@ -1,0 +1,9 @@
+<div class="space-y-5">
+  <div>
+    <h1 class="text-2xl font-bold tracking-tight text-[#111111]">Leads List</h1>
+    <p class="mt-1 text-sm text-gray-500">CRM / Leads / All Leads</p>
+  </div>
+
+  <lib-leads-filters [allLeads]="allLeads" (filterChange)="onFilterChange($event)"/>
+  <lib-leads-table [leads]="filteredLeads" (editLead)="onEditLead($event)"/>
+</div>

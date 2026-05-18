@@ -1,0 +1,30 @@
+<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+  @for (card of cards; track card.label) {
+    <div class="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg">
+      <div class="flex items-start justify-between">
+        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
+          [style.background]="card.color + '15'">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+            [style.color]="card.color">
+            <path [attr.d]="iconMap[card.icon] || iconMap['users']"/>
+          </svg>
+        </div>
+        @if (card.growth !== 0) {
+          <span class="inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-[11px] font-semibold"
+            [ngClass]="card.growth > 0 ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-500'">
+            <svg class="shrink-0" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              @if (card.growth > 0) {
+                <polyline points="18 15 12 9 6 15"/>
+              } @else {
+                <polyline points="6 9 12 15 18 9"/>
+              }
+            </svg>
+            {{ card.growth > 0 ? '+' : '' }}{{ card.growth }}%
+          </span>
+        }
+      </div>
+      <p class="mt-4 text-2xl font-bold tracking-tight text-[#111111]">{{ formatValue(card) }}</p>
+      <p class="mt-0.5 text-sm text-gray-500">{{ card.label }}</p>
+    </div>
+  }
+</div>

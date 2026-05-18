@@ -1,0 +1,45 @@
+<div class="flex flex-wrap items-center gap-3">
+  <div class="relative min-w-0 flex-1 sm:max-w-xs">
+    <svg class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input type="text" placeholder="Search leads..." [(ngModel)]="search" (input)="onFilter()"
+      class="h-10 w-full rounded-xl border border-gray-200 bg-white pl-10 pr-4 text-sm text-gray-700 shadow-sm placeholder:text-gray-400 focus:border-[#FFC107] focus:outline-none focus:ring-2 focus:ring-[#FFC107]/20"/>
+  </div>
+
+  <select [(ngModel)]="status" (change)="onFilter()"
+    class="h-10 appearance-none rounded-xl border border-gray-200 bg-white px-4 pr-8 text-sm text-gray-700 shadow-sm focus:border-[#FFC107] focus:outline-none focus:ring-2 focus:ring-[#FFC107]/20 cursor-pointer">
+    <option value="">All Status</option>
+    <option value="new">New</option>
+    <option value="hot">Hot</option>
+    <option value="warm">Warm</option>
+    <option value="cold">Cold</option>
+    <option value="converted">Converted</option>
+    <option value="lost">Lost</option>
+  </select>
+
+  <select [(ngModel)]="assignedUser" (change)="onFilter()"
+    class="h-10 appearance-none rounded-xl border border-gray-200 bg-white px-4 pr-8 text-sm text-gray-700 shadow-sm focus:border-[#FFC107] focus:outline-none focus:ring-2 focus:ring-[#FFC107]/20 cursor-pointer">
+    <option value="">All Users</option>
+    @for (u of users; track u) {
+      <option [value]="u">{{ u }}</option>
+    }
+  </select>
+
+  <select [(ngModel)]="city" (change)="onFilter()"
+    class="h-10 appearance-none rounded-xl border border-gray-200 bg-white px-4 pr-8 text-sm text-gray-700 shadow-sm focus:border-[#FFC107] focus:outline-none focus:ring-2 focus:ring-[#FFC107]/20 cursor-pointer">
+    <option value="">All Cities</option>
+    @for (c of cities; track c) {
+      <option [value]="c">{{ c }}</option>
+    }
+  </select>
+
+  <input type="date" [(ngModel)]="followupDate" (change)="onFilter()"
+    class="h-10 rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-700 shadow-sm focus:border-[#FFC107] focus:outline-none focus:ring-2 focus:ring-[#FFC107]/20"/>
+
+  <button (click)="clearFilters()"
+    class="inline-flex h-10 items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-3.5 text-sm text-gray-500 shadow-sm transition-colors hover:bg-gray-50 hover:text-gray-700">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+    Reset
+  </button>
+</div>
