@@ -5,6 +5,7 @@ import { KpiCard, Lead } from '../../models/lead.model';
 import { LeadHeaderComponent } from '../lead-header/lead-header.component';
 import { KpiCardsComponent } from '../kpi-cards/kpi-cards.component';
 import { RecentLeadsComponent } from '../recent-leads/recent-leads.component';
+import { SharedDateRangePickerComponent } from '@shared/ui/src';
 
 @Component({
   selector: 'lib-leads-dashboard',
@@ -14,12 +15,14 @@ import { RecentLeadsComponent } from '../recent-leads/recent-leads.component';
     LeadHeaderComponent,
     KpiCardsComponent,
     RecentLeadsComponent,
+    SharedDateRangePickerComponent,
   ],
   templateUrl: './leads-dashboard.component.html',
 })
 export class LeadsDashboardComponent implements OnInit {
   kpiCards: KpiCard[] = [];
   recentLeads: Lead[] = [];
+  dateRange: { start: Date | null; end: Date | null } = { start: null, end: null };
 
   constructor(private readonly leadsService: LeadsService) {}
 
@@ -30,5 +33,10 @@ export class LeadsDashboardComponent implements OnInit {
 
   onAddLead(): void {
     console.log('Add New Lead clicked');
+  }
+
+  onDateRangeChange(range: { start: Date | null; end: Date | null }): void {
+    this.dateRange = range;
+    console.log('Date range selected:', range);
   }
 }
