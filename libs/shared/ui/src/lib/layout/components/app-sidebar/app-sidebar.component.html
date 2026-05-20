@@ -1,17 +1,17 @@
 <aside
-  class="fixed flex flex-col top-0 left-0 h-screen z-[9999999] border-r overflow-hidden transition-all duration-300 ease-in-out bg-[#151515]"
+  class="fixed flex flex-col top-0 left-0 h-screen z-[9999999] border-r overflow-hidden transition-all duration-300 ease-in-out bg-sidebar shadow-card"
   [ngClass]="{
-    'w-[320px]': (isExpanded$ | async) || (isMobileOpen$ | async) || (isHovered$ | async),
+    'w-[280px]': (isExpanded$ | async) || (isMobileOpen$ | async) || (isHovered$ | async),
     'w-[90px]': !((isExpanded$ | async) || (isMobileOpen$ | async) || (isHovered$ | async)),
     'translate-x-0': isMobileOpen$ | async,
     '-translate-x-full': !(isMobileOpen$ | async),
     'xl:translate-x-0': true,
-    'border-[#2A2A2A]': true
+    'border-default': true
   }"
   (mouseenter)="onSidebarMouseEnter()"
   (mouseleave)="sidebarService.setHovered(false)"
 >
-  <div class="flex items-center border-b border-[#2A2A2A] min-h-[66px] transition-all duration-300"
+  <div class="flex items-center border-b border-default min-h-[66px] transition-all duration-300"
     [ngClass]="{
       'gap-3 px-5 py-4': (isExpanded$ | async) || (isHovered$ | async) || (isMobileOpen$ | async),
       'justify-center px-2 py-4': !((isExpanded$ | async) || (isHovered$ | async) || (isMobileOpen$ | async))
@@ -33,30 +33,30 @@
     <nav class="px-3.5">
       @for (nav of navItems; track $index; let i = $index) {
         @if (nav.section && ((isExpanded$ | async) || (isHovered$ | async) || (isMobileOpen$ | async))) {
-          <p class="px-4 pt-3 pb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-[#BDBDBD] select-none">{{ nav.section }}</p>
+          <p class="px-4 pt-3 pb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-sidebar-secondary select-none">{{ nav.section }}</p>
         }
         <div class="mb-0.5">
           @if (nav.subItems) {
             <button
               (click)="toggleSubmenu('main', i)"
-              class="group flex w-full items-center gap-3 px-4 py-2.5 rounded-lg text-[14px] font-medium transition-all duration-150 cursor-pointer"
+              class="group flex w-full items-center gap-3 px-4 py-2.5 rounded-xl text-[14px] font-medium transition-all duration-150 cursor-pointer"
               [ngClass]="{
                 'bg-[#FFD000]/10 text-[#FFD000]': openSubmenu === 'main-' + i || nav.subItems.some(subItem => isActive(subItem.path)),
-                'text-[#BDBDBD] hover:text-white hover:bg-[#1A1A1A]': openSubmenu !== 'main-' + i && !nav.subItems.some(subItem => isActive(subItem.path))
+                'text-sidebar-primary hover:text-white hover:bg-surface-hover': openSubmenu !== 'main-' + i && !nav.subItems.some(subItem => isActive(subItem.path))
               }"
             >
               <span
                 class="flex-shrink-0 flex items-center justify-center w-[34px] h-[34px] rounded-md [&>svg]:w-[18px] [&>svg]:h-[18px] transition-colors duration-150"
                 [ngClass]="{
                   'bg-[#FFD000] text-black': openSubmenu === 'main-' + i || nav.subItems.some(subItem => isActive(subItem.path)),
-                  'bg-[#1A1A1A] text-[#BDBDBD] group-hover:text-white': openSubmenu !== 'main-' + i && !nav.subItems.some(subItem => isActive(subItem.path))
+                  'bg-surface-hover text-secondary-fg group-hover:bg-[#FFD000]/10 group-hover:text-[#FFD000]': openSubmenu !== 'main-' + i && !nav.subItems.some(subItem => isActive(subItem.path))
                 }"
                 [innerHTML]="nav.icon | safeHtml"
               ></span>
               @if ((isExpanded$ | async) || (isHovered$ | async) || (isMobileOpen$ | async)) {
-                <span class="flex-1 text-left truncate leading-none">{{ nav.name }}</span>
+                <span class="flex-1 text-left truncate leading-none text-sidebar-primary">{{ nav.name }}</span>
                 <svg
-                  class="flex-shrink-0 w-3.5 h-3.5 transition-transform duration-200 text-[#666]"
+                  class="flex-shrink-0 w-3.5 h-3.5 transition-transform duration-200 text-sidebar-muted"
                   [ngClass]="{ 'rotate-90': openSubmenu === 'main-' + i }"
                   viewBox="0 0 20 20" fill="none"
                 >
@@ -70,23 +70,23 @@
               [style.display]="(isExpanded$ | async) || (isHovered$ | async) || (isMobileOpen$ | async) ? 'block' : 'none'"
               [ngStyle]="{ height: openSubmenu === 'main-' + i ? (subMenuHeights['main-' + i] || 0) + 'px' : '0px' }"
             >
-              <ul class="pl-3 pr-1 pb-1.5 pt-1 space-y-0.5 ml-[22px] border-l border-[#2A2A2A]">
+              <ul class="pl-3 pr-1 pb-1.5 pt-1 space-y-0.5 ml-[22px] border-l border-default">
                 @for (subItem of nav.subItems; track $index) {
                   <li>
                     <a
                       [routerLink]="subItem.path"
                       (click)="onSubmenuClick()"
-                      class="flex items-center gap-2 pl-3 pr-2 py-2 rounded-md text-[13px] font-medium transition-all duration-150"
+                      class="flex items-center gap-2 pl-3 pr-2 py-2 rounded-lg text-[13px] font-medium transition-all duration-150"
                       [ngClass]="{
                         'bg-[#FFD000]/10 text-[#FFD000]': isActive(subItem.path),
-                        'text-[#BDBDBD] hover:text-white hover:bg-[#1A1A1A]': !isActive(subItem.path)
+                        'text-sidebar-primary hover:text-white hover:bg-surface-hover': !isActive(subItem.path)
                       }"
                     >
                       <span
                         class="flex-shrink-0 w-1.5 h-1.5 rounded-full"
                         [ngClass]="{
                           'bg-[#FFD000]': isActive(subItem.path),
-                          'bg-[#555]': !isActive(subItem.path)
+                          'bg-sidebar-muted': !isActive(subItem.path)
                         }"
                       ></span>
                       <span class="truncate">{{ subItem.name }}</span>
@@ -99,10 +99,10 @@
             @if (nav.path) {
               <a
                 [routerLink]="nav.path"
-                class="group relative flex items-center gap-3 px-4 py-2.5 rounded-lg text-[14px] font-medium transition-all duration-150"
+                class="group relative flex items-center gap-3 px-4 py-2.5 rounded-xl text-[14px] font-medium transition-all duration-150"
                 [ngClass]="{
                   'bg-[#FFD000]/10 text-[#FFD000]': isActive(nav.path),
-                  'text-[#BDBDBD] hover:text-white hover:bg-[#1A1A1A]': !isActive(nav.path)
+                  'text-sidebar-primary hover:text-white hover:bg-surface-hover': !isActive(nav.path)
                 }"
               >
                 @if (isActive(nav.path)) {
@@ -112,12 +112,12 @@
                   class="flex-shrink-0 flex items-center justify-center w-[34px] h-[34px] rounded-md [&>svg]:w-[18px] [&>svg]:h-[18px] transition-colors duration-150"
                   [ngClass]="{
                     'bg-[#FFD000] text-black': isActive(nav.path),
-                    'bg-[#1A1A1A] text-[#BDBDBD] group-hover:text-white': !isActive(nav.path)
+                    'bg-surface-hover text-secondary-fg group-hover:bg-[#FFD000]/10 group-hover:text-[#FFD000]': !isActive(nav.path)
                   }"
                   [innerHTML]="nav.icon | safeHtml"
                 ></span>
                 @if ((isExpanded$ | async) || (isHovered$ | async) || (isMobileOpen$ | async)) {
-                  <span class="truncate leading-none">{{ nav.name }}</span>
+                  <span class="truncate leading-none text-sidebar-primary">{{ nav.name }}</span>
                 }
               </a>
             }

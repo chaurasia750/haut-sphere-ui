@@ -1,7 +1,7 @@
 <div class="relative">
   <button
     type="button"
-    class="relative inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[#333] text-[#BDBDBD] hover:bg-[#1A1A1A] hover:text-white"
+    class="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-default text-secondary-fg hover:bg-surface-hover hover:text-primary-fg transition-colors duration-200"
     aria-label="Notifications"
     (click)="toggle()"
   >
@@ -18,34 +18,34 @@
   </button>
 
   @if (isOpen) {
-    <div class="absolute right-0 z-[1000000] mt-2 w-72 rounded-xl border border-[#2A2A2A] bg-[#151515] p-2 shadow-lg shadow-black/50">
+    <div class="absolute right-0 z-[1100] mt-2 w-72 rounded-2xl border border-default bg-surface p-2 shadow-modal">
       <div class="flex items-center justify-between px-2 py-1">
-        <h3 class="text-sm font-semibold text-white">Notifications</h3>
+        <h3 class="text-sm font-semibold text-primary-fg">Notifications</h3>
         <button
           type="button"
-          class="text-xs font-medium text-[#BDBDBD] hover:text-white"
+          class="text-xs font-medium text-secondary-fg hover:text-primary-fg transition-colors duration-150"
           (click)="markAllRead()"
         >
           Mark all read
         </button>
       </div>
 
-      <ul class="max-h-72 overflow-auto py-1">
+      <ul class="max-h-72 overflow-auto py-1 custom-scrollbar">
         @if (items.length === 0) {
-          <li class="px-2 py-6 text-center text-sm text-[#666]">No notifications</li>
+          <li class="px-2 py-6 text-center text-sm text-muted-fg">No notifications</li>
         } @else {
           @for (item of items; track item.id) {
             <li>
               <button
                 type="button"
-                class="w-full rounded-lg px-2 py-2 text-left hover:bg-[#1A1A1A]"
+                class="w-full rounded-lg px-2 py-2 text-left hover:bg-surface-hover transition-colors duration-150"
                 (click)="markRead(item.id)"
               >
                 <div class="flex items-start gap-2">
-                  <span class="mt-2 h-2 w-2 rounded-full" [class.bg-[#FFD000]]="!item.read" [class.bg-[#555]]="item.read"></span>
+                  <span class="mt-2 h-2 w-2 rounded-full shrink-0" [class.bg-accent]="!item.read" [class.bg-muted-fg]="item.read"></span>
                   <div class="min-w-0">
-                    <p class="truncate text-sm" [class.font-semibold]="!item.read" [class.text-white]="!item.read" [class.text-[#BDBDBD]]="item.read">{{ item.title }}</p>
-                    <p class="text-xs text-[#666]">{{ item.time }}</p>
+                    <p class="truncate text-sm" [class.font-semibold]="!item.read" [class.text-primary-fg]="!item.read" [class.text-secondary-fg]="item.read">{{ item.title }}</p>
+                    <p class="text-xs text-muted-fg">{{ item.time }}</p>
                   </div>
                 </div>
               </button>

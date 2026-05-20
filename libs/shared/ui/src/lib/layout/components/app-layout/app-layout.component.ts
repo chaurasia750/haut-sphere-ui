@@ -28,7 +28,7 @@ import { BackdropComponent } from '../backdrop/backdrop.component';
   <div
     class="flex-1 transition-all duration-300 ease-in-out"
     [ngClass]="{
-      'xl:ml-[320px]': (isExpanded$ | async) || (isHovered$ | async),
+      'xl:ml-[280px]': (isExpanded$ | async) || (isHovered$ | async),
       'xl:ml-[90px]': !(isExpanded$ | async) && !(isHovered$ | async),
       'ml-0': (isMobileOpen$ | async)
     }"

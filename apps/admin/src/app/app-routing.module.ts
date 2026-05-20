@@ -21,13 +21,6 @@ const routes: Routes = [
           import('./modules/users/users.module').then((m) => m.UsersModule),
       },
       {
-        path: 'projects',
-        loadChildren: () =>
-          import('./modules/projects/projects.module').then(
-            (m) => m.ProjectsModule
-          ),
-      },
-      {
         path: 'leads',
         loadChildren: () =>
           import('./modules/leads/leads.module').then(
@@ -39,6 +32,13 @@ const routes: Routes = [
         loadChildren: () =>
           import('./modules/tree-visualization/tree-visualization.module').then(
             (m) => m.TreeVisualizationModule
+          ),
+      },
+      {
+        path: 'inventory',
+        loadChildren: () =>
+          import('./modules/inventory/inventory.module').then(
+            (m) => m.InventoryModule
           ),
       },
     ],
