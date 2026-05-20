@@ -1,0 +1,301 @@
+<div class="pb-10">
+
+  <!-- Page Header -->
+  <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+    <h2 class="text-xl font-semibold text-primary-fg">Add Inventory</h2>
+    <nav>
+      <ol class="flex items-center gap-1.5">
+        <li>
+          <a class="inline-flex items-center gap-1.5 text-sm text-muted-fg" href="#">
+            Inventory
+            <svg class="stroke-current" width="17" height="16" viewBox="0 0 17 16" fill="none">
+              <path d="M6.0765 12.667L10.2432 8.50033L6.0765 4.33366" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+        <li class="text-sm text-primary-fg">Add Inventory</li>
+      </ol>
+    </nav>
+  </div>
+
+  <div class="grid grid-cols-1 xl:grid-cols-3 gap-7">
+    <!-- Left Column: Form -->
+    <div class="xl:col-span-2 space-y-6">
+
+      <!-- Inventory Information Card -->
+      <div class="rounded-2xl border border-default bg-surface shadow-sm">
+        <div class="px-6 py-5">
+          <h3 class="text-base font-semibold text-primary-fg">Inventory Information</h3>
+          <p class="mt-1 text-sm text-secondary-fg">Basic details about the inventory</p>
+        </div>
+        <div class="border-t border-default"></div>
+        <div class="p-4 sm:p-6 space-y-5">
+
+          <!-- Inventory Profile Image -->
+          <div class="relative rounded-2xl border-2 border-dashed border-default bg-body/50 overflow-hidden transition-all hover:border-accent/50 hover:bg-accent/[0.02] cursor-pointer group"
+            (click)="propertyImageInput.click()">
+            <input #propertyImageInput type="file" (change)="onPropertyImageSelect($event)" accept="image/*"
+              class="hidden"/>
+            @if (propertyImage) {
+              <div class="aspect-[3/1] w-full">
+<img [src]="propertyImage" alt="Inventory image" class="w-full h-full object-cover"/>
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <div class="flex items-center gap-3">
+                    <span class="inline-flex items-center gap-2 rounded-xl bg-white/90 px-4 py-2 text-sm font-medium text-gray-800 shadow-lg backdrop-blur-sm transition-all hover:bg-white">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                      Change Image
+                    </span>
+                    <button type="button" (click)="removePropertyImage($event)"
+                      class="inline-flex items-center gap-1.5 rounded-xl bg-red-500/90 px-4 py-2 text-sm font-medium text-white shadow-lg backdrop-blur-sm transition-all hover:bg-red-600">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <div class="aspect-[3/1] w-full flex flex-col items-center justify-center gap-3">
+                <div class="h-14 w-14 rounded-2xl bg-accent/5 flex items-center justify-center group-hover:bg-accent/10 transition-colors">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+                  </svg>
+                </div>
+                <p class="text-sm font-medium text-primary-fg">
+                  <span class="text-accent">Click to upload</span> inventory photo
+                </p>
+                <p class="text-xs text-muted-fg">JPG, PNG, WebP up to 10MB</p>
+              </div>
+            }
+          </div>
+
+          <!-- Inventory Name -->
+          <div class="relative">
+            <input id="propertyName" type="text" [(ngModel)]="formModel.propertyName" name="propertyName" placeholder=" "
+              class="peer block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"/>
+            <label for="propertyName"
+              class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-primary-fg">
+              Inventory Name <span class="text-red-400">*</span>
+            </label>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <!-- Inventory Type -->
+            <div class="relative">
+              <select id="inventoryType" [(ngModel)]="selectedType" name="propertyType"
+                class="block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 cursor-pointer">
+                <option value=""></option>
+                @for (t of propertyTypes; track t.id) {
+                  <option [value]="t.id">{{ t.label }}</option>
+                }
+              </select>
+              <label for="inventoryType"
+                class="pointer-events-none absolute left-4 z-10 origin-[0] transition-all duration-200"
+                [class.top-1]="selectedType" [class.scale-75]="selectedType" [class.text-xs]="selectedType"
+                [class.top-3.5]="!selectedType" [class.scale-100]="!selectedType" [class.text-sm]="!selectedType"
+                [class.text-primary-fg/50]="true">
+                Inventory Type
+              </label>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-fg"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+            </div>
+
+            <!-- Category -->
+            <div class="relative">
+              <select id="category" [(ngModel)]="formModel.category" name="category"
+                class="block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 cursor-pointer">
+                <option value=""></option>
+                @for (c of categories; track c.value) {
+                  <option [value]="c.value">{{ c.label }}</option>
+                }
+              </select>
+              <label for="category"
+                class="pointer-events-none absolute left-4 z-10 origin-[0] transition-all duration-200"
+                [class.top-1]="formModel.category" [class.scale-75]="formModel.category" [class.text-xs]="formModel.category"
+                [class.top-3.5]="!formModel.category" [class.scale-100]="!formModel.category" [class.text-sm]="!formModel.category"
+                [class.text-primary-fg/50]="true">
+                Inventory Category
+              </label>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-fg"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+            </div>
+
+            <!-- BHK -->
+            <div class="relative">
+              <select id="bhk" [(ngModel)]="formModel.bhk" name="bhk"
+                class="block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 cursor-pointer">
+                <option value=""></option>
+                @for (b of bhkOptions; track b.value) {
+                  <option [value]="b.value">{{ b.label }}</option>
+                }
+              </select>
+              <label for="bhk"
+                class="pointer-events-none absolute left-4 z-10 origin-[0] transition-all duration-200"
+                [class.top-1]="formModel.bhk" [class.scale-75]="formModel.bhk" [class.text-xs]="formModel.bhk"
+                [class.top-3.5]="!formModel.bhk" [class.scale-100]="!formModel.bhk" [class.text-sm]="!formModel.bhk"
+                [class.text-primary-fg/50]="true">
+                BHK Configuration
+              </label>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-fg"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+            </div>
+
+            <!-- Price -->
+            <div class="relative">
+              <input id="price" type="number" [(ngModel)]="formModel.price" name="price" placeholder=" "
+                class="peer block w-full appearance-none rounded-xl border border-default bg-surface pl-8 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"/>
+              <div class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 z-10 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-focus:top-1 peer-focus:-translate-y-0 peer-focus:scale-75 peer-focus:text-xs transition-all duration-200">
+                <span class="text-sm text-muted-fg font-medium peer-focus:text-primary-fg/50">₹</span>
+              </div>
+              <label for="price"
+                class="pointer-events-none absolute left-8 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-primary-fg">
+                Price
+              </label>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <!-- Area -->
+            <div class="relative">
+              <input id="area" type="number" [(ngModel)]="formModel.area" name="area" placeholder=" "
+                class="peer block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"/>
+              <label for="area"
+                class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-primary-fg">
+                Area (sq.ft)
+              </label>
+            </div>
+
+            <!-- Location -->
+            <div class="relative">
+              <input id="location" type="text" [(ngModel)]="formModel.location" name="location" placeholder=" "
+                class="peer block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"/>
+              <label for="location"
+                class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-primary-fg">
+                Location <span class="text-red-400">*</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="relative">
+            <textarea id="description" [(ngModel)]="formModel.description" name="description" placeholder=" " rows="3"
+              class="peer block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 resize-none"></textarea>
+            <label for="description"
+              class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-primary-fg">
+              Description
+            </label>
+          </div>
+
+          <!-- Location URL -->
+          <div class="relative">
+            <input id="locationUrl" type="url" [(ngModel)]="formModel.locationUrl" name="locationUrl" placeholder=" "
+              class="peer block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"/>
+            <label for="locationUrl"
+              class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-primary-fg">
+              Location URL <span class="text-xs text-muted-fg font-normal">(Google Maps link)</span>
+            </label>
+          </div>
+
+        </div>
+      </div>
+
+      <app-dynamic-fields-card [fields]="currentType?.dynamicFields || propertyTypes[0].dynamicFields" [values]="formModel.dynamic" [typeLabel]="typeLabel || propertyTypes[0].label"></app-dynamic-fields-card>
+
+      <!-- File Upload Card -->
+      <div class="rounded-2xl border border-default bg-surface shadow-sm">
+        <div class="px-6 py-5">
+          <h3 class="text-base font-semibold text-primary-fg">Media & Documents</h3>
+          <p class="mt-1 text-sm text-secondary-fg">Upload inventory images and documents</p>
+        </div>
+        <div class="border-t border-default"></div>
+        <div class="p-4 sm:p-6 space-y-6">
+          <div
+            (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave($event)"
+            (drop)="onDrop($event)"
+            [class.!border-accent.!bg-accent/[0.02]]="isDragging"
+            class="relative rounded-xl border-2 border-dashed border-default bg-body/50 px-6 py-10 transition-all hover:border-accent/50 hover:bg-accent/[0.02] cursor-pointer group">
+            <input type="file" (change)="onFileSelect($event)" accept="image/*,application/pdf" multiple
+              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"/>
+            <div class="flex flex-col items-center text-center">
+              <div class="mb-4 h-14 w-14 rounded-2xl bg-accent/5 flex items-center justify-center group-hover:bg-accent/10 transition-colors">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+              </div>
+              <p class="text-sm font-medium text-primary-fg mb-1">
+                <span class="text-accent">Click to upload</span> or drag and drop
+              </p>
+              <p class="text-xs text-muted-fg">JPG, PNG, WebP, PDF up to 10MB each</p>
+            </div>
+          </div>
+
+          @if (uploadedFiles.length > 0) {
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              @for (file of uploadedFiles; track file.id) {
+                <div class="group relative rounded-xl border border-default bg-surface shadow-sm hover:shadow-md transition-all">
+                  @if (file.type === 'image') {
+                    <div class="aspect-[4/3] bg-body">
+                      <img [src]="file.preview" [alt]="file.name"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-xl"/>
+                    </div>
+                  } @else {
+                    <div class="aspect-[4/3] bg-body flex flex-col items-center justify-center gap-2 rounded-t-xl">
+                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                      <span class="text-xs font-medium text-red-500">PDF</span>
+                    </div>
+                  }
+                  <div class="px-3 py-2.5">
+                    <p class="text-xs font-medium text-primary-fg truncate">{{ file.name }}</p>
+                    <p class="text-xs text-muted-fg mt-0.5">{{ file.size }}</p>
+                  </div>
+                  <button type="button" (click)="removeFile(file.id)"
+                    class="absolute top-2 right-2 h-6 w-6 rounded-full bg-surface/90 backdrop-blur-sm flex items-center justify-center shadow-sm opacity-0 group-hover:opacity-100 transition-all hover:bg-red-50 focus:outline-none">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
+                </div>
+              }
+              <div class="relative rounded-xl border-2 border-dashed border-default bg-body/50 flex flex-col items-center justify-center gap-2 min-h-[160px] cursor-pointer hover:border-accent/50 transition-colors">
+                <input type="file" (change)="onFileSelect($event)" accept="image/*,application/pdf" multiple
+                  class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"/>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="text-muted-fg"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span class="text-xs text-muted-fg font-medium">Add More</span>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="flex items-center justify-between">
+        <button type="button"
+          class="inline-flex items-center gap-2 rounded-xl border border-default bg-surface px-6 py-2.5 text-sm font-medium text-secondary-fg shadow-sm transition-all hover:bg-surface-hover hover:border-default focus:outline-none focus:ring-2 focus:ring-gray-200">
+          Cancel
+        </button>
+        <div class="flex items-center gap-3">
+          <button type="button"
+            class="inline-flex items-center gap-2 rounded-xl border border-default bg-surface px-5 py-2.5 text-sm font-medium text-secondary-fg shadow-sm transition-all hover:bg-surface-hover hover:border-default focus:outline-none focus:ring-2 focus:ring-gray-200">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Save Draft
+          </button>
+          <button type="button" (click)="onSubmit()"
+            class="inline-flex items-center gap-2 rounded-xl bg-[#2563EB] px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#2563EB]/25 transition-all hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:ring-offset-2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Save Inventory
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <app-inventory-summary-card [propertyImage]="propertyImage" [propertyName]="formModel.propertyName"
+      [location]="formModel.location" [locationUrl]="formModel.locationUrl" [category]="formModel.category"
+      [price]="formModel.price" [area]="formModel.area" [bhk]="formModel.bhk" [typeLabel]="typeLabel"
+      [description]="formModel.description" [uploadedFiles]="uploadedFiles">
+    </app-inventory-summary-card>
+  </div>
+
+</div>

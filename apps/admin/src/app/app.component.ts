@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
     appName: 'Admin Portal',
     brandName: 'Anon India',
     appSubtitle: 'Administration Console',
-    footerText: 'Admin Module',
+
     user: {
       name: 'Admin User',
       role: 'Administrator',

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { ROUTES, Routes } from '@angular/router';
-import { AddPropertyPageComponent } from './pages/add-property-page/add-property-page.component';
+import { AddInventoryPageComponent } from './pages/add-inventory-page/add-inventory-page.component';
 
 const routes: Routes = [
   {
@@ -10,7 +10,7 @@ const routes: Routes = [
   },
   {
     path: 'add-property',
-    component: AddPropertyPageComponent,
+    component: AddInventoryPageComponent,
   },
 ];
 

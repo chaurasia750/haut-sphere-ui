@@ -24,43 +24,19 @@ interface UploadedFile {
 }
 
 @Component({
-  selector: 'app-add-property-page',
+  selector: 'app-add-inventory-page',
   standalone: false,
-  templateUrl: './add-property-page.component.html',
-  styleUrls: ['./add-property-page.component.scss'],
+  templateUrl: './add-inventory-page.component.html',
+  styleUrls: ['./add-inventory-page.component.scss'],
 })
-export class AddPropertyPageComponent {
-  selectedType = 'real-estate';
+export class AddInventoryPageComponent {
+  selectedType = '';
   selectedCategory = '';
   selectedBhk = '';
   isDragging = false;
+  propertyImage: string | null = null;
 
-  uploadedFiles: UploadedFile[] = [
-    {
-      id: '1',
-      name: 'living-room.jpg',
-      size: '2.4 MB',
-      type: 'image',
-      url: '#',
-      preview: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=200&h=150&fit=crop',
-    },
-    {
-      id: '2',
-      name: 'kitchen-view.jpg',
-      size: '1.8 MB',
-      type: 'image',
-      url: '#',
-      preview: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=200&h=150&fit=crop',
-    },
-    {
-      id: '3',
-      name: 'floor-plan.pdf',
-      size: '856 KB',
-      type: 'pdf',
-      url: '#',
-      preview: '',
-    },
-  ];
+  uploadedFiles: UploadedFile[] = [];
 
   propertyTypes: PropertyType[] = [
     {
@@ -150,22 +126,40 @@ export class AddPropertyPageComponent {
   ];
 
   formModel = {
-    propertyName: 'Skyline Luxury Apartment',
-    price: 8500000,
-    area: 1560,
-    location: 'Whitefield, Bangalore',
-    description: 'A stunning 3BHK apartment in the heart of Whitefield with panoramic city views, modern amenities, and premium finishes throughout.',
-    bhk: '3',
-    category: 'residential',
+    propertyName: '',
+    price: null,
+    area: null,
+    location: '',
+    locationUrl: '',
+    description: '',
+    bhk: '',
+    category: '',
     dynamic: {} as Record<string, string>,
   };
 
-  get currentType(): PropertyType {
-    return this.propertyTypes.find(t => t.id === this.selectedType) || this.propertyTypes[0];
+  get currentType(): PropertyType | undefined {
+    return this.propertyTypes.find(t => t.id === this.selectedType);
   }
 
   get typeLabel(): string {
-    return this.currentType.label;
+    return this.currentType?.label || '';
+  }
+
+  onPropertyImageSelect(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.propertyImage = e.target?.result as string;
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+    input.value = '';
+  }
+
+  removePropertyImage(event: Event): void {
+    event.stopPropagation();
+    this.propertyImage = null;
   }
 
   removeFile(id: string): void {
@@ -195,6 +189,6 @@ export class AddPropertyPageComponent {
   }
 
   onSubmit(): void {
-    console.log('Submitting property:', this.formModel);
+    console.log('Submitting inventory:', this.formModel);
   }
 }
