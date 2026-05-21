@@ -5,11 +5,11 @@ import { AddInventoryPageComponent } from './pages/add-inventory-page/add-invent
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'add-property',
+    redirectTo: 'add-inventory',
     pathMatch: 'full',
   },
   {
-    path: 'add-property',
+    path: 'add-inventory',
     component: AddInventoryPageComponent,
   },
 ];
