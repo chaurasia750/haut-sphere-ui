@@ -1,16 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { InventoryService } from '../../services/inventory.service';
+import { PropertyField, PropertyTypeItem } from '../../models/property-field.model';
 
-interface PropertyType {
-  id: string;
-  label: string;
-  dynamicFields: DynamicField[];
-}
-
-interface DynamicField {
+export interface DynamicField {
   key: string;
   label: string;
   type: 'text' | 'number' | 'select' | 'textarea';
-  placeholder: string;
+  isRequired?: boolean;
   options?: { label: string; value: string }[];
 }
 
@@ -23,126 +20,118 @@ interface UploadedFile {
   preview: string;
 }
 
+function mapApiFieldToDynamicField(field: PropertyField): DynamicField {
+  const typeMap: Record<string, 'text' | 'number' | 'select' | 'textarea'> = {
+    dropdown: 'select',
+    textbox: 'text',
+    number: 'number',
+    textarea: 'textarea',
+  };
+  return {
+    key: field.fieldName,
+    label: field.fieldLabel,
+    type: typeMap[field.fieldType] || 'text',
+    isRequired: field.isRequired,
+    options: field.options.length > 0 ? field.options : undefined,
+  };
+}
+
 @Component({
   selector: 'app-add-inventory-page',
   standalone: false,
   templateUrl: './add-inventory-page.component.html',
   styleUrls: ['./add-inventory-page.component.scss'],
 })
-export class AddInventoryPageComponent {
+export class AddInventoryPageComponent implements OnInit, OnDestroy {
+  private readonly inventoryService = inject(InventoryService);
+  private fieldsSub?: Subscription;
+  private fieldsCache = new Map<string, DynamicField[]>();
+  private pendingRequests = new Set<string>();
+
   selectedType = '';
-  selectedCategory = '';
-  selectedBhk = '';
   isDragging = false;
   propertyImage: string | null = null;
+  loadingTypes = false;
+  loadingFields = false;
 
   uploadedFiles: UploadedFile[] = [];
 
-  propertyTypes: PropertyType[] = [
-    {
-      id: 'real-estate',
-      label: 'Real Estate',
-      dynamicFields: [
-        { key: 'furnishing', label: 'Furnishing Status', type: 'select', placeholder: 'Select furnishing', options: [
-          { label: 'Fully Furnished', value: 'fully' },
-          { label: 'Semi Furnished', value: 'semi' },
-          { label: 'Unfurnished', value: 'unfurnished' },
-        ]},
-        { key: 'parking', label: 'Parking', type: 'select', placeholder: 'Select parking', options: [
-          { label: 'Covered Parking', value: 'covered' },
-          { label: 'Open Parking', value: 'open' },
-          { label: 'No Parking', value: 'none' },
-        ]},
-        { key: 'floor', label: 'Floor Number', type: 'text', placeholder: 'e.g. 3rd Floor' },
-        { key: 'totalFloors', label: 'Total Floors', type: 'text', placeholder: 'e.g. 12' },
-        { key: 'possession', label: 'Possession Status', type: 'select', placeholder: 'Select status', options: [
-          { label: 'Ready to Move', value: 'ready' },
-          { label: 'Under Construction', value: 'under-construction' },
-          { label: 'Yet to Start', value: 'yet-to-start' },
-        ]},
-      ],
-    },
-    {
-      id: 'interior',
-      label: 'Interior Decor',
-      dynamicFields: [
-        { key: 'designStyle', label: 'Design Style', type: 'select', placeholder: 'Select design style', options: [
-          { label: 'Modern', value: 'modern' },
-          { label: 'Contemporary', value: 'contemporary' },
-          { label: 'Minimalist', value: 'minimalist' },
-          { label: 'Classic', value: 'classic' },
-          { label: 'Industrial', value: 'industrial' },
-          { label: 'Bohemian', value: 'bohemian' },
-        ]},
-        { key: 'serviceCost', label: 'Service Cost (₹)', type: 'number', placeholder: 'e.g. 500000' },
-        { key: 'projectDuration', label: 'Project Duration', type: 'select', placeholder: 'Select duration', options: [
-          { label: '1-2 Months', value: '1-2' },
-          { label: '2-4 Months', value: '2-4' },
-          { label: '4-6 Months', value: '4-6' },
-          { label: '6-12 Months', value: '6-12' },
-        ]},
-        { key: 'rooms', label: 'Number of Rooms', type: 'text', placeholder: 'e.g. 3 Bedrooms' },
-      ],
-    },
-    {
-      id: 'construction',
-      label: 'Construction',
-      dynamicFields: [
-        { key: 'budget', label: 'Budget (₹)', type: 'number', placeholder: 'e.g. 2500000' },
-        { key: 'projectType', label: 'Project Type', type: 'select', placeholder: 'Select project type', options: [
-          { label: 'New Construction', value: 'new' },
-          { label: 'Renovation', value: 'renovation' },
-          { label: 'Extension', value: 'extension' },
-          { label: 'Commercial Build', value: 'commercial' },
-        ]},
-        { key: 'timeline', label: 'Expected Timeline', type: 'select', placeholder: 'Select timeline', options: [
-          { label: '3-6 Months', value: '3-6' },
-          { label: '6-12 Months', value: '6-12' },
-          { label: '12-18 Months', value: '12-18' },
-          { label: '18+ Months', value: '18-plus' },
-        ]},
-        { key: 'material', label: 'Material Preference', type: 'select', placeholder: 'Select material', options: [
-          { label: 'Premium', value: 'premium' },
-          { label: 'Standard', value: 'standard' },
-          { label: 'Economy', value: 'economy' },
-        ]},
-      ],
-    },
-  ];
-
-  categories: { label: string; value: string }[] = [
-    { label: 'Residential', value: 'residential' },
-    { label: 'Commercial', value: 'commercial' },
-    { label: 'Industrial', value: 'industrial' },
-    { label: 'Land', value: 'land' },
-  ];
-
-  bhkOptions: { label: string; value: string }[] = [
-    { label: '1 BHK', value: '1' },
-    { label: '2 BHK', value: '2' },
-    { label: '3 BHK', value: '3' },
-    { label: '4 BHK', value: '4' },
-    { label: '5+ BHK', value: '5-plus' },
-  ];
+  propertyTypes: PropertyTypeItem[] = [];
+  fieldDefinitions: DynamicField[] = [];
 
   formModel = {
     propertyName: '',
-    price: null,
-    area: null,
-    location: '',
     locationUrl: '',
-    description: '',
-    bhk: '',
-    category: '',
     dynamic: {} as Record<string, string>,
   };
 
-  get currentType(): PropertyType | undefined {
-    return this.propertyTypes.find(t => t.id === this.selectedType);
+  get currentType(): PropertyTypeItem | undefined {
+    return this.propertyTypes.find(t => t.id === +this.selectedType);
   }
 
   get typeLabel(): string {
-    return this.currentType?.label || '';
+    return this.currentType?.name || '';
+  }
+
+  ngOnInit(): void {
+    this.fetchPropertyTypes();
+    this.prefetchFields('1');
+  }
+
+  ngOnDestroy(): void {
+    this.fieldsSub?.unsubscribe();
+  }
+
+  private fetchPropertyTypes(): void {
+    this.loadingTypes = true;
+    this.inventoryService.getPropertyTypes().subscribe({
+      next: (types) => {
+        this.propertyTypes = types;
+        this.loadingTypes = false;
+      },
+      error: () => {
+        this.propertyTypes = [];
+        this.loadingTypes = false;
+      },
+    });
+  }
+
+  onTypeChange(): void {
+    if (!this.selectedType) return;
+    this.formModel.dynamic = {};
+    if (this.fieldsCache.has(this.selectedType)) {
+      this.fieldDefinitions = this.fieldsCache.get(this.selectedType)!;
+    } else {
+      this.loadingFields = true;
+      this.fetchFields(this.selectedType);
+    }
+  }
+
+  private fetchFields(typeId: string): void {
+    if (this.pendingRequests.has(typeId)) return;
+    this.pendingRequests.add(typeId);
+    this.fieldsSub?.unsubscribe();
+    this.fieldsSub = this.inventoryService.getPropertyFields(typeId).subscribe({
+      next: (fields) => {
+        this.pendingRequests.delete(typeId);
+        const mapped = fields.map(mapApiFieldToDynamicField);
+        this.fieldsCache.set(typeId, mapped);
+        if (this.selectedType === typeId) {
+          this.fieldDefinitions = mapped;
+          this.formModel.dynamic = {};
+          this.loadingFields = false;
+        }
+      },
+      error: () => this.pendingRequests.delete(typeId),
+    });
+  }
+
+  private prefetchFields(typeId: string): void {
+    this.inventoryService.getPropertyFields(typeId).subscribe({
+      next: (fields) => {
+        this.fieldsCache.set(typeId, fields.map(mapApiFieldToDynamicField));
+      },
+    });
   }
 
   onPropertyImageSelect(event: Event): void {

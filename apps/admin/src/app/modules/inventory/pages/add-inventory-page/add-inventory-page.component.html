@@ -81,11 +81,16 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <!-- Inventory Type -->
             <div class="relative">
-              <select id="inventoryType" [(ngModel)]="selectedType" name="propertyType"
-                class="block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 cursor-pointer">
-                <option value=""></option>
-                @for (t of propertyTypes; track t.id) {
-                  <option [value]="t.id">{{ t.label }}</option>
+              <select id="inventoryType" [(ngModel)]="selectedType" name="propertyType" (change)="onTypeChange()"
+                class="block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 cursor-pointer"
+                [attr.disabled]="loadingTypes ? true : null">
+                <option value="" hidden></option>
+                @if (loadingTypes) {
+                  <option value="" disabled>Loading...</option>
+                } @else {
+                  @for (t of propertyTypes; track t.id) {
+                    <option [value]="t.id">{{ t.name }}</option>
+                  }
                 }
               </select>
               <label for="inventoryType"
@@ -100,108 +105,34 @@
               </div>
             </div>
 
-            <!-- Category -->
+            <!-- Location URL -->
             <div class="relative">
-              <select id="category" [(ngModel)]="formModel.category" name="category"
-                class="block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 cursor-pointer">
-                <option value=""></option>
-                @for (c of categories; track c.value) {
-                  <option [value]="c.value">{{ c.label }}</option>
-                }
-              </select>
-              <label for="category"
-                class="pointer-events-none absolute left-4 z-10 origin-[0] transition-all duration-200"
-                [class.top-1]="formModel.category" [class.scale-75]="formModel.category" [class.text-xs]="formModel.category"
-                [class.top-3.5]="!formModel.category" [class.scale-100]="!formModel.category" [class.text-sm]="!formModel.category"
-                [class.text-primary-fg/50]="true">
-                Inventory Category
-              </label>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-fg"><polyline points="6 9 12 15 18 9"/></svg>
-              </div>
-            </div>
-
-            <!-- BHK -->
-            <div class="relative">
-              <select id="bhk" [(ngModel)]="formModel.bhk" name="bhk"
-                class="block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 cursor-pointer">
-                <option value=""></option>
-                @for (b of bhkOptions; track b.value) {
-                  <option [value]="b.value">{{ b.label }}</option>
-                }
-              </select>
-              <label for="bhk"
-                class="pointer-events-none absolute left-4 z-10 origin-[0] transition-all duration-200"
-                [class.top-1]="formModel.bhk" [class.scale-75]="formModel.bhk" [class.text-xs]="formModel.bhk"
-                [class.top-3.5]="!formModel.bhk" [class.scale-100]="!formModel.bhk" [class.text-sm]="!formModel.bhk"
-                [class.text-primary-fg/50]="true">
-                BHK Configuration
-              </label>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-fg"><polyline points="6 9 12 15 18 9"/></svg>
-              </div>
-            </div>
-
-            <!-- Price -->
-            <div class="relative">
-              <input id="price" type="number" [(ngModel)]="formModel.price" name="price" placeholder=" "
-                class="peer block w-full appearance-none rounded-xl border border-default bg-surface pl-8 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"/>
-              <div class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 z-10 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-focus:top-1 peer-focus:-translate-y-0 peer-focus:scale-75 peer-focus:text-xs transition-all duration-200">
-                <span class="text-sm text-muted-fg font-medium peer-focus:text-primary-fg/50">₹</span>
-              </div>
-              <label for="price"
-                class="pointer-events-none absolute left-8 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-primary-fg">
-                Price
-              </label>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <!-- Area -->
-            <div class="relative">
-              <input id="area" type="number" [(ngModel)]="formModel.area" name="area" placeholder=" "
+              <input id="locationUrl" type="url" [(ngModel)]="formModel.locationUrl" name="locationUrl" placeholder=" "
                 class="peer block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"/>
-              <label for="area"
+              <label for="locationUrl"
                 class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-primary-fg">
-                Area (sq.ft)
+                Location URL <span class="text-xs text-muted-fg font-normal">(Google Maps link)</span>
               </label>
             </div>
-
-            <!-- Location -->
-            <div class="relative">
-              <input id="location" type="text" [(ngModel)]="formModel.location" name="location" placeholder=" "
-                class="peer block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"/>
-              <label for="location"
-                class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-primary-fg">
-                Location <span class="text-red-400">*</span>
-              </label>
-            </div>
-          </div>
-
-          <!-- Description -->
-          <div class="relative">
-            <textarea id="description" [(ngModel)]="formModel.description" name="description" placeholder=" " rows="3"
-              class="peer block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 resize-none"></textarea>
-            <label for="description"
-              class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-primary-fg">
-              Description
-            </label>
-          </div>
-
-          <!-- Location URL -->
-          <div class="relative">
-            <input id="locationUrl" type="url" [(ngModel)]="formModel.locationUrl" name="locationUrl" placeholder=" "
-              class="peer block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"/>
-            <label for="locationUrl"
-              class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-primary-fg">
-              Location URL <span class="text-xs text-muted-fg font-normal">(Google Maps link)</span>
-            </label>
           </div>
 
         </div>
       </div>
 
-      <app-dynamic-fields-card [fields]="currentType?.dynamicFields || propertyTypes[0].dynamicFields" [values]="formModel.dynamic" [typeLabel]="typeLabel || propertyTypes[0].label"></app-dynamic-fields-card>
+      <div class="relative">
+        @if (loadingFields) {
+          <div class="absolute inset-0 z-10 bg-surface/60 backdrop-blur-[1px] rounded-2xl flex items-center justify-center">
+            <div class="flex items-center gap-2.5 px-4 py-2 rounded-lg bg-surface/80 shadow-sm border border-default">
+              <svg class="animate-spin text-accent" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity="0.25"/>
+                <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+              <span class="text-sm text-secondary-fg">Loading fields...</span>
+            </div>
+          </div>
+        }
+        <app-dynamic-fields-card [fields]="fieldDefinitions" [values]="formModel.dynamic" [typeLabel]="typeLabel"></app-dynamic-fields-card>
+      </div>
 
       <!-- File Upload Card -->
       <div class="rounded-2xl border border-default bg-surface shadow-sm">
@@ -292,9 +223,10 @@
     </div>
 
     <app-inventory-summary-card [propertyImage]="propertyImage" [propertyName]="formModel.propertyName"
-      [location]="formModel.location" [locationUrl]="formModel.locationUrl" [category]="formModel.category"
-      [price]="formModel.price" [area]="formModel.area" [bhk]="formModel.bhk" [typeLabel]="typeLabel"
-      [description]="formModel.description" [uploadedFiles]="uploadedFiles">
+      [location]="formModel.dynamic['Location'] || ''" [locationUrl]="formModel.locationUrl"
+      [category]="formModel.dynamic['PropertyCategory'] || ''" [price]="+formModel.dynamic['Price'] || null"
+      [area]="+formModel.dynamic['Area'] || null" [bhk]="formModel.dynamic['BHK'] || ''" [typeLabel]="typeLabel"
+      [description]="formModel.dynamic['Description'] || ''" [uploadedFiles]="uploadedFiles">
     </app-inventory-summary-card>
   </div>
 

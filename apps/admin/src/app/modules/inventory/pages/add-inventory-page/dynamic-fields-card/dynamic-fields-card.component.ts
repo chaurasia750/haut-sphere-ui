@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 
-interface DynamicField {
+export interface DynamicField {
   key: string;
   label: string;
   type: 'text' | 'number' | 'select' | 'textarea';
-  placeholder: string;
+  isRequired?: boolean;
   options?: { label: string; value: string }[];
 }
 

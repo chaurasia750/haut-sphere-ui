@@ -9,7 +9,7 @@
         <div class="relative">
           <select [id]="field.key" [(ngModel)]="values[field.key]" [name]="field.key"
             class="block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 cursor-pointer">
-            <option value=""></option>
+            <option value="" hidden></option>
             @for (opt of field.options; track opt.value) {
               <option [value]="opt.value">{{ opt.label }}</option>
             }
