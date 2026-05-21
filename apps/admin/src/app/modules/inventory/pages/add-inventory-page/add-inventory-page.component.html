@@ -18,6 +18,32 @@
     </nav>
   </div>
 
+  <!-- Global Upload Progress -->
+  @if (isUploading) {
+    <div class="mb-6 animate-fadeSlideDown">
+      <div class="rounded-xl border border-accent/20 bg-gradient-to-r from-accent/[0.03] to-violet-500/[0.03] px-5 py-3 shadow-sm backdrop-blur-sm">
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2.5 shrink-0">
+            <svg class="animate-spin h-4 w-4 text-accent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg>
+            <span class="text-sm font-medium text-primary-fg">Uploading</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="h-2 rounded-full bg-gray-200/70 overflow-hidden">
+              <div class="h-full rounded-full bg-gradient-to-r from-accent to-violet-500 transition-all duration-300 ease-out"
+                [style.width.%]="uploadProgress ?? 0"></div>
+            </div>
+          </div>
+          <div class="shrink-0 min-w-[3rem] text-right">
+            <span class="text-sm font-bold text-accent">{{ uploadProgress }}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
   <div class="grid grid-cols-1 xl:grid-cols-3 gap-7">
     <!-- Left Column: Form -->
     <div class="xl:col-span-2 space-y-6">
@@ -121,13 +147,11 @@
 
       <div class="relative">
         @if (loadingFields) {
-          <div class="absolute inset-0 z-10 bg-surface/60 backdrop-blur-[1px] rounded-2xl flex items-center justify-center">
-            <div class="flex items-center gap-2.5 px-4 py-2 rounded-lg bg-surface/80 shadow-sm border border-default">
-              <svg class="animate-spin text-accent" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity="0.25"/>
-                <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-              </svg>
-              <span class="text-sm text-secondary-fg">Loading fields...</span>
+          <div class="absolute inset-0 z-10 rounded-2xl overflow-hidden pointer-events-none">
+            <div class="absolute inset-0 bg-surface/30 backdrop-blur-[2px]"></div>
+            <div class="relative h-1 bg-transparent">
+              <div class="absolute inset-0 bg-accent/20"></div>
+              <div class="absolute inset-0 bg-accent rounded-full animate-progress"></div>
             </div>
           </div>
         }
@@ -208,13 +232,13 @@
           Cancel
         </button>
         <div class="flex items-center gap-3">
-          <button type="button"
-            class="inline-flex items-center gap-2 rounded-xl border border-default bg-surface px-5 py-2.5 text-sm font-medium text-secondary-fg shadow-sm transition-all hover:bg-surface-hover hover:border-default focus:outline-none focus:ring-2 focus:ring-gray-200">
+          <button type="button" (click)="onSubmit('draft')" [disabled]="isSaving"
+            class="inline-flex items-center gap-2 rounded-xl border border-default bg-surface px-5 py-2.5 text-sm font-medium text-secondary-fg shadow-sm transition-all hover:bg-surface-hover hover:border-default focus:outline-none focus:ring-2 focus:ring-gray-200 disabled:opacity-50 disabled:cursor-not-allowed">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
             Save Draft
           </button>
-          <button type="button" (click)="onSubmit()"
-            class="inline-flex items-center gap-2 rounded-xl bg-[#2563EB] px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#2563EB]/25 transition-all hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:ring-offset-2">
+          <button type="button" (click)="onSubmit()" [disabled]="!formModel.propertyName.trim() || isSaving"
+            class="inline-flex items-center gap-2 rounded-xl bg-[#2563EB] px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#2563EB]/25 transition-all hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:ring-offset-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Save Inventory
           </button>
@@ -223,10 +247,8 @@
     </div>
 
     <app-inventory-summary-card [propertyImage]="propertyImage" [propertyName]="formModel.propertyName"
-      [location]="formModel.dynamic['Location'] || ''" [locationUrl]="formModel.locationUrl"
-      [category]="formModel.dynamic['PropertyCategory'] || ''" [price]="+formModel.dynamic['Price'] || null"
-      [area]="+formModel.dynamic['Area'] || null" [bhk]="formModel.dynamic['BHK'] || ''" [typeLabel]="typeLabel"
-      [description]="formModel.dynamic['Description'] || ''" [uploadedFiles]="uploadedFiles">
+      [locationUrl]="formModel.locationUrl" [typeLabel]="typeLabel" [uploadedFiles]="uploadedFiles"
+      [fieldDefinitions]="fieldDefinitions" [dynamicValues]="formModel.dynamic">
     </app-inventory-summary-card>
   </div>
 

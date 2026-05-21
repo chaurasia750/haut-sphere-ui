@@ -5,9 +5,13 @@ import { InventoryRoutingModule } from './inventory-routing.module';
 import { AddInventoryPageComponent } from './pages/add-inventory-page/add-inventory-page.component';
 import { DynamicFieldsCardComponent } from './pages/add-inventory-page/dynamic-fields-card/dynamic-fields-card.component';
 import { InventorySummaryCardComponent } from './pages/add-inventory-page/inventory-summary-card/inventory-summary-card.component';
+import { InventoryService, INVENTORY_SERVICE } from './services/inventory.service';
 
 @NgModule({
   declarations: [AddInventoryPageComponent, DynamicFieldsCardComponent, InventorySummaryCardComponent],
   imports: [CommonModule, FormsModule, InventoryRoutingModule],
+  providers: [
+    { provide: INVENTORY_SERVICE, useExisting: InventoryService },
+  ],
 })
 export class InventoryModule {}

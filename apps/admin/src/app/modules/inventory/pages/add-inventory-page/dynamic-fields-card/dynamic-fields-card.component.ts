@@ -12,6 +12,7 @@ export interface DynamicField {
   selector: 'app-dynamic-fields-card',
   standalone: false,
   templateUrl: './dynamic-fields-card.component.html',
+  styleUrls: ['./dynamic-fields-card.component.scss'],
 })
 export class DynamicFieldsCardComponent {
   @Input() fields: DynamicField[] = [];

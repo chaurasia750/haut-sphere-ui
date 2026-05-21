@@ -17,7 +17,9 @@
       }
     </div>
     <p class="text-lg font-semibold text-primary-fg leading-tight">{{ propertyName || 'Untitled Inventory' }}</p>
-    <p class="text-sm text-muted-fg -mt-3">{{ location || 'Location not set' }}</p>
+    @if (locationValue) {
+      <p class="text-sm text-muted-fg -mt-3">{{ locationValue }}</p>
+    }
     @if (locationUrl) {
       <a [href]="locationUrl" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-accent hover:underline">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
@@ -26,21 +28,23 @@
     }
     <div class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-50 px-3 py-1.5">
       <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-      <span class="text-xs font-medium text-emerald-700">Draft</span>
+      <span class="text-xs font-medium text-emerald-700">{{ typeLabel || 'Draft' }}</span>
     </div>
-    <div class="border-t border-default"></div>
-    <div class="grid grid-cols-2 gap-4">
-      <div><p class="text-xs text-muted-fg mb-0.5">Type</p><p class="text-sm font-medium text-primary-fg">{{ typeLabel || '-' }}</p></div>
-      <div><p class="text-xs text-muted-fg mb-0.5">Category</p><p class="text-sm font-medium text-primary-fg capitalize">{{ category || '-' }}</p></div>
-      <div><p class="text-xs text-muted-fg mb-0.5">Price</p><p class="text-sm font-medium text-primary-fg">{{ price ? ('₹' + (price | number)) : '-' }}</p></div>
-      <div><p class="text-xs text-muted-fg mb-0.5">Area</p><p class="text-sm font-medium text-primary-fg">{{ area || '-' }} sq.ft</p></div>
-      <div><p class="text-xs text-muted-fg mb-0.5">BHK</p><p class="text-sm font-medium text-primary-fg">{{ bhk ? bhk + ' BHK' : '-' }}</p></div>
-      <div><p class="text-xs text-muted-fg mb-0.5">Status</p><p class="text-sm font-medium text-primary-fg">Draft</p></div>
-    </div>
-    @if (description) {
+    @if (visibleFields.length) {
+      <div class="border-t border-default"></div>
+      <div class="grid grid-cols-2 gap-4">
+        @for (field of visibleFields; track field.key) {
+          <div>
+            <p class="text-xs text-muted-fg mb-0.5">{{ field.label }}</p>
+            <p class="text-sm font-medium text-primary-fg">{{ formatValue(field, dynamicValues[field.key]) }}</p>
+          </div>
+        }
+      </div>
+    }
+    @if (descriptionValue) {
       <div class="border-t border-default pt-4">
         <p class="text-xs text-muted-fg mb-1.5">Description</p>
-        <p class="text-sm text-secondary-fg leading-relaxed line-clamp-4">{{ description }}</p>
+        <p class="text-sm text-secondary-fg leading-relaxed line-clamp-4">{{ descriptionValue }}</p>
       </div>
     }
     @if (uploadedFiles.length > 0) {
