@@ -5,6 +5,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   selector: 'shared-side-panel',
   standalone: true,
   imports: [CommonModule],
+  host: { 'ng-host': '' },
   templateUrl: './side-panel.component.html',
   styles: [`
     @keyframes slide-in-right {

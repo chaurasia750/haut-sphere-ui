@@ -33,6 +33,24 @@ const config = {
     if (packageName === '@angular/platform-browser-dynamic') return false;
     if (packageName === '@shared') return false;
     if (explicitShared[packageName]) return explicitShared[packageName];
+
+    // Share all @shared/* subpaths as singletons so shared library components
+    // (side-panel, date-picker, date-range-picker) don't get duplicated
+    // across shell and remote, causing NG0912 component ID collisions.
+    if (packageName.startsWith('@shared/')) {
+      return { singleton: true, strictVersion: false, eager: true };
+    }
+
+    // Share all @angular/material/* and @angular/cdk/* subpaths as singletons
+    // to prevent NG0912 component ID collision errors when the remote loads
+    // its own copy on top of the shell's copy of Material/CDK components.
+    if (
+      packageName.startsWith('@angular/material') ||
+      packageName.startsWith('@angular/cdk')
+    ) {
+      return { singleton: true, strictVersion: false, eager: true };
+    }
+
     return defaultSharedConfig;
   },
   // Completely disable DTS generation to avoid 'ws' import in browser

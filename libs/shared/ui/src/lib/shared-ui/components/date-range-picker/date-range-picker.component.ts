@@ -7,6 +7,7 @@ import { MAT_DATE_LOCALE, MAT_DATE_FORMATS, DateAdapter, NativeDateAdapter, MatN
 @Component({
   selector: 'shared-date-range-picker',
   standalone: true,
+  host: { 'ng-host': '' },
   imports: [
     CommonModule,
     FormsModule,

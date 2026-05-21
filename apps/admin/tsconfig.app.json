@@ -6,5 +6,15 @@
     "types": []
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"]
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "src/app/app.config.ts",
+    "src/app/app.routes.ts",
+    "src/app/app.ts",
+    "src/app/layout/layout.component.ts",
+    "src/app/modules/projects/**",
+    "src/app/nx-welcome.ts",
+    "src/ws-stub.ts"
+  ]
 }
