@@ -21,8 +21,8 @@ export class InventoryEditPageComponent {
     });
   }
 
-  onSaved(id: number): void {
-    this.router.navigate(['/admin/inventory', id]);
+  onSaved(event: { id: number; isDraft: boolean }): void {
+    this.router.navigate(['/admin/inventory', event.id]);
   }
 
   onCancelled(): void {

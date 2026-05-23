@@ -10,8 +10,12 @@ import { Router } from '@angular/router';
 export class AddInventoryPageComponent {
   private readonly router = inject(Router);
 
-  onSaved(id: number): void {
-    this.router.navigate(['/admin/inventory', id]);
+  onSaved(event: { id: number; isDraft: boolean }): void {
+    if (event.isDraft) {
+      this.router.navigate(['/admin/inventory/list']);
+    } else {
+      this.router.navigate(['/admin/inventory', event.id]);
+    }
   }
 
   onCancelled(): void {

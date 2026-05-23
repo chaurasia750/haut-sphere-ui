@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, DestroyRef, inject, Input, input, OnInit, output, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -39,8 +39,8 @@ export class InventoryFormComponent implements OnInit {
   get editId(): number | null {
     return this._editId;
   }
-  readonly saved = output<number>();
-  readonly cancelled = output<void>();
+  @Output() readonly saved = new EventEmitter<{ id: number; isDraft: boolean }>();
+  @Output() readonly cancelled = new EventEmitter<void>();
 
   selectedType = '';
   isDragging = false;
@@ -332,10 +332,11 @@ export class InventoryFormComponent implements OnInit {
     request.pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
-      next: (result) => {
+      next: (result: any) => {
         this.isSaving.set(false);
-        if (result?.id) {
-          this.saved.emit(result.id);
+        const id = typeof result === 'number' ? result : result?.id;
+        if (id) {
+          this.saved.emit({ id, isDraft: status === 'draft' });
         }
       },
       error: () => {
