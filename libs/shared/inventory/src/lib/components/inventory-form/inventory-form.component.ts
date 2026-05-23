@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { Subscription } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 import { MediaService, TempUploadResult } from '@shared';
 import { INVENTORY_SERVICE, IInventoryService } from '../../services/inventory.service';
 import { PROPERTY_FIELD_MAPPER, IPropertyFieldMapper } from '../../services/property-field.mapper';
@@ -13,12 +14,12 @@ import { DynamicField, UploadedFile } from '../../models/inventory-form.model';
 import { PropertyDetail } from '../../models/property-detail.model';
 import { DynamicFieldsCardComponent } from '../dynamic-fields-card/dynamic-fields-card.component';
 import { InventorySummaryCardComponent } from '../inventory-summary-card/inventory-summary-card.component';
-import { UiButtonComponent, UiLoadingSpinnerComponent } from '@shared/ui/src';
+import { UiBackButtonComponent, UiButtonComponent, UiLoadingSpinnerComponent } from '@shared/ui/src';
 
 @Component({
   selector: 'lib-inventory-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, DynamicFieldsCardComponent, InventorySummaryCardComponent, UiButtonComponent, UiLoadingSpinnerComponent],
+  imports: [CommonModule, FormsModule, DynamicFieldsCardComponent, InventorySummaryCardComponent, UiBackButtonComponent, UiButtonComponent, UiLoadingSpinnerComponent],
   templateUrl: './inventory-form.component.html',
 })
 export class InventoryFormComponent implements OnInit {
@@ -43,6 +44,8 @@ export class InventoryFormComponent implements OnInit {
   }
   @Output() readonly saved = new EventEmitter<{ id: number; isDraft: boolean }>();
   @Output() readonly cancelled = new EventEmitter<void>();
+  @Output() readonly back = new EventEmitter<void>();
+  @Input() backLabel = '';
 
   selectedType = '';
   isDragging = false;
@@ -61,6 +64,7 @@ export class InventoryFormComponent implements OnInit {
 
   formModel = {
     propertyName: '',
+    description: '',
     locationUrl: '',
     dynamic: {} as Record<string, string>,
   };
@@ -90,22 +94,16 @@ export class InventoryFormComponent implements OnInit {
     this.isLoadingExistingData = true;
     this.isLoadingEditData.set(true);
     this.inventoryService.getPropertyById(this._editId).pipe(
+      finalize(() => this.isLoadingEditData.set(false)),
       takeUntilDestroyed(this.destroyRef),
-    ).subscribe({
-      next: (data) => {
-        this.populateForm(data);
-        this.isLoadingEditData.set(false);
-      },
-      error: () => {
-        this.isLoadingEditData.set(false);
-      },
-    });
+    ).subscribe((data) => this.populateForm(data));
   }
 
   private populateForm(data: PropertyDetail): void {
     this.formModel.propertyName = data.title;
+    this.formModel.description = data.description ?? '';
     this.selectedType = String(data.propertyType);
-    this.propertyImageId = data.profile?.mediaDetails?.id ?? null;
+    this.propertyImageId = data.profile?.mediaDetails?.id ?? data.profile?.mediaFileId ?? null;
     if (this.propertyImageId) {
       this.propertyImage = this.mediaService.getFileUrl(this.propertyImageId);
     }
@@ -127,23 +125,20 @@ export class InventoryFormComponent implements OnInit {
   private fetchPropertyTypes(): void {
     this.loadingTypes.set(true);
     this.inventoryService.getPropertyTypes().pipe(
+      finalize(() => {
+        this.loadingTypes.set(false);
+        if (!this.propertyTypes.length) this.propertyTypes = [];
+      }),
       takeUntilDestroyed(this.destroyRef),
-    ).subscribe({
-      next: (types) => {
-        this.propertyTypes = types;
-        this.loadingTypes.set(false);
-        if (!this._editId && types.length) {
-          this.selectedType = String(types[0].id);
-          this.onTypeChange();
-        }
-        if (this.isEditMode) {
-          this.loadExistingData();
-        }
-      },
-      error: () => {
-        this.propertyTypes = [];
-        this.loadingTypes.set(false);
-      },
+    ).subscribe((types) => {
+      this.propertyTypes = types;
+      if (!this._editId && types.length) {
+        this.selectedType = String(types[0].id);
+        this.onTypeChange();
+      }
+      if (this.isEditMode) {
+        this.loadExistingData();
+      }
     });
   }
 
@@ -171,19 +166,17 @@ export class InventoryFormComponent implements OnInit {
     if (this.pendingRequests.has(typeId)) return;
     this.pendingRequests.add(typeId);
     this.fieldsSub?.unsubscribe();
-    this.fieldsSub = this.inventoryService.getPropertyFields(typeId).subscribe({
-      next: (fields) => {
-        this.pendingRequests.delete(typeId);
-        const mapped = this.fieldMapper.toDynamicFields(fields);
-        this.fieldsCache.set(typeId, mapped);
-        if (this.selectedType === typeId) {
-          this.fieldDefinitions = mapped;
-          this.formModel.dynamic = {};
-          this.loadingFields.set(false);
-          this.applyFieldValues();
-        }
-      },
-      error: () => this.pendingRequests.delete(typeId),
+    this.fieldsSub = this.inventoryService.getPropertyFields(typeId).pipe(
+      finalize(() => this.pendingRequests.delete(typeId)),
+    ).subscribe((fields) => {
+      const mapped = this.fieldMapper.toDynamicFields(fields);
+      this.fieldsCache.set(typeId, mapped);
+      if (this.selectedType === typeId) {
+        this.fieldDefinitions = mapped;
+        this.formModel.dynamic = {};
+        this.loadingFields.set(false);
+        this.applyFieldValues();
+      }
     });
   }
 
@@ -199,7 +192,13 @@ export class InventoryFormComponent implements OnInit {
       reader.readAsDataURL(file);
       this.isUploading.set(true);
       this.uploadProgress = 0;
-      this.mediaService.tempUploadWithProgress([file]).subscribe({
+      this.mediaService.tempUploadWithProgress([file]).pipe(
+        finalize(() => {
+          this.isUploading.set(false);
+          this.uploadProgress = null;
+          this.cdr.detectChanges();
+        }),
+      ).subscribe({
         next: (event: HttpEvent<TempUploadResult>) => {
           switch (event.type) {
             case HttpEventType.UploadProgress:
@@ -212,16 +211,8 @@ export class InventoryFormComponent implements OnInit {
                 this.propertyImageId = res.files[0].id;
                 this.propertyImage = this.mediaService.getFileUrl(res.files[0].id);
               }
-              this.isUploading.set(false);
-              this.uploadProgress = null;
-              this.cdr.detectChanges();
               break;
           }
-        },
-        error: () => {
-          this.isUploading.set(false);
-          this.uploadProgress = null;
-          this.cdr.detectChanges();
         },
       });
     }
@@ -267,7 +258,13 @@ export class InventoryFormComponent implements OnInit {
   private uploadFiles(files: File[]): void {
     this.isUploading.set(true);
     this.uploadProgress = 0;
-    this.mediaService.tempUploadWithProgress(files).subscribe({
+    this.mediaService.tempUploadWithProgress(files).pipe(
+      finalize(() => {
+        this.isUploading.set(false);
+        this.uploadProgress = null;
+        this.cdr.detectChanges();
+      }),
+    ).subscribe({
       next: (event: HttpEvent<TempUploadResult>) => {
         switch (event.type) {
           case HttpEventType.UploadProgress:
@@ -276,12 +273,7 @@ export class InventoryFormComponent implements OnInit {
             break;
           case HttpEventType.Response:
             const res = event.body;
-            if (!res?.files?.length) {
-              this.isUploading.set(false);
-              this.uploadProgress = null;
-              this.cdr.detectChanges();
-              return;
-            }
+            if (!res?.files?.length) return;
             this.uploadedFiles = [...this.uploadedFiles, ...res.files.map((f, i) => {
               const file = files[i];
               const fullUrl = this.mediaService.getFileUrl(f.id);
@@ -295,16 +287,8 @@ export class InventoryFormComponent implements OnInit {
                 preview: file.type.startsWith('image/') ? fullUrl : '',
               };
             })];
-            this.isUploading.set(false);
-            this.uploadProgress = null;
-            this.cdr.detectChanges();
             break;
         }
-      },
-      error: () => {
-        this.isUploading.set(false);
-        this.uploadProgress = null;
-        this.cdr.detectChanges();
       },
     });
   }
@@ -323,6 +307,7 @@ export class InventoryFormComponent implements OnInit {
     const payload = this.payloadBuilder.build({
       selectedType: this.selectedType,
       propertyName: this.formModel.propertyName,
+      description: this.formModel.description,
       fieldDefinitions: this.fieldDefinitions,
       dynamicValues: this.formModel.dynamic,
       uploadedFiles: this.uploadedFiles,
@@ -336,18 +321,13 @@ export class InventoryFormComponent implements OnInit {
       : this.inventoryService.createInventory(payload);
 
     request.pipe(
+      finalize(() => this.isSaving.set(false)),
       takeUntilDestroyed(this.destroyRef),
-    ).subscribe({
-      next: (result: any) => {
-        this.isSaving.set(false);
-        const id = typeof result === 'number' ? result : result?.id;
-        if (id) {
-          this.saved.emit({ id, isDraft: status === 'draft' });
-        }
-      },
-      error: () => {
-        this.isSaving.set(false);
-      },
+    ).subscribe((result: any) => {
+      const id = typeof result === 'number' ? result : result?.id;
+      if (id) {
+        this.saved.emit({ id, isDraft: status === 'draft' });
+      }
     });
   }
 

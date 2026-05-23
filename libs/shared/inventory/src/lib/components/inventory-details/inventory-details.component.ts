@@ -1,16 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, DestroyRef, inject, Input, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize } from 'rxjs/operators';
 import { MediaService } from '@shared';
 import { PropertyDetail, PropertyDetailField, PropertyFile } from '../../models/property-detail.model';
 import { PropertyTypeItem } from '../../models/property-field.model';
 import { INVENTORY_SERVICE, IInventoryService } from '../../services/inventory.service';
-import { UiButtonComponent, UiEmptyStateComponent, UiLoadingSpinnerComponent } from '@shared/ui/src';
+import { UiBackButtonComponent, UiButtonComponent, UiEmptyStateComponent, UiLoadingSpinnerComponent } from '@shared/ui/src';
 
 @Component({
   selector: 'lib-inventory-details',
   standalone: true,
-  imports: [CommonModule, UiButtonComponent, UiEmptyStateComponent, UiLoadingSpinnerComponent],
+  imports: [CommonModule, UiBackButtonComponent, UiButtonComponent, UiEmptyStateComponent, UiLoadingSpinnerComponent],
   templateUrl: './inventory-details.component.html',
 })
 export class InventoryDetailsComponent {
@@ -119,13 +120,10 @@ export class InventoryDetailsComponent {
     if (!this.property() || this.acting()) return;
     this.acting.set(true);
     this.inventoryService.activateProperty(this.property()!.id).pipe(
+      finalize(() => this.acting.set(false)),
       takeUntilDestroyed(this.destroyRef),
-    ).subscribe({
-      next: () => {
-        this.property.update(p => p ? { ...p, isActive: true } : p);
-        this.acting.set(false);
-      },
-      error: () => this.acting.set(false),
+    ).subscribe(() => {
+      this.property.update(p => p ? { ...p, isActive: true } : p);
     });
   }
 
@@ -133,13 +131,10 @@ export class InventoryDetailsComponent {
     if (!this.property() || this.acting()) return;
     this.acting.set(true);
     this.inventoryService.deactivateProperty(this.property()!.id).pipe(
+      finalize(() => this.acting.set(false)),
       takeUntilDestroyed(this.destroyRef),
-    ).subscribe({
-      next: () => {
-        this.property.update(p => p ? { ...p, isActive: false } : p);
-        this.acting.set(false);
-      },
-      error: () => this.acting.set(false),
+    ).subscribe(() => {
+      this.property.update(p => p ? { ...p, isActive: false } : p);
     });
   }
 
@@ -147,13 +142,10 @@ export class InventoryDetailsComponent {
     if (!this.property() || this.acting()) return;
     this.acting.set(true);
     this.inventoryService.closeProperty(this.property()!.id).pipe(
+      finalize(() => this.acting.set(false)),
       takeUntilDestroyed(this.destroyRef),
-    ).subscribe({
-      next: () => {
-        this.property.update(p => p ? { ...p, isActive: false, status: 'closed' } : p);
-        this.acting.set(false);
-      },
-      error: () => this.acting.set(false),
+    ).subscribe(() => {
+      this.property.update(p => p ? { ...p, isActive: false, status: 'closed' } : p);
     });
   }
 

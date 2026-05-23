@@ -21,3 +21,4 @@ export * from './lib/shared-ui/components/ui-card/ui-card.component';
 export * from './lib/shared-ui/components/ui-empty-state/ui-empty-state.component';
 export * from './lib/shared-ui/components/ui-loading-spinner/ui-loading-spinner.component';
 export * from './lib/shared-ui/components/ui-search-input/ui-search-input.component';
+export * from './lib/shared-ui/components/ui-back-button/ui-back-button.component';

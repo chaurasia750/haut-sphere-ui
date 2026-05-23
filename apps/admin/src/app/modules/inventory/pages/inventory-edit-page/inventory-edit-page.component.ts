@@ -28,4 +28,10 @@ export class InventoryEditPageComponent {
   onCancelled(): void {
     this.router.navigate(['/admin/inventory/list']);
   }
+
+  goBack(): void {
+    if (this.editId) {
+      this.router.navigate(['/admin/inventory', this.editId]);
+    }
+  }
 }

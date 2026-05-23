@@ -11,6 +11,7 @@ import { DynamicField, UploadedFile } from '../../models/inventory-form.model';
 export class InventorySummaryCardComponent {
   @Input() propertyImage: string | null = null;
   @Input() propertyName: string = '';
+  @Input() description: string = '';
   @Input() locationUrl: string = '';
   @Input() typeLabel: string = '';
   @Input() uploadedFiles: UploadedFile[] = [];
@@ -22,7 +23,7 @@ export class InventorySummaryCardComponent {
   }
 
   get descriptionValue(): string {
-    return this.dynamicValues['Description'] || '';
+    return this.description || this.dynamicValues['Description'] || '';
   }
 
   get visibleFields(): DynamicField[] {

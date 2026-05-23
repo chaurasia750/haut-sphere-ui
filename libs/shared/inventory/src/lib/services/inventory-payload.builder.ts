@@ -5,6 +5,7 @@ import { DynamicField, UploadedFile } from '../models/inventory-form.model';
 export interface BuildPayloadData {
   selectedType: string;
   propertyName: string;
+  description: string;
   fieldDefinitions: DynamicField[];
   dynamicValues: Record<string, string>;
   uploadedFiles: UploadedFile[];
@@ -27,16 +28,13 @@ export class InventoryPayloadBuilder implements IInventoryPayloadBuilder {
       .map(f => ({ field: f, value: data.dynamicValues[f.key]?.trim() || '' }))
       .filter(x => x.value);
 
-    const descriptionField = allFields.find(x => x.field.key === 'Description');
-    const description = descriptionField?.value || '';
     const fields: CreateInventoryField[] = allFields
-      .filter(x => x.field.key !== 'Description')
       .map(x => ({ propertyFieldId: x.field.propertyFieldId, value: x.value }));
 
     const payload: CreateInventoryPayload = {
       propertyTypeId: +data.selectedType,
       title: data.propertyName.trim(),
-      description,
+      description: data.description.trim(),
       fields: fields.length ? fields : [],
       documentIds: data.uploadedFiles.map(f => f.fileId),
       profileId: data.propertyImageId ?? 0,
