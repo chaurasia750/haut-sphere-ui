@@ -39,6 +39,8 @@ import { ImagesComponent } from './features/ui-elements/images/images.component'
 import { VideosComponent } from './features/ui-elements/videos/videos.component';
 import { NotFoundComponent } from './features/other-page/not-found/not-found.component';
 import { AppLayoutComponent } from './shared/layout/app-layout/app-layout.component';
+import { MemberInventoryListPageComponent } from './features/inventory/pages/inventory-list/inventory-list-page.component';
+import { MemberInventoryDetailsPageComponent } from './features/inventory/pages/inventory-details/inventory-details-page.component';
 
 const routes: Routes = [
   {
@@ -49,6 +51,8 @@ const routes: Routes = [
       { path: 'leads-dashboard', component: MemberLeadsDashboardPageComponent },
       { path: 'leads-list', component: MemberLeadsListPageComponent },
       { path: 'leads-add', component: MemberLeadsAddPageComponent },
+      { path: 'inventory/list', component: MemberInventoryListPageComponent },
+      { path: 'inventory/:id', component: MemberInventoryDetailsPageComponent },
       { path: 'referral-link', component: ReferralLinkComponent },
       { path: 'calendar', component: CalenderComponent },
       { path: 'sponsor-new', component: SponsorNewComponent },

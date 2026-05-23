@@ -1,16 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-
-export interface DynamicField {
-  key: string;
-  label: string;
-  type: 'text' | 'number' | 'select' | 'textarea';
-  isRequired?: boolean;
-  options?: { label: string; value: string }[];
-}
+import { FormsModule } from '@angular/forms';
+import { DynamicField } from '../../models/inventory-form.model';
 
 @Component({
-  selector: 'app-dynamic-fields-card',
-  standalone: false,
+  selector: 'lib-dynamic-fields-card',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './dynamic-fields-card.component.html',
   styleUrls: ['./dynamic-fields-card.component.scss'],
 })
@@ -18,4 +14,5 @@ export class DynamicFieldsCardComponent {
   @Input() fields: DynamicField[] = [];
   @Input() values: Record<string, string> = {};
   @Input() typeLabel: string = '';
+  @Input() readOnly: boolean = false;
 }

@@ -5,7 +5,7 @@ import { SharedLayoutModule } from '@shared';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { createSharedTranslateLoader } from '@shared';
 import { AUTH_API_BASE_URL } from '@libs/shared/auth';
-import { INVENTORY_API_BASE_URL } from './modules/inventory/services/inventory.service';
+import { INVENTORY_API_BASE_URL } from '@shared/inventory/src';
 import { apiConfig } from '@shared/environments/api.dev';
 
 import { AppComponent } from './app.component';

@@ -1,0 +1,65 @@
+<div class="rounded-2xl border border-default bg-surface shadow-sm">
+  <div class="px-6 py-5">
+    <h3 class="text-base font-semibold text-primary-fg">{{ typeLabel }} Details</h3>
+  </div>
+  <div class="border-t border-default"></div>
+  <div class="p-4 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+    @for (field of fields; track field.key) {
+      @if (field.type === 'select') {
+        <div class="relative">
+          @if (readOnly) {
+            <div class="rounded-xl border border-default bg-body/50 px-4 pb-2.5 pt-5 text-sm text-primary-fg min-h-[2.5rem] flex items-center">
+              {{ values[field.key] || '-' }}
+            </div>
+          } @else {
+            <select [id]="field.key" [(ngModel)]="values[field.key]" [name]="field.key"
+              class="block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 cursor-pointer">
+              <option value="" hidden></option>
+              @for (opt of field.options; track opt.value) {
+                <option [value]="opt.value">{{ opt.label }}</option>
+              }
+            </select>
+          }
+          @if (!readOnly) {
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-fg"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          }
+          <label [for]="field.key"
+            class="pointer-events-none absolute left-4 z-10 origin-[0] transition-all duration-200"
+            [class.top-1]="values[field.key] || readOnly" [class.scale-75]="values[field.key] || readOnly" [class.text-xs]="values[field.key] || readOnly"
+            [class.top-3.5]="!values[field.key] && !readOnly" [class.scale-100]="!values[field.key] && !readOnly" [class.text-sm]="!values[field.key] && !readOnly"
+            [class.text-primary-fg/50]="true">
+            {{ field.label }}
+          </label>
+        </div>
+      } @else if (field.type === 'textarea') {
+        <div class="relative md:col-span-2">
+          @if (readOnly) {
+            <div class="rounded-xl border border-default bg-body/50 px-4 pb-2.5 pt-5 text-sm text-primary-fg min-h-[4rem]">{{ values[field.key] || '-' }}</div>
+          } @else {
+            <textarea [id]="field.key" [(ngModel)]="values[field.key]" [name]="field.key" placeholder=" " rows="3"
+              class="peer block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 resize-none"></textarea>
+          }
+          <label [for]="field.key"
+            class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-primary-fg">
+            {{ field.label }}
+          </label>
+        </div>
+      } @else {
+        <div class="relative">
+          @if (readOnly) {
+            <div class="rounded-xl border border-default bg-body/50 px-4 pb-2.5 pt-5 text-sm text-primary-fg">{{ values[field.key] || '-' }}</div>
+          } @else {
+            <input [id]="field.key" [(ngModel)]="values[field.key]" [name]="field.key" [type]="field.type" placeholder=" "
+              class="peer block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"/>
+          }
+          <label [for]="field.key"
+            class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-primary-fg">
+            {{ field.label }}
+          </label>
+        </div>
+      }
+    }
+  </div>
+</div>

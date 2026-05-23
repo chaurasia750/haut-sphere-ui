@@ -1,6 +1,7 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { AddInventoryPageComponent } from './add-inventory-page.component';
 import { IInventoryService, INVENTORY_SERVICE, CreateInventoryPayload } from '../../services/inventory.service';
@@ -31,6 +32,10 @@ describe('AddInventoryPageComponent', () => {
       getPropertyTypes: vi.fn().mockReturnValue(of([])) as any,
       getPropertyFields: vi.fn().mockReturnValue(of([])) as any,
       createInventory: createInventory as any,
+      getPropertyById: vi.fn() as any,
+      activateProperty: vi.fn() as any,
+      deactivateProperty: vi.fn() as any,
+      closeProperty: vi.fn() as any,
     };
 
     const fieldMapper: IPropertyFieldMapper = {
@@ -51,6 +56,7 @@ describe('AddInventoryPageComponent', () => {
       declarations: [AddInventoryPageComponent],
       providers: [
         provideNoopAnimations(),
+        provideRouter([]),
         { provide: INVENTORY_SERVICE, useValue: inventoryService },
         { provide: PROPERTY_FIELD_MAPPER, useValue: fieldMapper },
         { provide: INVENTORY_PAYLOAD_BUILDER, useValue: payloadBuilder },

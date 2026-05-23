@@ -17,5 +17,3 @@ export interface PropertyTypeItem {
   id: number;
   name: string;
 }
-
-

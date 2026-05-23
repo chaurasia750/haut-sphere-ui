@@ -25,6 +25,7 @@ export class AdminLayoutComponent {
     menu: [
       { label: 'Dashboard', route: '/admin/dashboard', section: 'MAIN', icon: DASHBOARD_ICON },
       { label: 'Inventory', section: 'MAIN', icon: INVENTORY_ICON, subItems: [
+        { name: 'All Inventory', path: '/admin/inventory/list' },
         { name: 'Add Inventory', path: '/admin/inventory/add-inventory' },
       ]},
       { label: 'Leads', section: 'MAIN', icon: LEADS_ICON, subItems: [

@@ -1,0 +1,215 @@
+<div>
+  <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+    <h2 class="text-xl font-semibold text-primary-fg">Inventory Details</h2>
+    <nav>
+      <ol class="flex items-center gap-1.5">
+        <li>
+          <a class="inline-flex items-center gap-1.5 text-sm text-muted-fg cursor-pointer hover:text-primary-fg transition-colors" (click)="goBack()">
+            Inventory
+            <svg class="stroke-current" width="17" height="16" viewBox="0 0 17 16" fill="none">
+              <path d="M6.0765 12.667L10.2432 8.50033L6.0765 4.33366" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+        <li class="text-sm text-primary-fg truncate max-w-[200px]">{{ property?.title || 'Loading...' }}</li>
+      </ol>
+    </nav>
+  </div>
+
+  @if (loading) {
+    <div class="flex items-center justify-center py-20">
+      <div class="flex flex-col items-center gap-3">
+        <div class="h-8 w-8 animate-spin rounded-full border-4 border-accent border-t-transparent"></div>
+        <p class="text-sm text-muted-fg">Loading inventory details...</p>
+      </div>
+    </div>
+  }
+
+  @if (error) {
+    <div class="rounded-2xl border border-default bg-surface shadow-sm p-12 text-center">
+      <svg class="mx-auto h-12 w-12 text-red-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/>
+      </svg>
+      <h3 class="text-base font-semibold text-primary-fg mb-2">Failed to load inventory</h3>
+      <p class="text-sm text-secondary-fg mb-4">The inventory could not be found or a network error occurred.</p>
+      <button (click)="goBack()" class="inline-flex items-center gap-2 rounded-xl bg-[#2563EB] px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#2563EB]/25 transition-all hover:-translate-y-0.5 hover:shadow-xl">
+        Back to Inventory
+      </button>
+    </div>
+  }
+
+  @if (!loading && !error && property) {
+    <div class="rounded-2xl border border-default bg-surface shadow-sm overflow-hidden mb-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
+        <div class="lg:col-span-1">
+          <div class="rounded-xl aspect-[4/3] bg-gradient-to-br from-accent/5 to-accent/10 overflow-hidden">
+            @if (profileImageUrl) {
+              <img [src]="profileImageUrl" alt="Property" class="w-full h-full object-cover" />
+            } @else {
+              <div class="flex items-center justify-center h-full">
+                <svg class="h-16 w-16 text-accent/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/>
+                </svg>
+              </div>
+            }
+          </div>
+        </div>
+        <div class="lg:col-span-2 flex flex-col justify-between">
+          <div>
+            <div class="flex flex-wrap items-center gap-2 mb-3">
+              <span class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium"
+                    [ngClass]="statusBadgeClass">
+                <span class="h-1.5 w-1.5 rounded-full" [ngClass]="statusDotClass"></span>
+                {{ statusLabel }}
+              </span>
+              <span class="inline-flex items-center gap-1.5 rounded-lg bg-purple-50 px-3 py-1.5">
+                <span class="h-1.5 w-1.5 rounded-full bg-purple-500"></span>
+                <span class="text-xs font-medium text-purple-700">{{ propertyTypeLabel }}</span>
+              </span>
+              @if (showActions) {
+                <button (click)="onEdit()"
+                  class="inline-flex items-center gap-1.5 rounded-lg bg-blue-50 px-3 py-1.5 hover:bg-blue-100 transition-colors">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  <span class="text-xs font-medium text-blue-700">Edit</span>
+                </button>
+              }
+            </div>
+            <h1 class="text-2xl font-bold text-primary-fg mb-2">{{ property.title }}</h1>
+            @if (property.description) {
+              <p class="text-sm text-secondary-fg line-clamp-2">{{ property.description }}</p>
+            }
+          </div>
+          @if (showActions) {
+            <div class="flex flex-wrap gap-3 mt-5 pt-4 border-t border-default">
+              @if (!property.isActive && property.status !== 'closed') {
+                <button (click)="activate()" [disabled]="acting"
+                        class="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0">
+                  @if (acting) {
+                    <div class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                  } @else {
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                  }
+                  {{ acting ? 'Activating...' : 'Activate' }}
+                </button>
+              }
+              @if (property.isActive) {
+                <button (click)="deactivate()" [disabled]="acting"
+                        class="inline-flex items-center gap-2 rounded-xl bg-amber-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-amber-600/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0">
+                  @if (acting) {
+                    <div class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                  } @else {
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                  }
+                  {{ acting ? 'Deactivating...' : 'Deactivate' }}
+                </button>
+              }
+              @if (property.status !== 'closed') {
+                <button (click)="closeInventory()" [disabled]="acting"
+                        class="inline-flex items-center gap-2 rounded-xl border border-default bg-surface px-5 py-2.5 text-sm font-medium text-secondary-fg shadow-sm transition-all hover:bg-red-50 hover:text-red-600 hover:border-red-200 focus:outline-none focus:ring-2 focus:ring-red-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
+                  </svg>
+                  {{ acting ? 'Closing...' : 'Close' }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="rounded-2xl border border-default bg-surface shadow-sm mb-6">
+      <div class="px-6 py-5">
+        <h3 class="text-base font-semibold text-primary-fg">Property Fields</h3>
+        <p class="mt-1 text-sm text-secondary-fg">Detailed specifications and attributes</p>
+      </div>
+      <div class="border-t border-default"></div>
+      <div class="p-6">
+        @if (fields.length === 0) {
+          <p class="text-sm text-muted-fg text-center py-8">No fields available for this property type</p>
+        } @else {
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            @for (field of fields; track field.fieldName) {
+              <div class="group">
+                <p class="text-xs text-muted-fg mb-1.5 flex items-center gap-1.5">
+                  <span class="h-1 w-1 rounded-full bg-accent/60"></span>
+                  {{ field.fieldLabel }}
+                </p>
+                <p class="text-sm font-medium text-primary-fg bg-body/50 rounded-lg px-3 py-2 border border-transparent group-hover:border-default transition-colors">
+                  {{ field.value || '-' }}
+                </p>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    @if (property.description) {
+      <div class="rounded-2xl border border-default bg-surface shadow-sm mb-6">
+        <div class="px-6 py-5">
+          <h3 class="text-base font-semibold text-primary-fg">Description</h3>
+        </div>
+        <div class="border-t border-default"></div>
+        <div class="p-6">
+          <p class="text-sm text-secondary-fg leading-relaxed whitespace-pre-wrap">{{ property.description }}</p>
+        </div>
+      </div>
+    }
+
+    <div class="rounded-2xl border border-default bg-surface shadow-sm mb-6">
+      <div class="px-6 py-5">
+        <h3 class="text-base font-semibold text-primary-fg">Documents & Files</h3>
+        <p class="mt-1 text-sm text-secondary-fg">{{ files.length }} file(s) attached</p>
+      </div>
+      <div class="border-t border-default"></div>
+      <div class="p-6">
+        @if (files.length === 0) {
+          <p class="text-sm text-muted-fg text-center py-8">No files attached to this inventory</p>
+        } @else {
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            @for (file of files; track file.propertyFileId) {
+              <div class="flex items-center gap-3 rounded-xl border border-default bg-body/30 p-4 hover:bg-surface-hover transition-colors group">
+                <div class="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center"
+                     [ngClass]="fileIcon(file) === 'pdf' ? 'bg-red-50' : 'bg-blue-50'">
+                  @if (fileIcon(file) === 'pdf') {
+                    <svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM9 9.5h1v-1H9v1zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm10 5.5h1v-3h-1v3z"/>
+                    </svg>
+                  } @else {
+                    <svg class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                  }
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="text-sm font-medium text-primary-fg truncate">{{ file.mediaDetails?.originalFileName || file.mediaDetails?.fileName || 'Unknown file' }}</p>
+                  <p class="text-xs text-muted-fg">{{ file.mediaDetails?.contentType || 'Unknown type' }}</p>
+                </div>
+                <a [href]="fileUrl(file)" target="_blank" class="flex-shrink-0 rounded-lg p-2 text-secondary-fg hover:bg-surface-hover hover:text-primary-fg transition-colors opacity-0 group-hover:opacity-100">
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                  </svg>
+                </a>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="rounded-2xl border border-default bg-surface/60 shadow-sm">
+      <div class="px-6 py-4 flex items-center justify-between text-xs text-muted-fg">
+        <span>Inventory ID: #{{ property.id }}</span>
+        <span class="inline-flex items-center gap-1.5">
+          <span class="h-1.5 w-1.5 rounded-full" [ngClass]="statusDotClass"></span>
+          {{ property.status || 'draft' }} &middot; {{ propertyTypeLabel }}
+        </span>
+      </div>
+    </div>
+  }
+</div>

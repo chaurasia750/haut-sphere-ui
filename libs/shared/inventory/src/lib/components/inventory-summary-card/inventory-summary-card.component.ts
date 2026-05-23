@@ -1,9 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { DynamicField, UploadedFile } from '../../../models/inventory-form.model';
+import { DynamicField, UploadedFile } from '../../models/inventory-form.model';
 
 @Component({
-  selector: 'app-inventory-summary-card',
-  standalone: false,
+  selector: 'lib-inventory-summary-card',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './inventory-summary-card.component.html',
 })
 export class InventorySummaryCardComponent {
