@@ -201,15 +201,5 @@
         }
       </div>
     </div>
-
-    <div class="rounded-2xl border border-default bg-surface/60 shadow-sm">
-      <div class="px-6 py-4 flex items-center justify-between text-xs text-muted-fg">
-        <span>Inventory ID: #{{ property()?.id }}</span>
-        <span class="inline-flex items-center gap-1.5">
-          <span class="h-1.5 w-1.5 rounded-full" [ngClass]="statusDotClass()"></span>
-          {{ property()?.status || 'draft' }} &middot; {{ propertyTypeLabel() }}
-        </span>
-      </div>
-    </div>
   }
 </div>

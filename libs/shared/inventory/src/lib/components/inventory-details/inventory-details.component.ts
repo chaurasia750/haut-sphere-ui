@@ -41,6 +41,9 @@ export class InventoryDetailsComponent {
     if (profile?.mediaDetails?.id) {
       return this.mediaService.getFileUrl(profile.mediaDetails.id);
     }
+    if (profile?.mediaFileId) {
+      return this.mediaService.getFileUrl(profile.mediaFileId);
+    }
     return null;
   });
 
