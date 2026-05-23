@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, inject, input, OnInit, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
 import { PropertyListItem, InventoryListRequest } from '../../models/property-detail.model';
 import { INVENTORY_SERVICE, IInventoryService } from '../../services/inventory.service';
 import { MediaService } from '@shared';
 import { PaginationComponent } from '../pagination/pagination.component';
+import { InventoryFilterComponent, InventoryFilter } from '../inventory-filter/inventory-filter.component';
 
 @Component({
   selector: 'lib-inventory-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, PaginationComponent],
+  imports: [CommonModule, PaginationComponent, InventoryFilterComponent],
   templateUrl: './inventory-list.component.html',
 })
 export class InventoryListComponent implements OnInit {
@@ -27,9 +27,10 @@ export class InventoryListComponent implements OnInit {
   readonly properties = signal<PropertyListItem[]>([]);
   readonly loading = signal(true);
   readonly error = signal(false);
-  searchQuery = '';
 
   readonly pageIndex = signal(1);
+  readonly selectedPropertyTypeId = signal<number | null>(null);
+  searchQuery = '';
   readonly pageSize = 20;
   readonly totalCount = signal(0);
   readonly totalPages = signal(0);
@@ -53,6 +54,7 @@ export class InventoryListComponent implements OnInit {
       pageIndex: this.pageIndex(),
       pageSize: this.pageSize,
       title: this.searchQuery.trim() || undefined,
+      propertyTypeId: this.selectedPropertyTypeId(),
     };
 
     this.inventoryService.getPropertyList(request)
@@ -74,7 +76,9 @@ export class InventoryListComponent implements OnInit {
       });
   }
 
-  onSearch(): void {
+  onFilterChange(filter: InventoryFilter): void {
+    this.searchQuery = filter.searchQuery;
+    this.selectedPropertyTypeId.set(filter.propertyTypeId);
     this.pageIndex.set(1);
     this.loadData();
   }
