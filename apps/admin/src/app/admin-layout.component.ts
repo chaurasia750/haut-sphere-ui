@@ -5,7 +5,7 @@ import { DASHBOARD_ICON, INVENTORY_ICON, LEADS_ICON, TREE_ICON, USERS_ICON } fro
 @Component({
   selector: 'app-admin-layout',
   standalone: false,
-  template: `<shared-app-layout [config]="layoutConfig"><router-outlet /></shared-app-layout>`,
+  template: `<shared-app-layout [config]="layoutConfig"></shared-app-layout>`,
 })
 export class AdminLayoutComponent {
   readonly layoutConfig: AppLayoutConfig = {

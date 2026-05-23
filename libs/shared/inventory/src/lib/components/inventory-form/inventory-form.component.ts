@@ -31,6 +31,7 @@ export class InventoryFormComponent implements OnInit {
   private fieldsSub?: Subscription;
   private fieldsCache = new Map<string, DynamicField[]>();
   private pendingRequests = new Set<string>();
+  private pendingFieldValues: Record<string, string> | null = null;
 
   private _editId: number | null = null;
   private isLoadingExistingData = false;
@@ -119,14 +120,8 @@ export class InventoryFormComponent implements OnInit {
         preview: '',
       }));
     }
-    this.onTypeChange();
-    if (data.fields?.length) {
-      setTimeout(() => {
-        for (const f of data.fields) {
-          this.formModel.dynamic[f.fieldName] = f.value;
-        }
-      });
-    }
+    this.pendingFieldValues = data.fields?.length ? Object.fromEntries(data.fields.map(f => [f.fieldName, f.value])) : null;
+    this.onTypeChange(true);
   }
 
   private fetchPropertyTypes(): void {
@@ -152,15 +147,24 @@ export class InventoryFormComponent implements OnInit {
     });
   }
 
-  onTypeChange(): void {
+  onTypeChange(applyPendingValues = false): void {
     if (!this.selectedType) return;
     this.formModel.dynamic = {};
     if (this.fieldsCache.has(this.selectedType)) {
       this.fieldDefinitions = this.fieldsCache.get(this.selectedType)!;
+      if (applyPendingValues) this.applyFieldValues();
     } else {
       this.loadingFields.set(true);
       this.fetchFields(this.selectedType);
     }
+  }
+
+  private applyFieldValues(): void {
+    if (!this.pendingFieldValues) return;
+    for (const [key, value] of Object.entries(this.pendingFieldValues)) {
+      this.formModel.dynamic[key] = value;
+    }
+    this.pendingFieldValues = null;
   }
 
   private fetchFields(typeId: string): void {
@@ -176,6 +180,7 @@ export class InventoryFormComponent implements OnInit {
           this.fieldDefinitions = mapped;
           this.formModel.dynamic = {};
           this.loadingFields.set(false);
+          this.applyFieldValues();
         }
       },
       error: () => this.pendingRequests.delete(typeId),

@@ -19,6 +19,7 @@ export class InventoryDetailsComponent {
   private readonly destroyRef = inject(DestroyRef);
 
   private _propertyId = 0;
+  private loadReq = 0;
   @Input() set propertyId(value: number) {
     this._propertyId = value;
     if (value) this.fetchProperty();
@@ -39,13 +40,8 @@ export class InventoryDetailsComponent {
 
   readonly profileImageUrl = computed(() => {
     const profile = this.property()?.profile;
-    if (profile?.mediaDetails?.id) {
-      return this.mediaService.getFileUrl(profile.mediaDetails.id);
-    }
-    if (profile?.mediaFileId) {
-      return this.mediaService.getFileUrl(profile.mediaFileId);
-    }
-    return null;
+    const id = profile?.mediaDetails?.id ?? profile?.mediaFileId;
+    return id ? this.mediaService.getFileUrl(id) : null;
   });
 
   readonly propertyTypeLabel = computed(() => {
@@ -73,12 +69,14 @@ export class InventoryDetailsComponent {
 
   private fetchProperty(): void {
     if (!this._propertyId) return;
+    const reqId = ++this.loadReq;
     this.loading.set(true);
     this.error.set(false);
     this.inventoryService.getPropertyById(this._propertyId).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: (data) => {
+        if (reqId !== this.loadReq) return;
         this.property.set(data);
         this.fields.set(data.fields || []);
         this.files.set(data.files || []);
@@ -86,6 +84,7 @@ export class InventoryDetailsComponent {
         this.fetchPropertyTypes();
       },
       error: () => {
+        if (reqId !== this.loadReq) return;
         this.loading.set(false);
         this.error.set(true);
       },
