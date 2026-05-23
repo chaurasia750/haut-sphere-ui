@@ -156,7 +156,8 @@
         } @else {
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             @for (file of files(); track file.propertyFileId) {
-              <div class="flex items-center gap-3 rounded-xl border border-default bg-body/30 p-4 hover:bg-surface-hover transition-colors group">
+              <div class="flex items-center gap-3 rounded-xl border border-default bg-body/30 p-4 hover:bg-surface-hover transition-colors group cursor-pointer"
+                (click)="openPreview(file)">
                 <div class="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center"
                      [ngClass]="fileIcon(file) === 'pdf' ? 'bg-red-50' : 'bg-blue-50'">
                   @if (fileIcon(file) === 'pdf') {
@@ -173,7 +174,8 @@
                   <p class="text-sm font-medium text-primary-fg truncate">{{ file.mediaDetails?.originalFileName || file.mediaDetails?.fileName || 'Unknown file' }}</p>
                   <p class="text-xs text-muted-fg">{{ file.mediaDetails?.contentType || 'Unknown type' }}</p>
                 </div>
-                <a [href]="fileUrl(file)" target="_blank" class="flex-shrink-0 rounded-lg p-2 text-secondary-fg hover:bg-surface-hover hover:text-primary-fg transition-colors opacity-0 group-hover:opacity-100">
+                <a [href]="fileUrl(file)" target="_blank" class="flex-shrink-0 rounded-lg p-2 text-secondary-fg hover:bg-surface-hover hover:text-primary-fg transition-colors opacity-0 group-hover:opacity-100"
+                  (click)="$event.stopPropagation()">
                   <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                   </svg>
@@ -184,5 +186,26 @@
         }
       </div>
     </div>
+
+    <shared-side-panel [isOpen]="isPreviewOpen" [title]="previewFile?.name ?? 'File Preview'" (closed)="closePreview()" panelWidth="600px">
+      @if (previewFile) {
+        @if (previewFile.isImage) {
+          <div class="flex items-center justify-center flex-1">
+            <img [src]="previewFile.url" [alt]="previewFile.name" class="max-w-full max-h-full object-contain rounded-lg"/>
+          </div>
+        } @else {
+          <div class="flex flex-col gap-4 flex-1 min-h-0">
+            <iframe [src]="safePreviewUrl" class="w-full flex-1 rounded-lg border border-default bg-body" style="min-height:0"></iframe>
+            <div class="flex justify-end shrink-0">
+              <a [href]="mediaService.getDownloadUrl(previewFile.fileId)"
+                class="inline-flex items-center gap-2 rounded-xl bg-brand-500 text-black px-5 py-2.5 text-sm font-medium hover:bg-brand-600 transition-colors">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download
+              </a>
+            </div>
+          </div>
+        }
+      }
+    </shared-side-panel>
   }
 </div>

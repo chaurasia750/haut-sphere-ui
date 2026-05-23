@@ -44,4 +44,8 @@ export class MediaService {
   getFileUrl(id: number): string {
     return `${this.baseUrl}/media/view/${id}`;
   }
+
+  getDownloadUrl(id: number): string {
+    return `${this.baseUrl}/media/download/${id}`;
+  }
 }

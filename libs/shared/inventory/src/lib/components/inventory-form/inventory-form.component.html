@@ -195,7 +195,8 @@
             @if (uploadedFiles.length > 0) {
               <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 @for (file of uploadedFiles; track file.id) {
-                  <div class="group relative rounded-xl border border-default bg-surface shadow-sm hover:shadow-md transition-all">
+                  <div class="group relative rounded-xl border border-default bg-surface shadow-sm hover:shadow-md transition-all cursor-pointer"
+                    (click)="openPreview(file)">
                     @if (file.type === 'image') {
                       <div class="aspect-[4/3] bg-body">
                         <img [src]="file.preview" [alt]="file.name"
@@ -211,7 +212,7 @@
                       <p class="text-xs font-medium text-primary-fg truncate">{{ file.name }}</p>
                       <p class="text-xs text-muted-fg mt-0.5">{{ file.size }}</p>
                     </div>
-                    <button type="button" (click)="removeFile(file.id)"
+                    <button type="button" (click)="removeFile(file.id); $event.stopPropagation()"
                       class="absolute top-2 right-2 h-6 w-6 rounded-full bg-surface/90 backdrop-blur-sm flex items-center justify-center shadow-sm opacity-0 group-hover:opacity-100 transition-all hover:bg-red-50 focus:outline-none">
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                     </button>
@@ -252,3 +253,24 @@
     </div>
   }
 </div>
+
+<shared-side-panel [isOpen]="isPreviewOpen" [title]="previewFile?.name ?? 'File Preview'" (closed)="closePreview()" panelWidth="600px">
+  @if (previewFile) {
+    @if (previewFile.type === 'image') {
+      <div class="flex items-center justify-center flex-1">
+        <img [src]="previewFile.url" [alt]="previewFile.name" class="max-w-full max-h-full object-contain rounded-lg"/>
+      </div>
+    } @else {
+      <div class="flex flex-col gap-4 flex-1 min-h-0">
+        <iframe [src]="safePreviewUrl" class="w-full flex-1 rounded-lg border border-default bg-body" style="min-height:0"></iframe>
+        <div class="flex justify-end shrink-0">
+          <a [href]="mediaService.getDownloadUrl(previewFile.fileId)"
+            class="inline-flex items-center gap-2 rounded-xl bg-brand-500 text-black px-5 py-2.5 text-sm font-medium hover:bg-brand-600 transition-colors">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download
+          </a>
+        </div>
+      </div>
+    }
+  }
+</shared-side-panel>

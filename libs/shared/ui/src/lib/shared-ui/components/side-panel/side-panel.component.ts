@@ -5,7 +5,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   selector: 'shared-side-panel',
   standalone: true,
   imports: [CommonModule],
-  host: { 'ng-host': '' },
   templateUrl: './side-panel.component.html',
   styles: [`
     @keyframes slide-in-right {
@@ -18,16 +17,20 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   `],
 })
 export class SharedSidePanelComponent {
-  @Input({ required: true }) isOpen = false;
+  private _isOpen = false;
+  @Input({ required: true }) set isOpen(value: boolean) {
+    this._isOpen = value;
+    document.body.style.overflow = value ? 'hidden' : '';
+  }
+  get isOpen(): boolean {
+    return this._isOpen;
+  }
   @Input() title = '';
   @Input() panelWidth = '480px';
   @Output() closed = new EventEmitter<void>();
 
   close(): void {
+    this._isOpen = false;
     this.closed.emit();
-  }
-
-  onOverlayClick(): void {
-    this.close();
   }
 }

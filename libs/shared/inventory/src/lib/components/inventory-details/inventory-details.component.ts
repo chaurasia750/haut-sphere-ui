@@ -2,21 +2,23 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, DestroyRef, inject, Input, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs/operators';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MediaService } from '@shared';
 import { PropertyDetail, PropertyDetailField, PropertyFile } from '../../models/property-detail.model';
 import { PropertyTypeItem } from '../../models/property-field.model';
 import { INVENTORY_SERVICE, IInventoryService } from '../../services/inventory.service';
-import { UiBackButtonComponent, UiButtonComponent, UiEmptyStateComponent, UiLoadingSpinnerComponent } from '@shared/ui/src';
+import { UiBackButtonComponent, UiButtonComponent, UiEmptyStateComponent, UiLoadingSpinnerComponent, SharedSidePanelComponent } from '@shared/ui/src';
 
 @Component({
   selector: 'lib-inventory-details',
   standalone: true,
-  imports: [CommonModule, UiBackButtonComponent, UiButtonComponent, UiEmptyStateComponent, UiLoadingSpinnerComponent],
+  imports: [CommonModule, UiBackButtonComponent, UiButtonComponent, UiEmptyStateComponent, UiLoadingSpinnerComponent, SharedSidePanelComponent],
   templateUrl: './inventory-details.component.html',
 })
 export class InventoryDetailsComponent {
   private readonly inventoryService = inject(INVENTORY_SERVICE);
-  private readonly mediaService = inject(MediaService);
+  readonly mediaService = inject(MediaService);
+  private readonly sanitizer = inject(DomSanitizer);
   private readonly destroyRef = inject(DestroyRef);
 
   private _propertyId = 0;
@@ -98,6 +100,30 @@ export class InventoryDetailsComponent {
     ).subscribe({
       next: (types) => this.propertyTypes.set(types),
     });
+  }
+
+  previewFile: { url: string; name: string; isImage: boolean; fileId: number } | null = null;
+  safePreviewUrl: SafeResourceUrl | null = null;
+
+  get isPreviewOpen(): boolean {
+    return this.previewFile !== null;
+  }
+
+  openPreview(file: PropertyFile): void {
+    const url = this.fileUrl(file);
+    if (url === '#') return;
+    this.previewFile = {
+      url,
+      name: file.mediaDetails?.originalFileName || file.mediaDetails?.fileName || 'File',
+      isImage: (file.mediaDetails?.contentType ?? '').startsWith('image/'),
+      fileId: file.mediaDetails?.id ?? 0,
+    };
+    this.safePreviewUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+
+  closePreview(): void {
+    this.previewFile = null;
+    this.safePreviewUrl = null;
   }
 
   fileUrl(file: PropertyFile): string {

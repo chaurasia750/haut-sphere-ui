@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { MediaService, TempUploadResult } from '@shared';
@@ -14,18 +15,19 @@ import { DynamicField, UploadedFile } from '../../models/inventory-form.model';
 import { PropertyDetail } from '../../models/property-detail.model';
 import { DynamicFieldsCardComponent } from '../dynamic-fields-card/dynamic-fields-card.component';
 import { InventorySummaryCardComponent } from '../inventory-summary-card/inventory-summary-card.component';
-import { UiBackButtonComponent, UiButtonComponent, UiLoadingSpinnerComponent } from '@shared/ui/src';
+import { UiBackButtonComponent, UiButtonComponent, UiLoadingSpinnerComponent, SharedSidePanelComponent } from '@shared/ui/src';
 
 @Component({
   selector: 'lib-inventory-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, DynamicFieldsCardComponent, InventorySummaryCardComponent, UiBackButtonComponent, UiButtonComponent, UiLoadingSpinnerComponent],
+  imports: [CommonModule, FormsModule, DynamicFieldsCardComponent, InventorySummaryCardComponent, UiBackButtonComponent, UiButtonComponent, UiLoadingSpinnerComponent, SharedSidePanelComponent],
   templateUrl: './inventory-form.component.html',
 })
 export class InventoryFormComponent implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly inventoryService = inject(INVENTORY_SERVICE);
-  private readonly mediaService = inject(MediaService);
+  readonly mediaService = inject(MediaService);
+  private readonly sanitizer = inject(DomSanitizer);
   private readonly fieldMapper = inject(PROPERTY_FIELD_MAPPER);
   private readonly payloadBuilder = inject(INVENTORY_PAYLOAD_BUILDER);
   private readonly destroyRef = inject(DestroyRef);
@@ -55,6 +57,23 @@ export class InventoryFormComponent implements OnInit {
   uploadedFiles: UploadedFile[] = [];
   fieldDefinitions: DynamicField[] = [];
   propertyTypes: PropertyTypeItem[] = [];
+
+  previewFile: UploadedFile | null = null;
+  safePreviewUrl: SafeResourceUrl | null = null;
+
+  get isPreviewOpen(): boolean {
+    return this.previewFile !== null;
+  }
+
+  openPreview(file: UploadedFile): void {
+    this.previewFile = file;
+    this.safePreviewUrl = file.url ? this.sanitizer.bypassSecurityTrustResourceUrl(file.url) : null;
+  }
+
+  closePreview(): void {
+    this.previewFile = null;
+    this.safePreviewUrl = null;
+  }
 
   readonly loadingTypes = signal(false);
   readonly loadingFields = signal(false);
