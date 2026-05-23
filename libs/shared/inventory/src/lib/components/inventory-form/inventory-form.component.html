@@ -16,7 +16,7 @@
     </nav>
   </div>
 
-  @if (isLoadingEditData) {
+  @if (isLoadingEditData()) {
     <div class="flex items-center justify-center py-20">
       <div class="flex flex-col items-center gap-3">
         <div class="h-8 w-8 animate-spin rounded-full border-4 border-accent border-t-transparent"></div>
@@ -24,7 +24,7 @@
       </div>
     </div>
   } @else {
-    @if (isUploading) {
+    @if (isUploading()) {
       <div class="mb-6 animate-fadeSlideDown">
         <div class="rounded-xl border border-accent/20 bg-gradient-to-r from-accent/[0.03] to-violet-500/[0.03] px-5 py-3 shadow-sm backdrop-blur-sm">
           <div class="flex items-center gap-4">
@@ -107,9 +107,9 @@
               <div class="relative">
                 <select id="inventoryType" [(ngModel)]="selectedType" name="propertyType" (change)="onTypeChange()"
                   class="block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 cursor-pointer"
-                  [attr.disabled]="loadingTypes ? true : null">
+                  [attr.disabled]="loadingTypes() ? true : null">
                   <option value="" hidden></option>
-                  @if (loadingTypes) {
+                  @if (loadingTypes()) {
                     <option value="" disabled>Loading...</option>
                   } @else {
                     @for (t of propertyTypes; track t.id) {
@@ -142,7 +142,7 @@
         </div>
 
         <div class="relative">
-          @if (loadingFields) {
+          @if (loadingFields()) {
             <div class="absolute inset-0 z-10 rounded-2xl overflow-hidden pointer-events-none">
               <div class="absolute inset-0 bg-surface/30 backdrop-blur-[2px]"></div>
               <div class="relative h-1 bg-transparent">
@@ -226,12 +226,12 @@
             Cancel
           </button>
           <div class="flex items-center gap-3">
-            <button type="button" (click)="onSubmit('draft')" [disabled]="isSaving"
+            <button type="button" (click)="onSubmit('draft')" [disabled]="isSaving()"
               class="inline-flex items-center gap-2 rounded-xl border border-default bg-surface px-5 py-2.5 text-sm font-medium text-secondary-fg shadow-sm transition-all hover:bg-surface-hover hover:border-default focus:outline-none focus:ring-2 focus:ring-gray-200 disabled:opacity-50 disabled:cursor-not-allowed">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
               Save Draft
             </button>
-            <button type="button" (click)="onSubmit()" [disabled]="!formModel.propertyName.trim() || isSaving"
+            <button type="button" (click)="onSubmit()" [disabled]="!formModel.propertyName.trim() || isSaving()"
               class="inline-flex items-center gap-2 rounded-xl bg-[#2563EB] px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#2563EB]/25 transition-all hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:ring-offset-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               {{ isEditMode ? 'Update Inventory' : 'Save Inventory' }}

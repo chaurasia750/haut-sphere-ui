@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, DestroyRef, inject, input, OnInit, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { PropertyListItem, InventoryListRequest } from '../../models/property-detail.model';
@@ -12,30 +12,29 @@ import { PaginationComponent } from '../pagination/pagination.component';
   standalone: true,
   imports: [CommonModule, FormsModule, PaginationComponent],
   templateUrl: './inventory-list.component.html',
-  styleUrls: ['./inventory-list.component.scss'],
 })
 export class InventoryListComponent implements OnInit {
   private readonly inventoryService = inject(INVENTORY_SERVICE);
   private readonly mediaService = inject(MediaService);
   private readonly destroyRef = inject(DestroyRef);
 
-  @Input() showAddButton: boolean = true;
-  @Input() showEditButton: boolean = false;
-  @Output() addInventory = new EventEmitter<void>();
-  @Output() viewDetails = new EventEmitter<number>();
-  @Output() editInventory = new EventEmitter<number>();
+  readonly showAddButton = input(true);
+  readonly showEditButton = input(false);
+  readonly addInventory = output<void>();
+  readonly viewDetails = output<number>();
+  readonly editInventory = output<number>();
 
-  properties: PropertyListItem[] = [];
-  loading = false;
-  error = false;
+  readonly properties = signal<PropertyListItem[]>([]);
+  readonly loading = signal(true);
+  readonly error = signal(false);
   searchQuery = '';
 
-  pageIndex = 1;
-  pageSize = 20;
-  totalCount = 0;
-  totalPages = 0;
+  readonly pageIndex = signal(1);
+  readonly pageSize = 20;
+  readonly totalCount = signal(0);
+  readonly totalPages = signal(0);
 
-  private loadReq: number = 0;
+  private loadReq = 0;
 
   getFileUrl(id: number | null | undefined): string | null {
     return id ? this.mediaService.getFileUrl(id) : null;
@@ -47,11 +46,11 @@ export class InventoryListComponent implements OnInit {
 
   loadData(): void {
     const reqId = ++this.loadReq;
-    this.loading = true;
-    this.error = false;
+    this.loading.set(true);
+    this.error.set(false);
 
     const request: InventoryListRequest = {
-      pageIndex: this.pageIndex,
+      pageIndex: this.pageIndex(),
       pageSize: this.pageSize,
       title: this.searchQuery.trim() || undefined,
     };
@@ -61,27 +60,27 @@ export class InventoryListComponent implements OnInit {
       .subscribe({
         next: (data) => {
           if (reqId !== this.loadReq) return;
-          this.properties = data?.items ?? [];
-          this.totalCount = data?.totalCount ?? 0;
-          this.totalPages = data?.totalPages ?? 0;
-          this.pageIndex = data?.pageIndex ?? 1;
-          this.loading = false;
+          this.properties.set(data?.items ?? []);
+          this.totalCount.set(data?.totalCount ?? 0);
+          this.totalPages.set(data?.totalPages ?? 0);
+          this.pageIndex.set(data?.pageIndex ?? 1);
+          this.loading.set(false);
         },
         error: () => {
           if (reqId !== this.loadReq) return;
-          this.loading = false;
-          this.error = true;
+          this.loading.set(false);
+          this.error.set(true);
         },
       });
   }
 
   onSearch(): void {
-    this.pageIndex = 1;
+    this.pageIndex.set(1);
     this.loadData();
   }
 
   onPageChange(page: number): void {
-    this.pageIndex = page;
+    this.pageIndex.set(page);
     this.loadData();
   }
 

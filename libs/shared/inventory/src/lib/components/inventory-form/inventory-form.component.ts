@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject, Input, input, OnInit, output, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
@@ -18,37 +19,43 @@ import { InventorySummaryCardComponent } from '../inventory-summary-card/invento
   standalone: true,
   imports: [CommonModule, FormsModule, DynamicFieldsCardComponent, InventorySummaryCardComponent],
   templateUrl: './inventory-form.component.html',
-  styleUrls: ['./inventory-form.component.scss'],
 })
-export class InventoryFormComponent implements OnInit, OnDestroy {
+export class InventoryFormComponent implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly inventoryService = inject(INVENTORY_SERVICE);
   private readonly mediaService = inject(MediaService);
   private readonly fieldMapper = inject(PROPERTY_FIELD_MAPPER);
   private readonly payloadBuilder = inject(INVENTORY_PAYLOAD_BUILDER);
+  private readonly destroyRef = inject(DestroyRef);
   private fieldsSub?: Subscription;
   private fieldsCache = new Map<string, DynamicField[]>();
   private pendingRequests = new Set<string>();
 
-  @Input() editId: number | null = null;
-  @Output() saved = new EventEmitter<number>();
-  @Output() cancelled = new EventEmitter<void>();
+  private _editId: number | null = null;
+  private isLoadingExistingData = false;
+  @Input() set editId(value: number | null) {
+    this._editId = value;
+  }
+  get editId(): number | null {
+    return this._editId;
+  }
+  readonly saved = output<number>();
+  readonly cancelled = output<void>();
 
   selectedType = '';
   isDragging = false;
   propertyImage: string | null = null;
-  loadingTypes = false;
-  loadingFields = false;
-  uploadProgress: number | null = null;
-  isUploading = false;
-  isSaving = false;
-  isLoadingEditData = false;
   propertyImageId: number | null = null;
-
+  uploadProgress: number | null = null;
   uploadedFiles: UploadedFile[] = [];
-
-  propertyTypes: PropertyTypeItem[] = [];
   fieldDefinitions: DynamicField[] = [];
+  propertyTypes: PropertyTypeItem[] = [];
+
+  readonly loadingTypes = signal(false);
+  readonly loadingFields = signal(false);
+  readonly isUploading = signal(false);
+  readonly isSaving = signal(false);
+  readonly isLoadingEditData = signal(false);
 
   formModel = {
     propertyName: '',
@@ -65,7 +72,7 @@ export class InventoryFormComponent implements OnInit, OnDestroy {
   }
 
   get isEditMode(): boolean {
-    return this.editId !== null;
+    return this._editId !== null;
   }
 
   get pageTitle(): string {
@@ -74,25 +81,21 @@ export class InventoryFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.fetchPropertyTypes();
-    if (this.isEditMode) {
-      this.loadExistingData();
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.fieldsSub?.unsubscribe();
   }
 
   private loadExistingData(): void {
-    if (!this.editId) return;
-    this.isLoadingEditData = true;
-    this.inventoryService.getPropertyById(this.editId).subscribe({
+    if (!this._editId || this.isLoadingExistingData) return;
+    this.isLoadingExistingData = true;
+    this.isLoadingEditData.set(true);
+    this.inventoryService.getPropertyById(this._editId).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (data) => {
         this.populateForm(data);
-        this.isLoadingEditData = false;
+        this.isLoadingEditData.set(false);
       },
       error: () => {
-        this.isLoadingEditData = false;
+        this.isLoadingEditData.set(false);
       },
     });
   }
@@ -126,19 +129,24 @@ export class InventoryFormComponent implements OnInit, OnDestroy {
   }
 
   private fetchPropertyTypes(): void {
-    this.loadingTypes = true;
-    this.inventoryService.getPropertyTypes().subscribe({
+    this.loadingTypes.set(true);
+    this.inventoryService.getPropertyTypes().pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (types) => {
         this.propertyTypes = types;
-        this.loadingTypes = false;
-        if (!this.editId && types.length) {
+        this.loadingTypes.set(false);
+        if (!this._editId && types.length) {
           this.selectedType = String(types[0].id);
           this.onTypeChange();
+        }
+        if (this.isEditMode) {
+          this.loadExistingData();
         }
       },
       error: () => {
         this.propertyTypes = [];
-        this.loadingTypes = false;
+        this.loadingTypes.set(false);
       },
     });
   }
@@ -149,7 +157,7 @@ export class InventoryFormComponent implements OnInit, OnDestroy {
     if (this.fieldsCache.has(this.selectedType)) {
       this.fieldDefinitions = this.fieldsCache.get(this.selectedType)!;
     } else {
-      this.loadingFields = true;
+      this.loadingFields.set(true);
       this.fetchFields(this.selectedType);
     }
   }
@@ -166,7 +174,7 @@ export class InventoryFormComponent implements OnInit, OnDestroy {
         if (this.selectedType === typeId) {
           this.fieldDefinitions = mapped;
           this.formModel.dynamic = {};
-          this.loadingFields = false;
+          this.loadingFields.set(false);
         }
       },
       error: () => this.pendingRequests.delete(typeId),
@@ -183,7 +191,7 @@ export class InventoryFormComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       };
       reader.readAsDataURL(file);
-      this.isUploading = true;
+      this.isUploading.set(true);
       this.uploadProgress = 0;
       this.mediaService.tempUploadWithProgress([file]).subscribe({
         next: (event: HttpEvent<TempUploadResult>) => {
@@ -198,14 +206,14 @@ export class InventoryFormComponent implements OnInit, OnDestroy {
                 this.propertyImageId = res.files[0].id;
                 this.propertyImage = this.mediaService.getFileUrl(res.files[0].id);
               }
-              this.isUploading = false;
+              this.isUploading.set(false);
               this.uploadProgress = null;
               this.cdr.detectChanges();
               break;
           }
         },
         error: () => {
-          this.isUploading = false;
+          this.isUploading.set(false);
           this.uploadProgress = null;
           this.cdr.detectChanges();
         },
@@ -251,7 +259,7 @@ export class InventoryFormComponent implements OnInit, OnDestroy {
   }
 
   private uploadFiles(files: File[]): void {
-    this.isUploading = true;
+    this.isUploading.set(true);
     this.uploadProgress = 0;
     this.mediaService.tempUploadWithProgress(files).subscribe({
       next: (event: HttpEvent<TempUploadResult>) => {
@@ -263,7 +271,7 @@ export class InventoryFormComponent implements OnInit, OnDestroy {
           case HttpEventType.Response:
             const res = event.body;
             if (!res?.files?.length) {
-              this.isUploading = false;
+              this.isUploading.set(false);
               this.uploadProgress = null;
               this.cdr.detectChanges();
               return;
@@ -281,14 +289,14 @@ export class InventoryFormComponent implements OnInit, OnDestroy {
                 preview: file.type.startsWith('image/') ? fullUrl : '',
               };
             })];
-            this.isUploading = false;
+            this.isUploading.set(false);
             this.uploadProgress = null;
             this.cdr.detectChanges();
             break;
         }
       },
       error: () => {
-        this.isUploading = false;
+        this.isUploading.set(false);
         this.uploadProgress = null;
         this.cdr.detectChanges();
       },
@@ -302,7 +310,7 @@ export class InventoryFormComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(status?: string): void {
-    if (this.isSaving) return;
+    if (this.isSaving()) return;
     if (!this.selectedType) return;
     if (!this.formModel.propertyName.trim()) return;
 
@@ -316,20 +324,22 @@ export class InventoryFormComponent implements OnInit, OnDestroy {
       status,
     });
 
-    this.isSaving = true;
+    this.isSaving.set(true);
     const request = this.isEditMode && this.editId
       ? this.inventoryService.updateProperty(this.editId, payload)
       : this.inventoryService.createInventory(payload);
 
-    request.subscribe({
+    request.pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (result) => {
-        this.isSaving = false;
+        this.isSaving.set(false);
         if (result?.id) {
           this.saved.emit(result.id);
         }
       },
       error: () => {
-        this.isSaving = false;
+        this.isSaving.set(false);
       },
     });
   }

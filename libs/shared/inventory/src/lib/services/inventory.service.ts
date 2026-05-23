@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { apiConfig } from '@shared/environments/api.dev';
 import { PropertyField, PropertyTypeItem } from '../models/property-field.model';
-import { PropertyDetail, PropertyListItem, ApiResponse, PaginatedData, InventoryListRequest } from '../models/property-detail.model';
+import { PropertyDetail, PropertyListItem, PaginatedData, InventoryListRequest } from '../models/property-detail.model';
 
 export const INVENTORY_API_BASE_URL = new InjectionToken<string>('INVENTORY_API_BASE_URL', {
   factory: () => `${apiConfig.baseUrl}/inventory`,
@@ -12,6 +12,12 @@ export const INVENTORY_API_BASE_URL = new InjectionToken<string>('INVENTORY_API_
 export const INVENTORY_SERVICE = new InjectionToken<IInventoryService>('INVENTORY_SERVICE', {
   factory: () => inject(InventoryService),
 });
+
+export const enum PropertyStatus {
+  Active = 1,
+  Draft = 2,
+  Closed = 3,
+}
 
 export interface CreateInventoryField {
   propertyFieldId: number;
@@ -63,30 +69,19 @@ export class InventoryService implements IInventoryService {
     if (request.sortingOrder) params = params.set('SortingOrder', request.sortingOrder);
     if (request.colName) params = params.set('ColName', request.colName);
 
-    return this.http.get(`${this.baseUrl}/property/list`, { params }).pipe(
-      map((res: any) => {
-        const paginatedData = res?.data ?? res?.Data ?? res;
-        const rawItems: any[] = paginatedData?.items ?? paginatedData?.Items ?? [];
-        const items: PropertyListItem[] = rawItems.map((item: any) => ({
-          id: item.id ?? item.Id,
-          title: item.title ?? item.Title ?? '',
-          propertyType: item.propertyType ?? item.PropertyType ?? '',
-          status: item.status ?? item.Status ?? null,
-          createdAt: item.createdAt ?? item.CreatedAt ?? '',
-          description: item.description ?? item.Description ?? undefined,
-          profileImageId: item.profileImageId ?? item.ProfileImageId ?? null,
-        }));
-        return {
-          items,
-          pageIndex: paginatedData?.pageIndex ?? paginatedData?.PageIndex ?? 1,
-          pageSize: paginatedData?.pageSize ?? paginatedData?.PageSize ?? 20,
-          totalCount: paginatedData?.totalCount ?? paginatedData?.TotalCount ?? 0,
-          totalPages: paginatedData?.totalPages ?? paginatedData?.TotalPages ?? 0,
-          indexFrom: paginatedData?.indexFrom ?? paginatedData?.IndexFrom ?? 0,
-          hasPreviousPage: paginatedData?.hasPreviousPage ?? paginatedData?.HasPreviousPage ?? false,
-          hasNextPage: paginatedData?.hasNextPage ?? paginatedData?.HasNextPage ?? false,
-        } as PaginatedData<PropertyListItem>;
-      }),
+    return this.http.get<PaginatedData<PropertyListItem>>(`${this.baseUrl}/property/list`, { params }).pipe(
+      map(paginatedData => ({
+        ...paginatedData,
+        items: (paginatedData.items ?? []).map(item => ({
+          id: item.id ?? (item as any).Id,
+          title: item.title ?? (item as any).Title ?? '',
+          propertyType: item.propertyType ?? (item as any).PropertyType ?? '',
+          status: item.status ?? (item as any).Status ?? null,
+          createdAt: item.createdAt ?? (item as any).CreatedAt ?? '',
+          description: item.description ?? (item as any).Description ?? undefined,
+          profileImageId: item.profileImageId ?? (item as any).ProfileImageId ?? null,
+        })),
+      })),
     );
   }
 
