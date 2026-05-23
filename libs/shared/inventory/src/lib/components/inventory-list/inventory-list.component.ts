@@ -6,11 +6,12 @@ import { INVENTORY_SERVICE, IInventoryService } from '../../services/inventory.s
 import { MediaService } from '@shared';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { InventoryFilterComponent, InventoryFilter } from '../inventory-filter/inventory-filter.component';
+import { UiButtonComponent, UiEmptyStateComponent, UiLoadingSpinnerComponent } from '@shared/ui/src';
 
 @Component({
   selector: 'lib-inventory-list',
   standalone: true,
-  imports: [CommonModule, PaginationComponent, InventoryFilterComponent],
+  imports: [CommonModule, PaginationComponent, InventoryFilterComponent, UiButtonComponent, UiEmptyStateComponent, UiLoadingSpinnerComponent],
   templateUrl: './inventory-list.component.html',
 })
 export class InventoryListComponent implements OnInit {

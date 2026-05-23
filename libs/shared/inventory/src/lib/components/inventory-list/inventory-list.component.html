@@ -6,11 +6,9 @@
     <h2 class="text-2xl font-bold tracking-tight text-[#111111]">Inventory</h2>
     <div class="flex items-center gap-3">
       @if (showAddButton()) {
-        <button (click)="onAdd()"
-          class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-2.5 text-sm font-semibold text-black shadow-lg shadow-brand-500/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:bg-brand-600">
+        <ui-button label="Add Inventory" (onClick)="onAdd()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Add Inventory
-        </button>
+        </ui-button>
       }
     </div>
   </div>
@@ -18,37 +16,19 @@
   <lib-inventory-filter (filterChange)="onFilterChange($event)"></lib-inventory-filter>
 
   @if (loading()) {
-    <div class="flex items-center justify-center py-20">
-      <div class="flex flex-col items-center gap-3">
-        <div class="h-8 w-8 animate-spin rounded-full border-4 border-brand-500 border-t-transparent"></div>
-        <p class="text-sm text-gray-500">Loading inventory...</p>
-      </div>
-    </div>
+    <ui-loading-spinner text="Loading inventory..."></ui-loading-spinner>
   } @else if (error()) {
-    <div class="rounded-2xl border border-gray-100 bg-white shadow-sm p-12 text-center">
-      <svg class="mx-auto h-12 w-12 text-red-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/>
-      </svg>
-      <h3 class="text-base font-semibold text-[#111111] mb-2">Failed to load inventory</h3>
-      <p class="text-sm text-gray-500 mb-4">A network error occurred while loading inventory data.</p>
-      <button (click)="loadData()" class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-2.5 text-sm font-semibold text-black shadow-lg shadow-brand-500/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:bg-brand-600">
-        Try Again
-      </button>
-    </div>
+    <ui-empty-state iconType="error" heading="Failed to load inventory" message="A network error occurred while loading inventory data." actionLabel="Try Again" (onAction)="loadData()"></ui-empty-state>
   } @else if (properties().length === 0) {
-    <div class="rounded-2xl border border-gray-100 bg-white shadow-sm p-12 text-center">
-      <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-      </svg>
-      <h3 class="text-base font-semibold text-[#111111] mb-2">No inventory found</h3>
-      <p class="text-sm text-gray-500 mb-4">{{ searchQuery ? 'No results match your search.' : 'No inventory items have been created yet.' }}</p>
+    <ui-empty-state heading="No inventory found" [message]="searchQuery ? 'No results match your search.' : 'No inventory items have been created yet.'" iconType="empty">
       @if (showAddButton() && !searchQuery) {
-        <button (click)="onAdd()" class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-2.5 text-sm font-semibold text-black shadow-lg shadow-brand-500/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:bg-brand-600">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Create First Inventory
-        </button>
+        <div class="mt-4">
+          <ui-button label="Create First Inventory" (onClick)="onAdd()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </ui-button>
+        </div>
       }
-    </div>
+    </ui-empty-state>
   } @else {
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
       @for (item of properties(); track item.id) {

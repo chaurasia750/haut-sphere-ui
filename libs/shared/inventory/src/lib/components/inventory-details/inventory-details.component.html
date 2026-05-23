@@ -1,11 +1,10 @@
 <div>
   <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
     <div class="flex items-center gap-3">
-      <button (click)="goBack()"
-        class="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">
+      <ui-button variant="outline" size="sm" (onClick)="goBack()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
         Back
-      </button>
+      </ui-button>
       <h2 class="text-xl font-semibold text-primary-fg">{{ property()?.title || 'Inventory Details' }}</h2>
     </div>
     <nav>
@@ -24,25 +23,11 @@
   </div>
 
   @if (loading()) {
-    <div class="flex items-center justify-center py-20">
-      <div class="flex flex-col items-center gap-3">
-        <div class="h-8 w-8 animate-spin rounded-full border-4 border-accent border-t-transparent"></div>
-        <p class="text-sm text-muted-fg">Loading inventory details...</p>
-      </div>
-    </div>
+    <ui-loading-spinner text="Loading inventory details..."></ui-loading-spinner>
   }
 
   @if (error()) {
-    <div class="rounded-2xl border border-default bg-surface shadow-sm p-12 text-center">
-      <svg class="mx-auto h-12 w-12 text-red-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/>
-      </svg>
-      <h3 class="text-base font-semibold text-primary-fg mb-2">Failed to load inventory</h3>
-      <p class="text-sm text-secondary-fg mb-4">The inventory could not be found or a network error occurred.</p>
-      <button (click)="goBack()" class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-2.5 text-sm font-semibold text-black shadow-lg shadow-brand-500/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:bg-brand-600">
-        Back to Inventory
-      </button>
-    </div>
+    <ui-empty-state iconType="error" heading="Failed to load inventory" message="The inventory could not be found or a network error occurred." actionLabel="Back to Inventory" (onAction)="goBack()"></ui-empty-state>
   }
 
   @if (!loading() && !error() && property()) {
@@ -74,11 +59,10 @@
                 <span class="text-xs font-medium text-purple-700">{{ propertyTypeLabel() }}</span>
               </span>
               @if (showActions()) {
-                <button (click)="onEdit()"
-                  class="inline-flex items-center gap-1.5 rounded-lg bg-blue-50 px-3 py-1.5 hover:bg-blue-100 transition-colors">
+                <ui-button variant="outline" size="sm" (onClick)="onEdit()">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="text-brand-500"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                  <span class="text-xs font-medium text-brand-500">Edit</span>
-                </button>
+                  Edit
+                </ui-button>
               }
             </div>
             <h1 class="text-2xl font-bold text-primary-fg mb-2">{{ property()?.title }}</h1>
@@ -89,39 +73,34 @@
           @if (showActions()) {
             <div class="flex flex-wrap gap-3 mt-5 pt-4 border-t border-default">
               @if (!property()?.isActive && property()?.status !== 'closed') {
-                <button (click)="activate()" [disabled]="acting()"
-                        class="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0">
-                  @if (acting()) {
-                    <div class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                  } @else {
+                <ui-button variant="primary" (onClick)="activate()" [disabled]="acting()" [loading]="acting()">
+                  @if (!acting()) {
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                     </svg>
                   }
                   {{ acting() ? 'Activating...' : 'Activate' }}
-                </button>
+                </ui-button>
               }
               @if (property()?.isActive) {
-                <button (click)="deactivate()" [disabled]="acting()"
-                        class="inline-flex items-center gap-2 rounded-xl bg-amber-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-amber-600/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0">
-                  @if (acting()) {
-                    <div class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                  } @else {
+                <ui-button variant="outline" (onClick)="deactivate()" [disabled]="acting()" [loading]="acting()">
+                  @if (!acting()) {
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
                   }
                   {{ acting() ? 'Deactivating...' : 'Deactivate' }}
-                </button>
+                </ui-button>
               }
               @if (property()?.status !== 'closed') {
-                <button (click)="closeInventory()" [disabled]="acting()"
-                        class="inline-flex items-center gap-2 rounded-xl border border-default bg-surface px-5 py-2.5 text-sm font-medium text-secondary-fg shadow-sm transition-all hover:bg-red-50 hover:text-red-600 hover:border-red-200 focus:outline-none focus:ring-2 focus:ring-red-200 disabled:opacity-50 disabled:cursor-not-allowed">
-                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
-                  </svg>
+                <ui-button variant="danger" (onClick)="closeInventory()" [disabled]="acting()" [loading]="acting()">
+                  @if (!acting()) {
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
+                    </svg>
+                  }
                   {{ acting() ? 'Closing...' : 'Close' }}
-                </button>
+                </ui-button>
               }
             </div>
           }

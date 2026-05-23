@@ -5,11 +5,12 @@ import { MediaService } from '@shared';
 import { PropertyDetail, PropertyDetailField, PropertyFile } from '../../models/property-detail.model';
 import { PropertyTypeItem } from '../../models/property-field.model';
 import { INVENTORY_SERVICE, IInventoryService } from '../../services/inventory.service';
+import { UiButtonComponent, UiEmptyStateComponent, UiLoadingSpinnerComponent } from '@shared/ui/src';
 
 @Component({
   selector: 'lib-inventory-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, UiButtonComponent, UiEmptyStateComponent, UiLoadingSpinnerComponent],
   templateUrl: './inventory-details.component.html',
 })
 export class InventoryDetailsComponent {

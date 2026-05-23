@@ -13,11 +13,12 @@ import { DynamicField, UploadedFile } from '../../models/inventory-form.model';
 import { PropertyDetail } from '../../models/property-detail.model';
 import { DynamicFieldsCardComponent } from '../dynamic-fields-card/dynamic-fields-card.component';
 import { InventorySummaryCardComponent } from '../inventory-summary-card/inventory-summary-card.component';
+import { UiButtonComponent, UiLoadingSpinnerComponent } from '@shared/ui/src';
 
 @Component({
   selector: 'lib-inventory-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, DynamicFieldsCardComponent, InventorySummaryCardComponent],
+  imports: [CommonModule, FormsModule, DynamicFieldsCardComponent, InventorySummaryCardComponent, UiButtonComponent, UiLoadingSpinnerComponent],
   templateUrl: './inventory-form.component.html',
 })
 export class InventoryFormComponent implements OnInit {
