@@ -1,0 +1,93 @@
+<div class="mx-auto max-w-4xl">
+  <!-- Page Header -->
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold tracking-tight text-[#111111]">Add New Lead</h1>
+    <p class="mt-1 text-sm text-gray-500">CRM / Leads / Add Lead</p>
+  </div>
+
+  <!-- Step Indicator -->
+  <div class="mb-10">
+    <div class="flex items-center justify-center">
+      <div class="flex items-center gap-6 sm:gap-10 md:gap-16">
+        @for (step of steps; track step.id; let i = $index) {
+          <div class="flex flex-col items-center">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold transition-all duration-300"
+                 [class]="currentStep() > i + 1 ? 'bg-[#FFD000] text-black shadow-sm shadow-[#FFD000]/30' :
+                           currentStep() === i + 1 ? 'bg-[#FFD000] text-black shadow-sm shadow-[#FFD000]/30' :
+                           'bg-white text-gray-400 ring-1 ring-gray-200'">
+              @if (currentStep() > i + 1) {
+                <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              } @else {
+                <span>{{ i + 1 }}</span>
+              }
+            </div>
+            <span class="mt-2.5 text-xs font-medium transition-colors duration-300"
+                  [class]="currentStep() >= i + 1 ? 'text-gray-900' : 'text-gray-400'">{{ step.label }}</span>
+          </div>
+
+          @if (i < steps.length - 1) {
+            <div class="flex items-center">
+              <div class="h-px w-8 transition-colors duration-300 sm:w-12 md:w-20"
+                   [class]="currentStep() >= i + 2 ? 'bg-[#FFD000]' : 'bg-gray-200'"></div>
+            </div>
+          }
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Card -->
+  <div class="rounded-2xl border border-gray-100 bg-white shadow-sm">
+    <div class="p-6 sm:p-8">
+      <div class="min-h-[380px]">
+        @if (currentStep() === 1) {
+          <lib-lead-info-form [form]="form"
+                              [leadSources]="leadSources"
+                              [leadStatuses]="leadStatuses"
+                              [assignedUsers]="assignedUsers" />
+        }
+        @if (currentStep() === 2) {
+          <lib-lead-notes-followup-form [form]="form"
+                                         [priorities]="priorities"
+                                         [availableTags]="availableTags" />
+        }
+        @if (currentStep() === 3) {
+          <lib-lead-review-save-form [form]="form"
+                                      [priorities]="priorities" />
+        }
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="flex items-center justify-between border-t border-gray-100 px-6 py-4">
+      <button type="button" (click)="onCancel()"
+              class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-600 shadow-sm transition-colors hover:bg-gray-50">
+        Cancel
+      </button>
+
+      <div class="flex items-center gap-3">
+        @if (!isFirstStep()) {
+          <button type="button" (click)="previousStep()"
+                  class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-600 shadow-sm transition-colors hover:bg-gray-50">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Previous
+          </button>
+        }
+        @if (!isLastStep()) {
+          <button type="button" (click)="nextStep()"
+                  class="inline-flex items-center gap-2 rounded-xl bg-[#FFD000] px-6 py-2.5 text-sm font-semibold text-black shadow-lg shadow-[#FFD000]/25 transition-all hover:-translate-y-0.5 hover:shadow-xl">
+            Next
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        }
+        @if (isLastStep()) {
+          <button type="button" (click)="onSubmit()"
+                  class="inline-flex items-center gap-2 rounded-xl bg-[#FFD000] px-6 py-2.5 text-sm font-semibold text-black shadow-lg shadow-[#FFD000]/25 transition-all hover:-translate-y-0.5 hover:shadow-xl">
+            <svg class="h-4.5 w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Save Lead
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+</div>

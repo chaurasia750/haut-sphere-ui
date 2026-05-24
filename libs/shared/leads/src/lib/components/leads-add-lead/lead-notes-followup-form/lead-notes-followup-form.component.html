@@ -1,0 +1,89 @@
+<div [formGroup]="form()" class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+  <!-- LEFT: Notes Editor -->
+  <div>
+    <p class="mb-1.5 text-xs font-medium text-primary-fg">Notes / Description</p>
+    <textarea formControlName="notes" rows="11"
+      placeholder="Write detailed notes about this lead — their requirements, budget, timeline, and any key discussion points..."
+      class="w-full resize-none rounded-xl border border-default bg-surface p-4 text-sm leading-relaxed text-primary-fg placeholder:text-primary-fg/40 focus:border-[#FFD000] focus:outline-none focus:ring-2 focus:ring-[#FFD000]/20"
+    ></textarea>
+    <p class="mt-1.5 text-xs text-primary-fg/50">
+      <span class="font-medium">{{ form().get('notes')?.value?.length || 0 }}</span> characters
+    </p>
+  </div>
+
+  <!-- RIGHT: Follow Up Details -->
+  <div class="space-y-4">
+
+    <div class="relative">
+      <input id="followUpDate" type="date" formControlName="followUpDate" placeholder=" "
+        class="peer block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-[#FFD000] focus:outline-none focus:ring-2 focus:ring-[#FFD000]/20"
+      />
+      <label for="followUpDate" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-primary-fg">
+        Follow Up Date
+      </label>
+    </div>
+
+    <div class="relative">
+      <input id="followUpTime" type="time" formControlName="followUpTime" placeholder=" "
+        class="peer block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-[#FFD000] focus:outline-none focus:ring-2 focus:ring-[#FFD000]/20"
+      />
+      <label for="followUpTime" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-primary-fg">
+        Follow Up Time
+      </label>
+    </div>
+
+    <div>
+      <p class="mb-2 text-xs font-medium text-primary-fg">Priority <span class="text-red-400">*</span></p>
+      <div class="flex gap-2.5">
+        @for (p of priorities(); track p.value) {
+          <label class="relative flex-1 cursor-pointer">
+            <input type="radio" formControlName="priority" [value]="p.value" class="sr-only peer">
+            <div class="flex items-center justify-center gap-1.5 rounded-xl border-2 px-3 py-2.5 text-sm font-semibold transition-all duration-200 peer-checked:border-[var(--pcolor)] peer-checked:bg-[var(--pbg)] peer-checked:text-[var(--pcolor)]"
+                 [style]="'--pcolor: ' + p.color + '; --pbg: ' + p.color + '15;'"
+                 [class]="form().get('priority')?.value === p.value ? '' : 'border-default text-primary-fg/50 hover:border-[#FFD000] hover:text-[#FFD000]'">
+              <span class="h-2 w-2 rounded-full" [style.background]="p.color"></span>
+              {{ p.label }}
+            </div>
+          </label>
+        }
+      </div>
+      @if (isInvalid('priority')) {
+        <p class="mt-1.5 flex items-center gap-1 text-xs text-red-400">
+          <svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+          {{ getError('priority') }}
+        </p>
+      }
+    </div>
+
+    <div>
+      <p class="mb-1.5 text-xs font-medium text-primary-fg">Tags</p>
+      <div class="mb-2 flex min-h-[28px] flex-wrap gap-1.5">
+        @for (tag of form().get('tags')?.value; track tag) {
+          <span class="inline-flex items-center gap-1.5 rounded-lg bg-[#FFD000]/15 px-2.5 py-1 text-xs font-medium text-[#BFA100]">
+            {{ tag }}
+            <button type="button" (click)="removeTag(tag)"
+                    class="flex h-3.5 w-3.5 items-center justify-center rounded-full transition-colors hover:bg-[#FFD000]/30">
+              <svg class="h-2.5 w-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </span>
+        }
+      </div>
+      <div class="relative">
+        <select id="tagsSelect" [(ngModel)]="selectedTag" name="selectedTag" (change)="addTag(selectedTag)"
+          class="peer block w-full appearance-none rounded-xl border px-4 pb-2.5 pt-5 pr-10 text-sm transition-colors focus:outline-none focus:ring-2 cursor-pointer"
+          [ngClass]="selectedTag ? 'border-default bg-surface text-primary-fg focus:border-[#FFD000] focus:ring-[#FFD000]/20' : 'border-default bg-surface text-primary-fg focus:border-[#FFD000] focus:ring-[#FFD000]/20'">
+          <option value="" disabled>Add a tag</option>
+          @for (t of availableTags(); track t) {
+            <option [value]="t" [disabled]="form().get('tags')?.value?.includes(t)">{{ t }}</option>
+          }
+        </select>
+        <label for="tagsSelect" class="pointer-events-none absolute left-4 z-10 text-primary-fg/50 transition-all duration-200"
+          [ngClass]="selectedTag ? 'top-1 scale-75 text-xs' : 'top-3.5 scale-100 text-sm'">
+          Tags
+        </label>
+        <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary-fg/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </div>
+    </div>
+
+  </div>
+</div>

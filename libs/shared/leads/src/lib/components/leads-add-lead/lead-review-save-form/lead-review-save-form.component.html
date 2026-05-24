@@ -1,0 +1,120 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="text-center">
+    <div class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#FFD000]/15" style="box-shadow: 0 4px 16px rgba(255, 208, 0, 0.2);">
+      <svg class="h-7 w-7 text-[#FFD000]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+    </div>
+    <h3 class="text-lg font-bold text-primary-fg">Review Lead Details</h3>
+    <p class="text-sm text-primary-fg/60">Please verify all information before saving</p>
+  </div>
+
+  <!-- Summary Cards Grid -->
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <!-- Lead Info Card -->
+    <div class="rounded-2xl border border-default bg-surface p-5">
+      <div class="mb-4 flex items-center gap-2.5">
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FFD000]/15">
+          <svg class="h-4.5 w-4.5 text-[#FFD000]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div>
+          <h4 class="text-sm font-bold text-primary-fg">Lead Information</h4>
+          <p class="text-xs text-primary-fg/50">Contact &amp; Company</p>
+        </div>
+      </div>
+      <div class="space-y-2.5">
+        <div class="flex justify-between"><span class="text-xs text-primary-fg/50">Name</span><span class="text-right text-sm font-semibold text-primary-fg">{{ form().get('leadName')?.value || '—' }}</span></div>
+        <div class="flex justify-between"><span class="text-xs text-primary-fg/50">Mobile</span><span class="text-right text-sm font-semibold text-primary-fg">{{ form().get('mobileNumber')?.value || '—' }}</span></div>
+        <div class="flex justify-between"><span class="text-xs text-primary-fg/50">Email</span><span class="max-w-[180px] truncate text-right text-sm font-semibold text-primary-fg">{{ form().get('email')?.value || '—' }}</span></div>
+        <div class="flex justify-between"><span class="text-xs text-primary-fg/50">Source</span><span class="text-right text-sm font-semibold text-primary-fg">{{ form().get('leadSource')?.value || '—' }}</span></div>
+      </div>
+    </div>
+
+    <!-- Deal & Assignment Card -->
+    <div class="rounded-2xl border border-default bg-surface p-5">
+      <div class="mb-4 flex items-center gap-2.5">
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FFD000]/15">
+          <svg class="h-4.5 w-4.5 text-[#FFD000]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div>
+          <h4 class="text-sm font-bold text-primary-fg">Deal &amp; Assignment</h4>
+          <p class="text-xs text-primary-fg/50">Amount &amp; Ownership</p>
+        </div>
+      </div>
+      <div class="space-y-2.5">
+        <div class="flex justify-between"><span class="text-xs text-primary-fg/50">Expected Amount</span><span class="text-right text-sm font-bold text-primary-fg">{{ formatCurrency(form().get('expectedAmount')?.value) }}</span></div>
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-primary-fg/50">Probability</span>
+          <div class="flex items-center gap-2">
+            <div class="h-1.5 w-16 rounded-full bg-gray-200"><div class="h-full rounded-full bg-[#FFD000] transition-all duration-500" [style.width.%]="form().get('probabilityPercentage')?.value"></div></div>
+            <span class="text-sm font-bold text-primary-fg">{{ form().get('probabilityPercentage')?.value }}%</span>
+          </div>
+        </div>
+        <div class="flex justify-between"><span class="text-xs text-primary-fg/50">Assigned To</span><span class="text-right text-sm font-semibold text-primary-fg">{{ form().get('assignedUser')?.value || '—' }}</span></div>
+        <div class="flex justify-between">
+          <span class="text-xs text-primary-fg/50">Status</span>
+          <span class="inline-flex items-center gap-1.5 text-sm font-semibold">
+            <span class="h-2 w-2 rounded-full" [style.background]="getStatusColor(form().get('leadStatus')?.value)"></span>
+            <span [style.color]="getStatusColor(form().get('leadStatus')?.value)">{{ getStatusLabel(form().get('leadStatus')?.value) }}</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Follow Up Card -->
+    <div class="rounded-2xl border border-default bg-surface p-5">
+      <div class="mb-4 flex items-center gap-2.5">
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FFD000]/15">
+          <svg class="h-4.5 w-4.5 text-[#FFD000]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div>
+          <h4 class="text-sm font-bold text-primary-fg">Follow Up Schedule</h4>
+          <p class="text-xs text-primary-fg/50">Date, Time &amp; Priority</p>
+        </div>
+      </div>
+      <div class="space-y-2.5">
+        <div class="flex justify-between"><span class="text-xs text-primary-fg/50">Follow Up Date</span><span class="text-right text-sm font-semibold text-primary-fg">{{ form().get('followUpDate')?.value || '—' }}</span></div>
+        <div class="flex justify-between"><span class="text-xs text-primary-fg/50">Follow Up Time</span><span class="text-right text-sm font-semibold text-primary-fg">{{ form().get('followUpTime')?.value || '—' }}</span></div>
+        <div class="flex justify-between">
+          <span class="text-xs text-primary-fg/50">Priority</span>
+          <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-primary-fg">
+            <span class="h-2 w-2 rounded-full" [style.background]="(priorities().find(p => p.value === form().get('priority')?.value)?.color || '#6B7280')"></span>
+            {{ priorities().find(p => p.value === form().get('priority')?.value)?.label || '—' }}
+          </span>
+        </div>
+        <div class="flex items-start justify-between">
+          <span class="text-xs text-primary-fg/50">Tags</span>
+          <div class="flex max-w-[180px] flex-wrap gap-1 justify-end">
+            @if ((form().get('tags')?.value || []).length === 0) {
+              <span class="text-sm font-semibold text-primary-fg">—</span>
+            }
+            @for (tag of form().get('tags')?.value; track tag) {
+              <span class="inline-flex rounded-lg bg-[#FFD000]/15 px-2 py-0.5 text-[11px] font-semibold text-[#BFA100]">{{ tag }}</span>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notes Preview Card -->
+    <div class="rounded-2xl border border-default bg-surface p-5">
+      <div class="mb-4 flex items-center gap-2.5">
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FFD000]/15">
+          <svg class="h-4.5 w-4.5 text-[#FFD000]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </div>
+        <div>
+          <h4 class="text-sm font-bold text-primary-fg">Notes Preview</h4>
+          <p class="text-xs text-primary-fg/50">Lead description</p>
+        </div>
+      </div>
+      <div class="rounded-xl bg-default p-3.5">
+        @if (form().get('notes')?.value) {
+          <p class="line-clamp-6 text-sm leading-relaxed text-primary-fg">{{ form().get('notes')?.value }}</p>
+        } @else {
+          <p class="text-sm italic text-primary-fg/40">No notes added</p>
+        }
+      </div>
+    </div>
+  </div>
+</div>
