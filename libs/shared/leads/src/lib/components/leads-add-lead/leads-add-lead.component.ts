@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { LeadInfoFormComponent } from './lead-info-form/lead-info-form.component';
+import { LeadStepperComponent } from './lead-stepper/lead-stepper.component';
 import { LeadNotesFollowupFormComponent } from './lead-notes-followup-form/lead-notes-followup-form.component';
 import { LeadReviewSaveFormComponent } from './lead-review-save-form/lead-review-save-form.component';
 
@@ -16,7 +18,9 @@ export interface Priority {
   standalone: true,
   imports: [
     CommonModule,
+    RouterLink,
     LeadInfoFormComponent,
+    LeadStepperComponent,
     LeadNotesFollowupFormComponent,
     LeadReviewSaveFormComponent,
   ],
@@ -45,13 +49,16 @@ export class LeadsAddLeadComponent {
   readonly availableTags = ['Urgent', 'High Budget', 'Decision Maker', 'Follow-up', 'New', 'VIP', 'Corporate', 'Individual'];
 
   readonly form: FormGroup = this.fb.group({
-    leadName: ['', Validators.required],
-    mobileNumber: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
-    alternateMobile: [''],
+    title: ['', Validators.required],
+    firstName: ['', Validators.required],
+    lastName: ['', Validators.required],
+    mobileNumber: ['', [Validators.required, Validators.pattern(/^\d{4} \d{4} \d{2}$/)]],
+    alternateMobile: ['', Validators.pattern(/^\d{4} \d{4} \d{2}$/)],
     email: ['', [Validators.required, Validators.email]],
 
     leadSource: ['', Validators.required],
     leadStatus: ['new', Validators.required],
+    gender: ['', Validators.required],
     assignedUser: ['', Validators.required],
     expectedAmount: [0, [Validators.required, Validators.min(0)]],
     probabilityPercentage: [50, [Validators.required, Validators.min(0), Validators.max(100)]],
@@ -63,7 +70,7 @@ export class LeadsAddLeadComponent {
   });
 
   private readonly stepFields: Record<number, string[]> = {
-    1: ['leadName', 'mobileNumber', 'email', 'leadSource', 'leadStatus', 'assignedUser', 'expectedAmount'],
+    1: ['title', 'firstName', 'lastName', 'mobileNumber', 'email', 'leadSource', 'leadStatus', 'gender', 'assignedUser', 'expectedAmount'],
     2: ['notes', 'followUpDate', 'followUpTime', 'priority', 'tags'],
   };
 

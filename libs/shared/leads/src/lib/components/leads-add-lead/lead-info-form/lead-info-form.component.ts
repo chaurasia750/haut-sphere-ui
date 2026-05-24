@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { SharedTitleSelectComponent, PhoneFormatDirective } from '@shared/ui/src';
 
 @Component({
   selector: 'lib-lead-info-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, SharedTitleSelectComponent, PhoneFormatDirective],
   templateUrl: './lead-info-form.component.html',
 })
 export class LeadInfoFormComponent {
@@ -24,19 +25,26 @@ export class LeadInfoFormComponent {
     if (!control?.touched || !control?.errors) return '';
     if (control.errors['required']) {
       const labels: Record<string, string> = {
-        leadName: 'Lead name',
+        title: 'Title',
+        firstName: 'First name',
+        lastName: 'Last name',
         mobileNumber: 'Mobile number',
         email: 'Email',
         leadSource: 'Lead source',
         leadStatus: 'Lead status',
+        gender: 'Gender',
         assignedUser: 'Assigned user',
         expectedAmount: 'Expected amount',
       };
       return `${labels[controlName] || controlName} is required.`;
     }
+    if (controlName === 'title') return 'Please select a title.';
+    if (controlName === 'gender') return 'Please select a gender.';
+    if (controlName === 'firstName' || controlName === 'lastName') return `${controlName === 'firstName' ? 'First name' : 'Last name'} is required.`;
     if (control.errors['email']) return 'Enter a valid email address.';
     if (control.errors['pattern']) {
       if (controlName === 'mobileNumber') return 'Enter a valid 10-digit mobile number.';
+      if (controlName === 'alternateMobile') return 'Enter a valid 10-digit alternate mobile number.';
     }
     if (control.errors['min']) return 'Value must be at least 0.';
     return 'Invalid input.';
