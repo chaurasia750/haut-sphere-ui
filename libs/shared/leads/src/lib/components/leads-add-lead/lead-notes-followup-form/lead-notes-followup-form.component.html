@@ -14,13 +14,13 @@
   <!-- RIGHT: Follow Up Details -->
   <div class="space-y-4">
 
-    <div class="relative">
-      <input id="followUpDate" type="date" formControlName="followUpDate" placeholder=" "
-        class="peer block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-[#FFD000] focus:outline-none focus:ring-2 focus:ring-[#FFD000]/20"
+    <div>
+      <p class="mb-1.5 text-xs font-medium text-primary-fg">Follow Up Date</p>
+      <shared-date-picker
+        placeholder="Select follow up date"
+        [value]="followUpDateValue"
+        (valueChange)="onFollowUpDateChange($event)"
       />
-      <label for="followUpDate" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-primary-fg">
-        Follow Up Date
-      </label>
     </div>
 
     <div class="relative">
@@ -34,16 +34,16 @@
 
     <div>
       <p class="mb-2 text-xs font-medium text-primary-fg">Priority <span class="text-red-400">*</span></p>
-      <div class="flex gap-2.5">
+      <div class="grid grid-cols-3 gap-3">
         @for (p of priorities(); track p.value) {
-          <label class="relative flex-1 cursor-pointer">
-            <input type="radio" formControlName="priority" [value]="p.value" class="sr-only peer">
-            <div class="flex items-center justify-center gap-1.5 rounded-xl border-2 px-3 py-2.5 text-sm font-semibold transition-all duration-200 peer-checked:border-[var(--pcolor)] peer-checked:bg-[var(--pbg)] peer-checked:text-[var(--pcolor)]"
-                 [style]="'--pcolor: ' + p.color + '; --pbg: ' + p.color + '15;'"
-                 [class]="form().get('priority')?.value === p.value ? '' : 'border-default text-primary-fg/50 hover:border-[#FFD000] hover:text-[#FFD000]'">
-              <span class="h-2 w-2 rounded-full" [style.background]="p.color"></span>
-              {{ p.label }}
-            </div>
+          <label class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-xs sm:text-sm transition-colors text-center"
+            [ngClass]="form().get('priority')?.value === p.value
+              ? 'border-[var(--pcolor)] bg-[var(--pbg)] text-[var(--pcolor)] font-semibold'
+              : 'border-default bg-surface text-primary-fg hover:border-[#FFD000] hover:bg-[#FFD000]/5 hover:text-[#FFD000]'"
+            [style]="'--pcolor: ' + p.color + '; --pbg: ' + p.color + '15;'">
+            <input type="radio" formControlName="priority" [value]="p.value" class="h-4 w-4 accent-[#FFD000]" />
+            <span class="h-2 w-2 rounded-full" [style.background]="p.color"></span>
+            {{ p.label }}
           </label>
         }
       </div>
@@ -69,7 +69,7 @@
         }
       </div>
       <div class="relative">
-        <select id="tagsSelect" [(ngModel)]="selectedTag" name="selectedTag" (change)="addTag(selectedTag)"
+        <select id="tagsSelect" [(ngModel)]="selectedTag" name="selectedTag" [ngModelOptions]="{standalone: true}" (change)="addTag(selectedTag)"
           class="peer block w-full appearance-none rounded-xl border px-4 pb-2.5 pt-5 pr-10 text-sm transition-colors focus:outline-none focus:ring-2 cursor-pointer"
           [ngClass]="selectedTag ? 'border-default bg-surface text-primary-fg focus:border-[#FFD000] focus:ring-[#FFD000]/20' : 'border-default bg-surface text-primary-fg focus:border-[#FFD000] focus:ring-[#FFD000]/20'">
           <option value="" disabled>Add a tag</option>

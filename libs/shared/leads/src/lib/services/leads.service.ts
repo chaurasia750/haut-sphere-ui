@@ -1,9 +1,32 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable, InjectionToken } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
+import { apiConfig } from '@shared/environments/api.dev';
 import { KpiCard, Lead, StatusBreakdown, MonthlyTrend } from '../models/lead.model';
+import { AddLeadRequest, AddLeadResponse } from '../models/lead-api.model';
+
+export const LEAD_API_BASE_URL = new InjectionToken<string>('LEAD_API_BASE_URL', {
+  factory: () => `${apiConfig.baseUrl}/api/leads`,
+});
+
+export const LEADS_SERVICE = new InjectionToken<ILeadsService>('LEADS_SERVICE', {
+  factory: () => inject(LeadsService),
+});
+
+export interface ILeadsService {
+  getKpiCards(): Observable<KpiCard[]>;
+  getLeadStatuses(): Observable<StatusBreakdown[]>;
+  getMonthlyTrends(): Observable<MonthlyTrend[]>;
+  getRecentLeads(): Observable<Lead[]>;
+  getLeads(): Observable<Lead[]>;
+  addLead(payload: AddLeadRequest): Observable<AddLeadResponse>;
+}
 
 @Injectable({ providedIn: 'root' })
-export class LeadsService {
+export class LeadsService implements ILeadsService {
+  private readonly http = inject(HttpClient);
+  private readonly baseUrl = inject(LEAD_API_BASE_URL);
+
   getKpiCards(): Observable<KpiCard[]> {
     return of([
       { label: 'Total Leads', value: 1248, icon: 'users', growth: 12.5, color: '#339AF0' },
@@ -22,7 +45,7 @@ export class LeadsService {
       { label: 'Cold', value: 198, color: '#868E96' },
       { label: 'Converted', value: 527, color: '#51CF66' },
       { label: 'Lost', value: 112, color: '#F06595' },
-    ] as StatusBreakdown[]);
+    ]);
   }
 
   getMonthlyTrends(): Observable<MonthlyTrend[]> {
@@ -70,5 +93,9 @@ export class LeadsService {
       { id: 'L-1027', name: 'Nisha Singh', mobile: '+91-18901-23456', status: 'warm', assignedUser: 'Anita Sharma', followupDate: 'May 23, 2026', city: 'Delhi', expectedAmount: 345000 },
       { id: 'L-1026', name: 'Omkar Desai', mobile: '+91-09012-34567', status: 'new', assignedUser: 'Rajesh Kumar', followupDate: 'May 21, 2026', city: 'Surat', expectedAmount: 520000 },
     ]);
+  }
+
+  addLead(payload: AddLeadRequest): Observable<AddLeadResponse> {
+    return this.http.post<AddLeadResponse>(this.baseUrl, payload);
   }
 }

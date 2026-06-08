@@ -17,31 +17,93 @@
     </nav>
   </div>
 
-  <div class="mb-10">
+  <div class="mb-6">
     <lib-lead-stepper [steps]="steps" [currentStep]="currentStep()" />
   </div>
 
-  <!-- Form Card -->
-  <div class="rounded-2xl border border-gray-100 bg-white shadow-sm">
-    <div class="p-6 sm:p-8">
-      <div class="min-h-[380px]">
-        @if (currentStep() === 1) {
-          <lib-lead-info-form [form]="form"
-                              [leadSources]="leadSources"
-                              [leadStatuses]="leadStatuses"
-                              [assignedUsers]="assignedUsers" />
-        }
-        @if (currentStep() === 2) {
+  <!-- Main Form Card -->
+  <div class="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden">
+    @if (currentStep() === 1) {
+      <!-- Inventory Section -->
+      <div class="px-6 sm:px-8 pt-6 sm:pt-8 pb-5">
+        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Inventory Details</h3>
+        <lib-inventory-type-select [formGroup]="form" />
+      </div>
+      <div class="border-t border-gray-100"></div>
+
+      <!-- Customer Information Section -->
+      <div class="px-6 sm:px-8 pt-6 pb-5">
+        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Customer Information</h3>
+        <lib-lead-info-form [form]="form"
+                            [leadSources]="leadSources"
+                            [leadStatuses]="leadStatuses"
+                            [assignedUsers]="assignedUsers" />
+      </div>
+      <div class="border-t border-gray-100"></div>
+
+      <!-- Customer Address Section -->
+      <div class="px-6 sm:px-8 pt-6 pb-6">
+        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Customer Address</h3>
+        <shared-address-form [formGroup]="form" [apiBaseUrl]="apiBaseUrl" />
+      </div>
+    }
+
+    @if (currentStep() === 2) {
+      <div class="p-6 sm:p-8 space-y-6">
+        <div>
+          <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Notes & Follow Up</h3>
           <lib-lead-notes-followup-form [form]="form"
                                          [priorities]="priorities"
                                          [availableTags]="availableTags" />
-        }
-        @if (currentStep() === 3) {
-          <lib-lead-review-save-form [form]="form"
-                                      [priorities]="priorities" />
-        }
+        </div>
+        <div class="border-t border-gray-100"></div>
+        <div>
+          <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Additional Details</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <p class="mb-1.5 text-xs font-medium text-primary-fg">Expected Close Date</p>
+              <shared-date-picker
+                placeholder="Select expected close date"
+                [value]="expectedCloseDateValue"
+                (valueChange)="onExpectedCloseDateChange($event)"
+              />
+            </div>
+            <div class="relative sm:col-span-2">
+              <textarea id="description" formControlName="description" rows="2" placeholder=" "
+                class="peer block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:border-[#FFD000] focus:outline-none focus:ring-2 focus:ring-[#FFD000]/20 resize-none"></textarea>
+              <label for="description"
+                class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-sm peer-placeholder-shown:text-primary-fg/50 peer-focus:top-1 peer-focus:scale-75 peer-focus:text-xs peer-focus:text-primary-fg">
+                Description
+              </label>
+            </div>
+          </div>
+          @if (form.errors?.['closeBeforeFollowUp'] && (form.get('expectedCloseDate')?.touched || form.get('followUpDate')?.touched)) {
+            <p class="mt-2 flex items-center gap-1 text-xs text-red-500">
+              <svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+              Expected close date cannot be before follow up date.
+            </p>
+          }
+        </div>
       </div>
-    </div>
+    }
+
+    @if (currentStep() === 3) {
+      <div class="p-6 sm:p-8">
+        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Review & Save</h3>
+        <lib-lead-review-save-form [form]="form"
+                                    [priorities]="priorities" />
+      </div>
+    }
+
+    <!-- Error -->
+    @if (submitError()) {
+      <div class="px-6 py-3 bg-red-50 border-t border-red-100">
+        <p class="text-sm text-red-600 flex items-center gap-2">
+          <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
+          {{ submitError() }}
+        </p>
+      </div>
+    }
 
     <!-- Footer -->
     <div class="flex items-center justify-between border-t border-gray-100 px-6 py-4">
@@ -52,8 +114,8 @@
 
       <div class="flex items-center gap-3">
         @if (!isFirstStep()) {
-          <button type="button" (click)="previousStep()"
-                  class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-600 shadow-sm transition-colors hover:bg-gray-50">
+          <button type="button" (click)="previousStep()" [disabled]="submitting()"
+                  class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-600 shadow-sm transition-colors hover:bg-gray-50 disabled:opacity-50">
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
             Previous
           </button>
@@ -66,10 +128,15 @@
           </button>
         }
         @if (isLastStep()) {
-          <button type="button" (click)="onSubmit()"
-                  class="inline-flex items-center gap-2 rounded-xl bg-[#FFD000] px-6 py-2.5 text-sm font-semibold text-black shadow-lg shadow-[#FFD000]/25 transition-all hover:-translate-y-0.5 hover:shadow-xl">
-            <svg class="h-4.5 w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            Save Lead
+          <button type="button" (click)="onSubmit()" [disabled]="submitting()"
+                  class="inline-flex items-center gap-2 rounded-xl bg-[#FFD000] px-6 py-2.5 text-sm font-semibold text-black shadow-lg shadow-[#FFD000]/25 transition-all hover:-translate-y-0.5 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed">
+            @if (submitting()) {
+              <svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/></svg>
+              Saving...
+            } @else {
+              <svg class="h-4.5 w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Save Lead
+            }
           </button>
         }
       </div>

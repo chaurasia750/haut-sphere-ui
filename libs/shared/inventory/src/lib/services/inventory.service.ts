@@ -36,6 +36,7 @@ export interface CreateInventoryPayload {
 
 export interface IInventoryService {
   getPropertyTypes(): Observable<PropertyTypeItem[]>;
+  getPropertiesByTypeId(typeId: number): Observable<PropertyTypeItem[]>;
   getPropertyFields(propertyTypeId: string | number): Observable<PropertyField[]>;
   getPropertyList(request: InventoryListRequest): Observable<PaginatedData<PropertyListItem>>;
   createInventory(payload: CreateInventoryPayload): Observable<PropertyDetail>;
@@ -53,6 +54,10 @@ export class InventoryService implements IInventoryService {
 
   getPropertyTypes(): Observable<PropertyTypeItem[]> {
     return this.http.get<PropertyTypeItem[]>(`${this.baseUrl}/property-types`);
+  }
+
+  getPropertiesByTypeId(typeId: number): Observable<PropertyTypeItem[]> {
+    return this.http.get<PropertyTypeItem[]>(`${this.baseUrl}/property-types/${typeId}/property`);
   }
 
   getPropertyFields(propertyTypeId: string | number): Observable<PropertyField[]> {

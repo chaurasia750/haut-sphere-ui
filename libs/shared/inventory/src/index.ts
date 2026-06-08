@@ -10,3 +10,4 @@ export * from './lib/components/inventory-list/inventory-list.component';
 export * from './lib/components/inventory-details/inventory-details.component';
 export * from './lib/components/inventory-form/inventory-form.component';
 export * from './lib/components/pagination/pagination.component';
+export * from './lib/components/inventory-type-select/inventory-type-select.component';

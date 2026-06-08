@@ -143,14 +143,17 @@
 
     <div class="relative">
       <select id="leadSource" formControlName="leadSource"
-        class="h-11 w-full appearance-none rounded-xl border bg-surface pl-4 pr-10 text-sm transition-colors focus:outline-none focus:ring-2 cursor-pointer"
-        [ngClass]="isInvalid('leadSource') ? 'border-red-500 bg-red-500/5 focus:border-red-500 focus:ring-red-500/20 text-red-500' : 'border-default text-primary-fg focus:border-[#FFD000] focus:ring-[#FFD000]/20'"
+        class="peer block w-full appearance-none rounded-xl border px-4 pb-2.5 pt-5 pr-10 text-sm transition-colors focus:outline-none focus:ring-2 cursor-pointer"
+        [ngClass]="isInvalid('leadSource') ? 'border-red-500 bg-red-500/5 focus:border-red-500 focus:ring-red-500/20 text-red-500' : 'border-default bg-surface text-primary-fg focus:border-[#FFD000] focus:ring-[#FFD000]/20'"
       >
-        <option value="" disabled>Select source</option>
+        <option value="" disabled>Select a source</option>
         @for (src of leadSources(); track src) {
           <option [value]="src">{{ src }}</option>
         }
       </select>
+      <label for="leadSource" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50">
+        Lead Source <span class="text-red-400">*</span>
+      </label>
       <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary-fg/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
       @if (isInvalid('leadSource')) {
         <p class="mt-1.5 flex items-center gap-1 text-xs text-red-400">
@@ -185,26 +188,19 @@
         class="peer block w-full appearance-none rounded-xl border px-4 pb-2.5 pt-5 pr-10 text-sm transition-colors focus:outline-none focus:ring-2 cursor-pointer"
         [ngClass]="isInvalid('assignedUser') ? 'border-red-500 bg-red-500/5 focus:border-red-500 focus:ring-red-500/20 text-red-500' : 'border-default bg-surface text-primary-fg focus:border-[#FFD000] focus:ring-[#FFD000]/20'"
       >
-        <option value="" disabled></option>
+        <option value="" disabled>Select a user</option>
         @for (u of assignedUsers(); track u) {
           <option [value]="u">{{ u }}</option>
         }
       </select>
-      <label for="assignedUser" class="pointer-events-none absolute left-4 z-10 text-primary-fg/50 transition-all duration-200"
-        [ngClass]="form().get('assignedUser')?.value ? 'top-1 scale-75 text-xs' : 'top-3.5 scale-100 text-sm'">
+      <label for="assignedUser" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50">
         Assign User <span class="text-red-400">*</span>
       </label>
       <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary-fg/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-      @if (isInvalid('assignedUser')) {
-        <p class="mt-1.5 flex items-center gap-1 text-xs text-red-400">
-          <svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
-          {{ getError('assignedUser') }}
-        </p>
-      }
     </div>
 
     <div class="relative">
-      <input id="expectedAmount" type="number" formControlName="expectedAmount" placeholder=" " min="0"
+      <input id="expectedAmount" type="text" formControlName="expectedAmount" placeholder=" " sharedCurrencyFormat
         class="peer block w-full appearance-none rounded-xl border px-4 pb-2.5 pt-5 text-sm text-primary-fg transition-colors focus:outline-none focus:ring-2"
         [ngClass]="isInvalid('expectedAmount') ? 'border-red-500 bg-red-500/5 focus:border-red-500 focus:ring-red-500/20' : 'border-default bg-surface focus:border-[#FFD000] focus:ring-[#FFD000]/20'"
       />
@@ -230,3 +226,4 @@
     </div>
 
   </div>
+</div>

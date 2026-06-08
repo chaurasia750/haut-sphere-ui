@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SharedDatePickerComponent } from '@shared/ui/src';
 import { Priority } from '../leads-add-lead.component';
 
 @Component({
   selector: 'lib-lead-notes-followup-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, SharedDatePickerComponent],
   templateUrl: './lead-notes-followup-form.component.html',
 })
 export class LeadNotesFollowupFormComponent {
@@ -31,6 +32,16 @@ export class LeadNotesFollowupFormComponent {
       return `${labels[controlName] || controlName} is required.`;
     }
     return 'Invalid input.';
+  }
+
+  get followUpDateValue(): Date | null {
+    const val = this.form().get('followUpDate')?.value;
+    return val ? new Date(val) : null;
+  }
+
+  onFollowUpDateChange(date: Date | null): void {
+    const formatted = date ? date.toISOString().split('T')[0] : '';
+    this.form().get('followUpDate')?.setValue(formatted);
   }
 
   addTag(tag: string): void {

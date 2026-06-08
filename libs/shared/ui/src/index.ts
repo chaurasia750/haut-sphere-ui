@@ -16,6 +16,7 @@ export * from './lib/shared-ui/directives/aadhaar-input.directive';
 export * from './lib/shared-ui/directives/pan-card.directive';
 export * from './lib/shared-ui/directives/number-only.directive';
 export * from './lib/shared-ui/directives/phone-format.directive';
+export * from './lib/shared-ui/directives/currency-format.directive';
 export * from './lib/shared-ui/components/ui-button/ui-button.component';
 export * from './lib/shared-ui/components/ui-card/ui-card.component';
 export * from './lib/shared-ui/components/ui-empty-state/ui-empty-state.component';

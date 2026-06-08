@@ -1,0 +1,43 @@
+<div [formGroup]="formGroup">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div class="relative">
+      <select [id]="typeControlName" [formControlName]="typeControlName"
+        class="peer block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 pr-10 text-sm text-primary-fg transition-colors focus:border-[#FFD000] focus:outline-none focus:ring-2 focus:ring-[#FFD000]/20 cursor-pointer"
+      >
+        @if (loadingTypes) {
+          <option value="" disabled>Loading...</option>
+        } @else {
+          <option value="" disabled>Select type</option>
+          @for (t of types; track t.id) {
+            <option [value]="t.id">{{ t.name }}</option>
+          }
+        }
+      </select>
+      <label [for]="typeControlName" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50">
+        Inventory Type <span class="text-red-400">*</span>
+      </label>
+      <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary-fg/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+    </div>
+
+    <div class="relative">
+      <select [id]="propertyControlName" [formControlName]="propertyControlName"
+        class="peer block w-full appearance-none rounded-xl border border-default bg-surface px-4 pb-2.5 pt-5 pr-10 text-sm text-primary-fg transition-colors focus:border-[#FFD000] focus:outline-none focus:ring-2 focus:ring-[#FFD000]/20 cursor-pointer"
+      >
+        @if (!formGroup.get(typeControlName)?.value) {
+          <option value="" disabled>Select type first</option>
+        } @else if (loadingProperties) {
+          <option value="" disabled>Loading...</option>
+        } @else {
+          <option value="" disabled>Select property</option>
+          @for (p of properties; track p.id) {
+            <option [value]="p.id">{{ p.name }}</option>
+          }
+        }
+      </select>
+      <label [for]="propertyControlName" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50">
+        Property
+      </label>
+      <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary-fg/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+    </div>
+  </div>
+</div>

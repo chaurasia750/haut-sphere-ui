@@ -1,16 +1,25 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { SharedAddressFormComponent, SharedDatePickerComponent } from '@shared/ui/src';
+import { apiConfig } from '@shared/environments/api.dev';
+import { LEADS_SERVICE } from '../../services/leads.service';
+import { AddLeadRequest } from '../../models/lead-api.model';
 import { LeadInfoFormComponent } from './lead-info-form/lead-info-form.component';
 import { LeadStepperComponent } from './lead-stepper/lead-stepper.component';
 import { LeadNotesFollowupFormComponent } from './lead-notes-followup-form/lead-notes-followup-form.component';
 import { LeadReviewSaveFormComponent } from './lead-review-save-form/lead-review-save-form.component';
+import { InventoryTypeSelectComponent } from '@shared/inventory/src';
 
 export interface Priority {
   value: string;
   label: string;
   color: string;
+}
+
+interface LookupMap {
+  [key: string]: number;
 }
 
 @Component({
@@ -23,11 +32,21 @@ export interface Priority {
     LeadStepperComponent,
     LeadNotesFollowupFormComponent,
     LeadReviewSaveFormComponent,
+    InventoryTypeSelectComponent,
+    SharedAddressFormComponent,
+    SharedDatePickerComponent,
   ],
   templateUrl: './leads-add-lead.component.html',
 })
 export class LeadsAddLeadComponent {
   private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
+  private readonly leadsService = inject(LEADS_SERVICE);
+
+  submitting = signal(false);
+  submitError = signal('');
+
+  readonly apiBaseUrl = apiConfig.baseUrl;
 
   currentStep = signal(1);
   totalSteps = 3;
@@ -48,6 +67,24 @@ export class LeadsAddLeadComponent {
   ];
   readonly availableTags = ['Urgent', 'High Budget', 'Decision Maker', 'Follow-up', 'New', 'VIP', 'Corporate', 'Individual'];
 
+  private readonly sourceMap: LookupMap = {
+    'Website': 1, 'Referral': 2, 'Social Media': 3, 'Email Campaign': 4,
+    'Phone Inquiry': 5, 'Walk-in': 6, 'Partner': 7, 'Event': 8,
+  };
+
+  private readonly statusMap: LookupMap = {
+    'new': 1, 'hot': 2, 'warm': 3, 'cold': 4,
+  };
+
+  private readonly userMap: LookupMap = {
+    'Anita Sharma': 1, 'Vikram Patel': 2, 'Neha Gupta': 3, 'Rajesh Kumar': 4, 'Priya Singh': 5,
+  };
+
+  private readonly tagMap: LookupMap = {
+    'Urgent': 1, 'High Budget': 2, 'Decision Maker': 3, 'Follow-up': 4,
+    'New': 5, 'VIP': 6, 'Corporate': 7, 'Individual': 8,
+  };
+
   readonly form: FormGroup = this.fb.group({
     title: ['', Validators.required],
     firstName: ['', Validators.required],
@@ -60,17 +97,27 @@ export class LeadsAddLeadComponent {
     leadStatus: ['new', Validators.required],
     gender: ['', Validators.required],
     assignedUser: ['', Validators.required],
-    expectedAmount: [0, [Validators.required, Validators.min(0)]],
+    inventoryTypeId: ['', Validators.required],
+    inventoryPropertyId: [''],
+    expectedAmount: ['', [Validators.required, Validators.min(0)]],
     probabilityPercentage: [50, [Validators.required, Validators.min(0), Validators.max(100)]],
+    description: [''],
+    expectedCloseDate: [''],
+    addressLine1: ['', Validators.required],
+    addressLine2: [''],
+    postalCode: ['', Validators.required],
+    city: ['', Validators.required],
+    country: ['', Validators.required],
+    state: ['', Validators.required],
     notes: [''],
     followUpDate: [''],
     followUpTime: [''],
     priority: ['medium', Validators.required],
     tags: [[]],
-  });
+  }, { validators: this.dateValidator });
 
   private readonly stepFields: Record<number, string[]> = {
-    1: ['title', 'firstName', 'lastName', 'mobileNumber', 'email', 'leadSource', 'leadStatus', 'gender', 'assignedUser', 'expectedAmount'],
+     1: ['title', 'firstName', 'lastName', 'mobileNumber', 'email', 'leadSource', 'leadStatus', 'gender', 'assignedUser', 'expectedAmount', 'inventoryTypeId', 'addressLine1', 'postalCode', 'city', 'country', 'state'],
     2: ['notes', 'followUpDate', 'followUpTime', 'priority', 'tags'],
   };
 
@@ -100,15 +147,103 @@ export class LeadsAddLeadComponent {
     }
   }
 
+  private stripMobile(value: string): string {
+    return value ? value.replace(/\s/g, '') : '';
+  }
+
+  private formatDate(dateStr: string, timeStr: string): string {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    if (timeStr) {
+      const [h, m] = timeStr.split(':');
+      d.setHours(+h, +m, 0, 0);
+    }
+    return d.toISOString();
+  }
+
+  private buildPayload(): AddLeadRequest {
+    const v = this.form.value;
+
+    const title = `${v.title} ${v.firstName} ${v.lastName}`.trim();
+
+    const followUp = this.formatDate(v.followUpDate, v.followUpTime);
+    const closeDate = v.expectedCloseDate
+      ? this.formatDate(v.expectedCloseDate, '')
+      : followUp;
+
+    return {
+      customerInfo: {
+        firstName: v.firstName,
+        lastName: v.lastName,
+        mobile: this.stripMobile(v.mobileNumber),
+        alternateMobile: this.stripMobile(v.alternateMobile),
+        email: v.email,
+        stateName: v.state,
+        cityName: v.city,
+        pincode: v.postalCode,
+        addressLine1: v.addressLine1,
+        addressLine2: v.addressLine2,
+      },
+      title,
+      description: v.description || '',
+      leadForId: v.inventoryPropertyId ? +v.inventoryPropertyId : 0,
+      statusId: this.statusMap[v.leadStatus] || 1,
+      priority: v.priority,
+      expectedAmount: v.expectedAmount ? +v.expectedAmount : 0,
+      closingProbability: v.probabilityPercentage,
+      expectedCloseDate: closeDate,
+      nextFollowupDate: followUp,
+      assignedUserId: this.userMap[v.assignedUser] || 1,
+      sourceId: this.sourceMap[v.leadSource] || 1,
+      note: v.notes || '',
+      tagIds: (v.tags || []).map((tag: string) => this.tagMap[tag]).filter(Boolean),
+    };
+  }
+
+  get expectedCloseDateValue(): Date | null {
+    const val = this.form.get('expectedCloseDate')?.value;
+    return val ? new Date(val) : null;
+  }
+
+  onExpectedCloseDateChange(date: Date | null): void {
+    const formatted = date ? date.toISOString().split('T')[0] : '';
+    this.form.get('expectedCloseDate')?.setValue(formatted);
+  }
+
+  private dateValidator(group: AbstractControl): ValidationErrors | null {
+    const followUp = group.get('followUpDate')?.value;
+    const close = group.get('expectedCloseDate')?.value;
+
+    if (followUp && close && new Date(close) < new Date(followUp)) {
+      return { closeBeforeFollowUp: true };
+    }
+    return null;
+  }
+
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
-    console.log('Lead submitted:', this.form.value);
+
+    this.submitting.set(true);
+    this.submitError.set('');
+
+    const payload = this.buildPayload();
+
+    this.leadsService.addLead(payload).subscribe({
+      next: () => {
+        this.submitting.set(false);
+        this.router.navigate(['/admin/leads']);
+      },
+      error: (err) => {
+        this.submitting.set(false);
+        this.submitError.set(err?.error?.message || err?.message || 'Failed to create lead');
+      },
+    });
   }
 
   onCancel(): void {
-    console.log('Cancelled');
+    this.router.navigate(['/admin/leads']);
   }
 }

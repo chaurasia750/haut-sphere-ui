@@ -1,4 +1,5 @@
 export * from './lib/models/lead.model';
+export * from './lib/models/lead-api.model';
 export * from './lib/services/leads.service';
 export * from './lib/components/lead-header/lead-header.component';
 export * from './lib/components/kpi-cards/kpi-cards.component';
