@@ -24,3 +24,4 @@ export * from './lib/shared-ui/components/ui-loading-spinner/ui-loading-spinner.
 export * from './lib/shared-ui/components/ui-search-input/ui-search-input.component';
 export * from './lib/shared-ui/components/ui-back-button/ui-back-button.component';
 export * from './lib/shared-ui/components/ui-breadcrumb/ui-breadcrumb.component';
+export * from './lib/shared-ui/components/ui-pagination/ui-pagination.component';

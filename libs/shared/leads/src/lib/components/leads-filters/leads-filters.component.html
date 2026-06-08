@@ -37,12 +37,39 @@
             placeholderText="All Users" theme="light" />
         </div>
 
-        <!-- Follow-up date -->
+        <!-- From date -->
         <div class="w-40">
           <shared-date-picker
-            [value]="followupDateValue"
-            (valueChange)="onFollowupDateChange($event)"
-            placeholder="Follow-up date"
+            [value]="fromDateValue"
+            (valueChange)="fromDateValue = $event; fromDate = formatDate($event); onFilter()"
+            placeholder="From date"
+            label=""/>
+        </div>
+
+        <!-- To date -->
+        <div class="w-40">
+          <shared-date-picker
+            [value]="toDateValue"
+            (valueChange)="toDateValue = $event; toDate = formatDate($event); onFilter()"
+            placeholder="To date"
+            label=""/>
+        </div>
+
+        <!-- Follow-up from -->
+        <div class="w-40">
+          <shared-date-picker
+            [value]="followupFromDateValue"
+            (valueChange)="followupFromDateValue = $event; followupFromDate = formatDate($event); onFilter()"
+            placeholder="Follow-up from"
+            label=""/>
+        </div>
+
+        <!-- Follow-up to -->
+        <div class="w-40">
+          <shared-date-picker
+            [value]="followupToDateValue"
+            (valueChange)="followupToDateValue = $event; followupToDate = formatDate($event); onFilter()"
+            placeholder="Follow-up to"
             label=""/>
         </div>
 

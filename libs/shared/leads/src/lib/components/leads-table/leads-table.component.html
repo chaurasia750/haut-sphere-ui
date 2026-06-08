@@ -13,7 +13,7 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-50">
-        @for (lead of paginatedLeads; track lead.id) {
+        @for (lead of leads; track lead.id) {
           <tr class="transition-colors hover:bg-gray-50/60">
             <td class="px-4 py-3">
               <div class="flex items-center gap-2.5">
@@ -31,7 +31,7 @@
               </span>
             </td>
             <td class="px-4 py-3 text-sm text-gray-600">{{ lead.assignedUser }}</td>
-            <td class="px-4 py-3 text-sm text-gray-600">{{ lead.followupDate }}</td>
+            <td class="px-4 py-3 text-sm text-gray-600">{{ lead.nextFollowupDate }}</td>
             <td class="px-4 py-3 text-right text-sm font-semibold text-[#111111]">{{ formatCurrency(lead.expectedAmount) }}</td>
             <td class="px-4 py-3 text-center">
               <button (click)="editLead.emit(lead)"
@@ -51,29 +51,4 @@
       </tbody>
     </table>
   </div>
-
-  @if (totalPages > 1) {
-    <div class="flex items-center justify-between border-t border-gray-100 px-4 py-3">
-      <span class="text-xs text-gray-500">
-        Showing {{ (currentPage - 1) * pageSize + 1 }}–{{ Math.min(currentPage * pageSize, leads.length) }} of {{ leads.length }}
-      </span>
-      <nav class="flex items-center gap-1">
-        <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1"
-          class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 text-xs text-gray-500 transition-colors hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-30">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
-        </button>
-        @for (p of pages; track p) {
-          <button (click)="goToPage(p)"
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-xs font-medium transition-colors"
-            [ngClass]="p === currentPage ? 'bg-[#FFC107] text-black shadow-sm' : 'border border-gray-200 text-gray-600 hover:bg-gray-50'">
-            {{ p }}
-          </button>
-        }
-        <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages"
-          class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 text-xs text-gray-500 transition-colors hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-30">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
-        </button>
-      </nav>
-    </div>
-  }
 </div>

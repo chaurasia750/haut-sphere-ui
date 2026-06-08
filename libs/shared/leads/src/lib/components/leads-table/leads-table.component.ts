@@ -9,33 +9,8 @@ import { Lead } from '../../models/lead.model';
   templateUrl: './leads-table.component.html',
 })
 export class LeadsTableComponent {
-  readonly Math = Math;
   @Input({ required: true }) leads: Lead[] = [];
-  @Input() pageSize = 5;
   @Output() editLead = new EventEmitter<Lead>();
-
-  currentPage = 1;
-
-  get totalPages(): number {
-    return Math.ceil(this.leads.length / this.pageSize) || 1;
-  }
-
-  get paginatedLeads(): Lead[] {
-    const start = (this.currentPage - 1) * this.pageSize;
-    return this.leads.slice(start, start + this.pageSize);
-  }
-
-  get pages(): number[] {
-    const pages: number[] = [];
-    const start = Math.max(1, this.currentPage - 2);
-    const end = Math.min(this.totalPages, start + 4);
-    for (let i = start; i <= end; i++) pages.push(i);
-    return pages;
-  }
-
-  goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages) this.currentPage = page;
-  }
 
   readonly statusBadge: Record<string, string> = {
     new: 'bg-blue-50 text-blue-600 border-blue-200',

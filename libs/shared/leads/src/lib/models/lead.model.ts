@@ -21,12 +21,16 @@ export interface MonthlyTrend {
 }
 
 export interface Lead {
-  id: string;
+  id: number;
   name: string;
   mobile: string;
-  status: LeadStatus;
+  email: string;
+  status: string;
   assignedUser: string;
-  followupDate: string;
-  city: string;
   expectedAmount: number;
+  nextFollowupDate: string;
+  leadForId: number;
+  leadForTitle: string;
+  createdAt: string;
+  createdByName: string;
 }

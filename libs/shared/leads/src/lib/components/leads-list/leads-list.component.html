@@ -2,5 +2,6 @@
 
 <div class="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
   <lib-leads-filters (filterChange)="onFilterChange($event)"/>
-  <lib-leads-table [leads]="filteredLeads" (editLead)="onEditLead($event)"/>
+  <lib-leads-table [leads]="leads" (editLead)="onEditLead($event)"/>
+  <ui-pagination [pageIndex]="pageIndex" [pageSize]="pageSize" [totalCount]="totalCount" [totalPages]="totalPages" (pageChange)="onPageChange($event)"/>
 </div>

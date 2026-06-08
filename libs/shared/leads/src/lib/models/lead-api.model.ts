@@ -38,3 +38,26 @@ export interface LeadLookupItem {
   name: string;
   colorCode?: string;
 }
+
+export interface PaginatedResponse<T> {
+  items: T[];
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+
+export interface GetLeadsRequest {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  statusId?: number;
+  assignedUserId?: number;
+  leadForId?: number;
+  fromDate?: string;
+  toDate?: string;
+  followupFromDate?: string;
+  followupToDate?: string;
+}
