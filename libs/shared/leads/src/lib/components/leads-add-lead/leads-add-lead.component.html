@@ -22,7 +22,7 @@
   </div>
 
   <!-- Main Form Card -->
-  <div class="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden">
+  <div [formGroup]="form" class="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden">
     @if (currentStep() === 1) {
       <!-- Inventory Section -->
       <div class="px-6 sm:px-8 pt-6 sm:pt-8 pb-5">
@@ -37,7 +37,7 @@
         <lib-lead-info-form [form]="form"
                             [leadSources]="leadSources"
                             [leadStatuses]="leadStatuses"
-                            [assignedUsers]="assignedUsers" />
+                            [users]="users()" />
       </div>
       <div class="border-t border-gray-100"></div>
 
@@ -91,7 +91,8 @@
       <div class="p-6 sm:p-8">
         <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Review & Save</h3>
         <lib-lead-review-save-form [form]="form"
-                                    [priorities]="priorities" />
+                                    [priorities]="priorities"
+                                    [users]="users()" />
       </div>
     }
 

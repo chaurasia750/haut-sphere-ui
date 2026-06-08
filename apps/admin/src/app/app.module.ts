@@ -41,7 +41,7 @@ import { AppRoutingModule } from './app-routing.module';
     },
     {
       provide: LEAD_API_BASE_URL,
-      useValue: `${apiConfig.baseUrl}/api/leads`,
+      useValue: `${apiConfig.baseUrl}/leads`,
     },
   ],
   exports: [AppComponent],

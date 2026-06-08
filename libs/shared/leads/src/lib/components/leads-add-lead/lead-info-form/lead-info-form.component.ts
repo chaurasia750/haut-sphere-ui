@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SharedTitleSelectComponent, PhoneFormatDirective, CurrencyFormatDirective } from '@shared/ui/src';
+import { User } from '../../../models/user.model';
 
 @Component({
   selector: 'lib-lead-info-form',
@@ -13,7 +14,7 @@ export class LeadInfoFormComponent {
   readonly form = input.required<FormGroup>();
   readonly leadSources = input<string[]>([]);
   readonly leadStatuses = input<string[]>([]);
-  readonly assignedUsers = input<string[]>([]);
+  readonly users = input<User[]>([]);
 
   isInvalid(controlName: string): boolean {
     const control = this.form().get(controlName);

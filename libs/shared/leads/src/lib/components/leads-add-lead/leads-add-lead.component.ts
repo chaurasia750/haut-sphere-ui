@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { SharedAddressFormComponent, SharedDatePickerComponent } from '@shared/ui/src';
 import { apiConfig } from '@shared/environments/api.dev';
 import { LEADS_SERVICE } from '../../services/leads.service';
+import { USERS_SERVICE } from '../../services/users.service';
 import { AddLeadRequest } from '../../models/lead-api.model';
+import { User } from '../../models/user.model';
 import { LeadInfoFormComponent } from './lead-info-form/lead-info-form.component';
 import { LeadStepperComponent } from './lead-stepper/lead-stepper.component';
 import { LeadNotesFollowupFormComponent } from './lead-notes-followup-form/lead-notes-followup-form.component';
@@ -35,13 +37,15 @@ interface LookupMap {
     InventoryTypeSelectComponent,
     SharedAddressFormComponent,
     SharedDatePickerComponent,
+    ReactiveFormsModule,
   ],
   templateUrl: './leads-add-lead.component.html',
 })
-export class LeadsAddLeadComponent {
+export class LeadsAddLeadComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly leadsService = inject(LEADS_SERVICE);
+  private readonly usersService = inject(USERS_SERVICE);
 
   submitting = signal(false);
   submitError = signal('');
@@ -59,7 +63,7 @@ export class LeadsAddLeadComponent {
 
   readonly leadSources = ['Website', 'Referral', 'Social Media', 'Email Campaign', 'Phone Inquiry', 'Walk-in', 'Partner', 'Event'];
   readonly leadStatuses = ['new', 'hot', 'warm', 'cold'];
-  readonly assignedUsers = ['Anita Sharma', 'Vikram Patel', 'Neha Gupta', 'Rajesh Kumar', 'Priya Singh'];
+  readonly users = signal<User[]>([]);
   readonly priorities: Priority[] = [
     { value: 'high', label: 'High', color: '#EF4444' },
     { value: 'medium', label: 'Medium', color: '#F59E0B' },
@@ -76,9 +80,12 @@ export class LeadsAddLeadComponent {
     'new': 1, 'hot': 2, 'warm': 3, 'cold': 4,
   };
 
-  private readonly userMap: LookupMap = {
-    'Anita Sharma': 1, 'Vikram Patel': 2, 'Neha Gupta': 3, 'Rajesh Kumar': 4, 'Priya Singh': 5,
-  };
+  ngOnInit(): void {
+    this.usersService.getUsers().subscribe({
+      next: (data) => this.users.set(data),
+      error: () => this.users.set([]),
+    });
+  }
 
   private readonly tagMap: LookupMap = {
     'Urgent': 1, 'High Budget': 2, 'Decision Maker': 3, 'Follow-up': 4,
@@ -193,7 +200,7 @@ export class LeadsAddLeadComponent {
       closingProbability: v.probabilityPercentage,
       expectedCloseDate: closeDate,
       nextFollowupDate: followUp,
-      assignedUserId: this.userMap[v.assignedUser] || 1,
+      assignedUserId: v.assignedUser ? +v.assignedUser : 0,
       sourceId: this.sourceMap[v.leadSource] || 1,
       note: v.notes || '',
       tagIds: (v.tags || []).map((tag: string) => this.tagMap[tag]).filter(Boolean),

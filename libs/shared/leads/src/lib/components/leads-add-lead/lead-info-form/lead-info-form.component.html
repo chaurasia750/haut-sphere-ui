@@ -189,8 +189,8 @@
         [ngClass]="isInvalid('assignedUser') ? 'border-red-500 bg-red-500/5 focus:border-red-500 focus:ring-red-500/20 text-red-500' : 'border-default bg-surface text-primary-fg focus:border-[#FFD000] focus:ring-[#FFD000]/20'"
       >
         <option value="" disabled>Select a user</option>
-        @for (u of assignedUsers(); track u) {
-          <option [value]="u">{{ u }}</option>
+        @for (u of users(); track $index) {
+          <option [value]="u.id">{{ u.fullName }}</option>
         }
       </select>
       <label for="assignedUser" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50">

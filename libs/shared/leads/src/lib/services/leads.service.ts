@@ -6,7 +6,7 @@ import { KpiCard, Lead, StatusBreakdown, MonthlyTrend } from '../models/lead.mod
 import { AddLeadRequest, AddLeadResponse } from '../models/lead-api.model';
 
 export const LEAD_API_BASE_URL = new InjectionToken<string>('LEAD_API_BASE_URL', {
-  factory: () => `${apiConfig.baseUrl}/api/leads`,
+  factory: () => `${apiConfig.baseUrl}/leads`,
 });
 
 export const LEADS_SERVICE = new InjectionToken<ILeadsService>('LEADS_SERVICE', {

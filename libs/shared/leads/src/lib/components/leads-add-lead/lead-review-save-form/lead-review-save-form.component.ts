@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Priority } from '../leads-add-lead.component';
+import { User } from '../../../models/user.model';
 
 @Component({
   selector: 'lib-lead-review-save-form',
@@ -12,6 +13,13 @@ import { Priority } from '../leads-add-lead.component';
 export class LeadReviewSaveFormComponent {
   readonly form = input.required<FormGroup>();
   readonly priorities = input<Priority[]>([]);
+  readonly users = input<User[]>([]);
+
+  getUserName(id: number | null): string {
+    if (!id) return '—';
+    const user = this.users().find(u => u.id === id);
+    return user ? user.fullName : '—';
+  }
 
   getStatusColor(status: string): string {
     const colors: Record<string, string> = { new: '#339AF0', hot: '#EF4444', warm: '#F59E0B', cold: '#6B7280' };
