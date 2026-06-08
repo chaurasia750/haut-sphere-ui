@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { BreadcrumbItem } from '@shared/ui/src';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -8,6 +9,9 @@ import { Component } from '@angular/core';
 })
 export class DashboardPageComponent {
   title = 'Admin Dashboard';
+  breadcrumbItems: BreadcrumbItem[] = [
+    { label: 'Dashboard' },
+  ];
   stats = [
     { label: 'Total Users', value: '1,234' },
     { label: 'Active Sessions', value: '156' },

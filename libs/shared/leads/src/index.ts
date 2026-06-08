@@ -15,3 +15,5 @@ export * from './lib/components/leads-add-lead/lead-stepper/lead-stepper.compone
 export * from './lib/components/leads-add-lead/lead-info-form/lead-info-form.component';
 export * from './lib/components/leads-add-lead/lead-notes-followup-form/lead-notes-followup-form.component';
 export * from './lib/components/leads-add-lead/lead-review-save-form/lead-review-save-form.component';
+export * from './lib/components/shared-user-select/shared-user-select.component';
+export * from './lib/components/shared-lead-status-select/shared-lead-status-select.component';

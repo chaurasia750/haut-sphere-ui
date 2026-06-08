@@ -7,15 +7,19 @@ import { MediaService } from '@shared';
 import { PropertyDetail, PropertyDetailField, PropertyFile } from '../../models/property-detail.model';
 import { PropertyTypeItem } from '../../models/property-field.model';
 import { INVENTORY_SERVICE, IInventoryService } from '../../services/inventory.service';
-import { UiBackButtonComponent, UiButtonComponent, UiEmptyStateComponent, UiLoadingSpinnerComponent, SharedSidePanelComponent } from '@shared/ui/src';
+import { UiBackButtonComponent, UiButtonComponent, UiBreadcrumbComponent, BreadcrumbItem, UiEmptyStateComponent, UiLoadingSpinnerComponent, SharedSidePanelComponent } from '@shared/ui/src';
 
 @Component({
   selector: 'lib-inventory-details',
   standalone: true,
-  imports: [CommonModule, UiBackButtonComponent, UiButtonComponent, UiEmptyStateComponent, UiLoadingSpinnerComponent, SharedSidePanelComponent],
+  imports: [CommonModule, UiBackButtonComponent, UiButtonComponent, UiBreadcrumbComponent, UiEmptyStateComponent, UiLoadingSpinnerComponent, SharedSidePanelComponent],
   templateUrl: './inventory-details.component.html',
 })
 export class InventoryDetailsComponent {
+  readonly breadcrumbItems = computed<BreadcrumbItem[]>(() => [
+    { label: 'Inventory', link: '..' },
+    { label: this.property()?.title || 'Loading...' },
+  ]);
   private readonly inventoryService = inject(INVENTORY_SERVICE);
   readonly mediaService = inject(MediaService);
   private readonly sanitizer = inject(DomSanitizer);

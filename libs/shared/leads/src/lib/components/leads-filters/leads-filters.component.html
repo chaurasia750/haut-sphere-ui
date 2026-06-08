@@ -1,48 +1,58 @@
-<div class="flex flex-wrap items-center gap-3">
-  <div class="relative min-w-0 flex-1 sm:max-w-xs">
-    <svg class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+<div>
+  <button (click)="toggle()"
+    class="flex w-full items-center justify-between border-b border-gray-100 px-5 py-3 text-left">
+    <div class="flex items-center gap-2.5">
+      <svg class="h-4 w-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="12" y1="18" x2="20" y2="18"/>
+      </svg>
+      <span class="text-sm font-semibold text-gray-700">Filters</span>
+    </div>
+    <svg class="h-4 w-4 text-gray-400 transition-transform duration-200" [ngClass]="{'rotate-180': isOpen()}"
+      viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <polyline points="6 9 12 15 18 9"/>
     </svg>
-    <input type="text" placeholder="Search leads..." [(ngModel)]="search" (input)="onFilter()"
-      class="h-10 w-full rounded-xl border border-gray-200 bg-white pl-10 pr-4 text-sm text-gray-700 shadow-sm placeholder:text-gray-400 focus:border-[#FFC107] focus:outline-none focus:ring-2 focus:ring-[#FFC107]/20"/>
-  </div>
-
-  <select [(ngModel)]="status" (change)="onFilter()"
-    class="h-10 appearance-none rounded-xl border border-gray-200 bg-white px-4 pr-8 text-sm text-gray-700 shadow-sm focus:border-[#FFC107] focus:outline-none focus:ring-2 focus:ring-[#FFC107]/20 cursor-pointer">
-    <option value="">All Status</option>
-    <option value="new">New</option>
-    <option value="hot">Hot</option>
-    <option value="warm">Warm</option>
-    <option value="cold">Cold</option>
-    <option value="converted">Converted</option>
-    <option value="lost">Lost</option>
-  </select>
-
-  <select [(ngModel)]="assignedUser" (change)="onFilter()"
-    class="h-10 appearance-none rounded-xl border border-gray-200 bg-white px-4 pr-8 text-sm text-gray-700 shadow-sm focus:border-[#FFC107] focus:outline-none focus:ring-2 focus:ring-[#FFC107]/20 cursor-pointer">
-    <option value="">All Users</option>
-    @for (u of users; track u) {
-      <option [value]="u">{{ u }}</option>
-    }
-  </select>
-
-  <select [(ngModel)]="city" (change)="onFilter()"
-    class="h-10 appearance-none rounded-xl border border-gray-200 bg-white px-4 pr-8 text-sm text-gray-700 shadow-sm focus:border-[#FFC107] focus:outline-none focus:ring-2 focus:ring-[#FFC107]/20 cursor-pointer">
-    <option value="">All Cities</option>
-    @for (c of cities; track c) {
-      <option [value]="c">{{ c }}</option>
-    }
-  </select>
-
-  <shared-date-picker
-    [value]="followupDateValue"
-    (valueChange)="onFollowupDateChange($event)"
-    placeholder="Follow-up date"
-    label=""/>
-
-  <button (click)="clearFilters()"
-    class="inline-flex h-10 items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-3.5 text-sm text-gray-500 shadow-sm transition-colors hover:bg-gray-50 hover:text-gray-700">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-    Reset
   </button>
+
+  @if (isOpen()) {
+    <div class="px-5 py-4">
+      <div class="flex flex-wrap items-end gap-3">
+        <!-- Search -->
+        <div class="relative min-w-0 flex-1 sm:max-w-xs">
+          <svg class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="text" placeholder="Search leads..." [(ngModel)]="search" (input)="onFilter()"
+            class="h-10 w-full rounded-xl border border-gray-200 bg-white pl-10 pr-4 text-sm text-gray-700 shadow-sm placeholder:text-gray-400 focus:border-[#FFC107] focus:outline-none focus:ring-2 focus:ring-[#FFC107]/20"/>
+        </div>
+
+        <!-- Status -->
+        <div class="w-44">
+          <shared-lead-status-select [(ngModel)]="statusId" (ngModelChange)="onFilter()"
+            placeholderText="All Status" theme="light" />
+        </div>
+
+        <!-- User -->
+        <div class="w-44">
+          <shared-user-select [(ngModel)]="assignedUserId" (ngModelChange)="onFilter()"
+            placeholderText="All Users" theme="light" />
+        </div>
+
+        <!-- Follow-up date -->
+        <div class="w-40">
+          <shared-date-picker
+            [value]="followupDateValue"
+            (valueChange)="onFollowupDateChange($event)"
+            placeholder="Follow-up date"
+            label=""/>
+        </div>
+
+        <!-- Reset -->
+        <button (click)="clearFilters()"
+          class="inline-flex h-10 items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-3.5 text-sm text-gray-500 shadow-sm transition-colors hover:bg-gray-50 hover:text-gray-700">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          Reset
+        </button>
+      </div>
+    </div>
+  }
 </div>

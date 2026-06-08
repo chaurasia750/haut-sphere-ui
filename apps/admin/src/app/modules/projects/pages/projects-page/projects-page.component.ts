@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { BreadcrumbItem } from '@shared/ui/src';
 
 @Component({
   selector: 'app-projects-page',
@@ -8,4 +9,7 @@ import { Component } from '@angular/core';
 })
 export class ProjectsPageComponent {
   title = 'Projects';
+  breadcrumbItems: BreadcrumbItem[] = [
+    { label: 'Projects' },
+  ];
 }

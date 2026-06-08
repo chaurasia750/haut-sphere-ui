@@ -1,5 +1,5 @@
 <div class="dashboard-page p-6">
-  <h3 class="text-2xl font-bold mb-6 text-gray-800">{{ title }}</h3>
+  <ui-breadcrumb pageTitle="Admin Dashboard" [items]="breadcrumbItems"/>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
     <div *ngFor="let stat of stats" class="bg-yellow-100 border border-yellow-200 p-6 rounded-lg">
       <p class="text-gray-600 text-sm mb-2">{{ stat.label }}</p>

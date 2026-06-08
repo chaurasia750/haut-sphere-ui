@@ -1,21 +1,5 @@
 <div class="mx-auto max-w-4xl">
-  <!-- Page Header -->
-  <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
-    <h1 class="text-2xl font-bold tracking-tight text-[#111111]">Add New Lead</h1>
-    <nav>
-      <ol class="flex items-center gap-1.5 text-sm">
-        <li>
-          <a routerLink="/admin/leads" class="text-gray-400 transition-colors hover:text-[#FFD000]">Home</a>
-          <svg class="mx-1 inline h-3 w-3 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 18l6-6-6-6"/></svg>
-        </li>
-        <li>
-          <a routerLink="/admin/leads/list" class="text-gray-400 transition-colors hover:text-[#FFD000]">Leads</a>
-          <svg class="mx-1 inline h-3 w-3 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 18l6-6-6-6"/></svg>
-        </li>
-        <li class="text-gray-600">Add Lead</li>
-      </ol>
-    </nav>
-  </div>
+  <ui-breadcrumb class="mb-6" pageTitle="Add New Lead" [items]="breadcrumbItems"/>
 
   <div class="mb-6">
     <lib-lead-stepper [steps]="steps" [currentStep]="currentStep()" />

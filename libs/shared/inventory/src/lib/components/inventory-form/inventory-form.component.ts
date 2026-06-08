@@ -15,12 +15,12 @@ import { DynamicField, UploadedFile } from '../../models/inventory-form.model';
 import { PropertyDetail } from '../../models/property-detail.model';
 import { DynamicFieldsCardComponent } from '../dynamic-fields-card/dynamic-fields-card.component';
 import { InventorySummaryCardComponent } from '../inventory-summary-card/inventory-summary-card.component';
-import { UiBackButtonComponent, UiButtonComponent, UiLoadingSpinnerComponent, SharedSidePanelComponent } from '@shared/ui/src';
+import { UiBackButtonComponent, UiButtonComponent, UiBreadcrumbComponent, BreadcrumbItem, UiLoadingSpinnerComponent, SharedSidePanelComponent } from '@shared/ui/src';
 
 @Component({
   selector: 'lib-inventory-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, DynamicFieldsCardComponent, InventorySummaryCardComponent, UiBackButtonComponent, UiButtonComponent, UiLoadingSpinnerComponent, SharedSidePanelComponent],
+  imports: [CommonModule, FormsModule, DynamicFieldsCardComponent, InventorySummaryCardComponent, UiBackButtonComponent, UiButtonComponent, UiBreadcrumbComponent, UiLoadingSpinnerComponent, SharedSidePanelComponent],
   templateUrl: './inventory-form.component.html',
 })
 export class InventoryFormComponent implements OnInit {
@@ -102,6 +102,13 @@ export class InventoryFormComponent implements OnInit {
 
   get pageTitle(): string {
     return this.isEditMode ? 'Edit Inventory' : 'Add Inventory';
+  }
+
+  get breadcrumbItems(): BreadcrumbItem[] {
+    return [
+      { label: 'Inventory', link: '..' },
+      { label: this.pageTitle },
+    ];
   }
 
   ngOnInit(): void {

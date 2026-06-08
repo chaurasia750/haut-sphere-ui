@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { SharedAddressFormComponent, SharedDatePickerComponent } from '@shared/ui/src';
+import { Router } from '@angular/router';
+import { SharedAddressFormComponent, SharedDatePickerComponent, UiBreadcrumbComponent, BreadcrumbItem } from '@shared/ui/src';
 import { apiConfig } from '@shared/environments/api.dev';
 import { LEADS_SERVICE } from '../../services/leads.service';
 import { USERS_SERVICE } from '../../services/users.service';
@@ -29,7 +29,6 @@ interface LookupMap {
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
     LeadInfoFormComponent,
     LeadStepperComponent,
     LeadNotesFollowupFormComponent,
@@ -37,11 +36,18 @@ interface LookupMap {
     InventoryTypeSelectComponent,
     SharedAddressFormComponent,
     SharedDatePickerComponent,
+    UiBreadcrumbComponent,
     ReactiveFormsModule,
   ],
   templateUrl: './leads-add-lead.component.html',
 })
 export class LeadsAddLeadComponent implements OnInit {
+  readonly breadcrumbItems: BreadcrumbItem[] = [
+    { label: 'Home', link: '/leads' },
+    { label: 'Leads', link: '/leads/list' },
+    { label: 'Add Lead' },
+  ];
+
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly leadsService = inject(LEADS_SERVICE);

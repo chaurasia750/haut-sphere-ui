@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { BreadcrumbItem } from '@shared/ui/src';
 
 @Component({
   selector: 'app-users-page',
@@ -8,4 +9,7 @@ import { Component } from '@angular/core';
 })
 export class UsersPageComponent {
   title = 'User Management';
+  breadcrumbItems: BreadcrumbItem[] = [
+    { label: 'Users' },
+  ];
 }

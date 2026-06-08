@@ -1,57 +1,54 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SharedDatePickerComponent } from '@shared/ui/src';
-import { Lead } from '../../models/lead.model';
+import { SharedUserSelectComponent } from '../shared-user-select/shared-user-select.component';
+import { SharedLeadStatusSelectComponent } from '../shared-lead-status-select/shared-lead-status-select.component';
 
 export interface LeadFilters {
   search: string;
-  status: string;
-  assignedUser: string;
-  city: string;
+  statusId: number | string;
+  assignedUserId: number | string;
   followupDate: string;
 }
 
 @Component({
   selector: 'lib-leads-filters',
   standalone: true,
-  imports: [CommonModule, FormsModule, SharedDatePickerComponent],
+  imports: [
+    CommonModule, FormsModule, SharedDatePickerComponent,
+    SharedUserSelectComponent, SharedLeadStatusSelectComponent,
+  ],
   templateUrl: './leads-filters.component.html',
 })
 export class LeadsFiltersComponent {
-  @Input({ required: true }) allLeads: Lead[] = [];
   @Output() filterChange = new EventEmitter<LeadFilters>();
 
+  readonly isOpen = signal(true);
+
   search = '';
-  status = '';
-  assignedUser = '';
-  city = '';
+  statusId: number | string = '';
+  assignedUserId: number | string = '';
   followupDate = '';
   followupDateValue: Date | null = null;
 
-  get users(): string[] {
-    return [...new Set(this.allLeads.map(l => l.assignedUser))];
-  }
-
-  get cities(): string[] {
-    return [...new Set(this.allLeads.map(l => l.city))];
+  toggle(): void {
+    this.isOpen.update(v => !v);
   }
 
   onFilter(): void {
     this.filterChange.emit({
       search: this.search,
-      status: this.status,
-      assignedUser: this.assignedUser,
-      city: this.city,
+      statusId: this.statusId,
+      assignedUserId: this.assignedUserId,
       followupDate: this.followupDate,
     });
   }
 
   clearFilters(): void {
     this.search = '';
-    this.status = '';
-    this.assignedUser = '';
-    this.city = '';
+    this.statusId = '';
+    this.assignedUserId = '';
     this.followupDate = '';
     this.followupDateValue = null;
     this.onFilter();
@@ -59,14 +56,9 @@ export class LeadsFiltersComponent {
 
   onFollowupDateChange(date: Date | null): void {
     this.followupDateValue = date;
-    this.followupDate = date ? this.formatDate(date) : '';
+    this.followupDate = date
+      ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+      : '';
     this.onFilter();
-  }
-
-  private formatDate(date: Date): string {
-    const y = date.getFullYear();
-    const m = String(date.getMonth() + 1).padStart(2, '0');
-    const d = String(date.getDate()).padStart(2, '0');
-    return `${y}-${m}-${d}`;
   }
 }

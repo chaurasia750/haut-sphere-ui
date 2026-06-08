@@ -2,16 +2,14 @@
 
   <div class="rounded-2xl border border-gray-100 bg-white shadow-sm p-6">
 
-  <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
-    <h2 class="text-2xl font-bold tracking-tight text-[#111111]">Inventory</h2>
-    <div class="flex items-center gap-3">
-      @if (showAddButton()) {
-        <ui-button label="Add Inventory" (onClick)="onAdd()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        </ui-button>
-      }
+  <ui-breadcrumb pageTitle="Inventory" [items]="breadcrumbItems"/>
+  @if (showAddButton()) {
+    <div class="mb-6 flex justify-end">
+      <ui-button label="Add Inventory" (onClick)="onAdd()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </ui-button>
     </div>
-  </div>
+  }
 
   <lib-inventory-filter (filterChange)="onFilterChange($event)"></lib-inventory-filter>
 

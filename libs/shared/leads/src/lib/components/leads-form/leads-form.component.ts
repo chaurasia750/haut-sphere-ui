@@ -1,14 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { UiBreadcrumbComponent, BreadcrumbItem } from '@shared/ui/src';
 
 @Component({
   selector: 'lib-leads-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, UiBreadcrumbComponent],
   templateUrl: './leads-form.component.html',
 })
 export class LeadsFormComponent {
+  readonly breadcrumbItems: BreadcrumbItem[] = [
+    { label: 'CRM' },
+    { label: 'Leads', link: '/leads' },
+    { label: 'Add Lead' },
+  ];
   model = {
     name: '',
     mobile: '',
