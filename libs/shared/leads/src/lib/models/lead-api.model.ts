@@ -36,4 +36,5 @@ export interface AddLeadResponse {
 export interface LeadLookupItem {
   id: number;
   name: string;
+  colorCode?: string;
 }

@@ -39,6 +39,11 @@ export class InventoryTypeSelectComponent implements OnInit {
         }
         this.cdr.markForCheck();
       });
+
+    const existingTypeId = this.formGroup.get(this.typeControlName)?.value;
+    if (existingTypeId) {
+      this.loadProperties(existingTypeId);
+    }
   }
 
   private loadTypes(): void {

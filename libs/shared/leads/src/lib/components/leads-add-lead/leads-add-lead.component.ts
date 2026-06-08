@@ -6,7 +6,7 @@ import { SharedAddressFormComponent, SharedDatePickerComponent } from '@shared/u
 import { apiConfig } from '@shared/environments/api.dev';
 import { LEADS_SERVICE } from '../../services/leads.service';
 import { USERS_SERVICE } from '../../services/users.service';
-import { AddLeadRequest } from '../../models/lead-api.model';
+import { AddLeadRequest, LeadLookupItem } from '../../models/lead-api.model';
 import { User } from '../../models/user.model';
 import { LeadInfoFormComponent } from './lead-info-form/lead-info-form.component';
 import { LeadStepperComponent } from './lead-stepper/lead-stepper.component';
@@ -61,8 +61,8 @@ export class LeadsAddLeadComponent implements OnInit {
     { id: 3, label: 'Review & Save' },
   ];
 
-  readonly leadSources = ['Website', 'Referral', 'Social Media', 'Email Campaign', 'Phone Inquiry', 'Walk-in', 'Partner', 'Event'];
-  readonly leadStatuses = ['new', 'hot', 'warm', 'cold'];
+  readonly leadSources = signal<LeadLookupItem[]>([]);
+  readonly leadStatuses = signal<LeadLookupItem[]>([]);
   readonly users = signal<User[]>([]);
   readonly priorities: Priority[] = [
     { value: 'high', label: 'High', color: '#EF4444' },
@@ -71,16 +71,17 @@ export class LeadsAddLeadComponent implements OnInit {
   ];
   readonly availableTags = ['Urgent', 'High Budget', 'Decision Maker', 'Follow-up', 'New', 'VIP', 'Corporate', 'Individual'];
 
-  private readonly sourceMap: LookupMap = {
-    'Website': 1, 'Referral': 2, 'Social Media': 3, 'Email Campaign': 4,
-    'Phone Inquiry': 5, 'Walk-in': 6, 'Partner': 7, 'Event': 8,
-  };
-
-  private readonly statusMap: LookupMap = {
-    'new': 1, 'hot': 2, 'warm': 3, 'cold': 4,
-  };
-
   ngOnInit(): void {
+    this.leadsService.getLeadSources().subscribe({
+      next: (data) => this.leadSources.set(data),
+      error: () => this.leadSources.set([]),
+    });
+
+    this.leadsService.getLeadStatusLookup().subscribe({
+      next: (data) => this.leadStatuses.set(data),
+      error: () => this.leadStatuses.set([]),
+    });
+
     this.usersService.getUsers().subscribe({
       next: (data) => this.users.set(data),
       error: () => this.users.set([]),
@@ -101,7 +102,7 @@ export class LeadsAddLeadComponent implements OnInit {
     email: ['', [Validators.required, Validators.email]],
 
     leadSource: ['', Validators.required],
-    leadStatus: ['new', Validators.required],
+    leadStatus: ['', Validators.required],
     gender: ['', Validators.required],
     assignedUser: ['', Validators.required],
     inventoryTypeId: ['', Validators.required],
@@ -194,14 +195,14 @@ export class LeadsAddLeadComponent implements OnInit {
       title,
       description: v.description || '',
       leadForId: v.inventoryPropertyId ? +v.inventoryPropertyId : 0,
-      statusId: this.statusMap[v.leadStatus] || 1,
+      statusId: v.leadStatus || 0,
       priority: v.priority,
       expectedAmount: v.expectedAmount ? +v.expectedAmount : 0,
       closingProbability: v.probabilityPercentage,
       expectedCloseDate: closeDate,
       nextFollowupDate: followUp,
       assignedUserId: v.assignedUser ? +v.assignedUser : 0,
-      sourceId: this.sourceMap[v.leadSource] || 1,
+      sourceId: v.leadSource || 0,
       note: v.notes || '',
       tagIds: (v.tags || []).map((tag: string) => this.tagMap[tag]).filter(Boolean),
     };

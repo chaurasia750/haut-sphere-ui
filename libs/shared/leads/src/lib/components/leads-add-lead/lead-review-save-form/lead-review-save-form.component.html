@@ -27,7 +27,7 @@
         <div class="flex justify-between"><span class="text-xs text-primary-fg/50">Name</span><span class="text-right text-sm font-semibold text-primary-fg">{{ (form().get('title')?.value || '') + ' ' + (form().get('firstName')?.value || '') + ' ' + (form().get('lastName')?.value || '') || '—' }}</span></div>
         <div class="flex justify-between"><span class="text-xs text-primary-fg/50">Mobile</span><span class="text-right text-sm font-semibold text-primary-fg">{{ form().get('mobileNumber')?.value || '—' }}</span></div>
         <div class="flex justify-between"><span class="text-xs text-primary-fg/50">Email</span><span class="max-w-[180px] truncate text-right text-sm font-semibold text-primary-fg">{{ form().get('email')?.value || '—' }}</span></div>
-        <div class="flex justify-between"><span class="text-xs text-primary-fg/50">Source</span><span class="text-right text-sm font-semibold text-primary-fg">{{ form().get('leadSource')?.value || '—' }}</span></div>
+        <div class="flex justify-between"><span class="text-xs text-primary-fg/50">Source</span><span class="text-right text-sm font-semibold text-primary-fg">{{ getSourceName(form().get('leadSource')?.value) }}</span></div>
         <div class="flex justify-between"><span class="text-xs text-primary-fg/50">Gender</span><span class="text-right text-sm font-semibold text-primary-fg">{{ (form().get('gender')?.value || '—') | titlecase }}</span></div>
       </div>
     </div>
@@ -56,7 +56,7 @@
         <div class="flex justify-between">
           <span class="text-xs text-primary-fg/50">Status</span>
           <span class="inline-flex items-center gap-1.5 text-sm font-semibold">
-            <span class="h-2 w-2 rounded-full" [style.background]="getStatusColor(form().get('leadStatus')?.value)"></span>
+            <span class="h-2 w-2 rounded-full" [style.background-color]="getStatusColor(form().get('leadStatus')?.value)"></span>
             <span [style.color]="getStatusColor(form().get('leadStatus')?.value)">{{ getStatusLabel(form().get('leadStatus')?.value) }}</span>
           </span>
         </div>

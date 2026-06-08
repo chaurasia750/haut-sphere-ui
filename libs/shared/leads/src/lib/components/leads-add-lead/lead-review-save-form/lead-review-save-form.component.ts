@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Priority } from '../leads-add-lead.component';
+import { LeadLookupItem } from '../../../models/lead-api.model';
 import { User } from '../../../models/user.model';
 
 @Component({
@@ -14,6 +15,8 @@ export class LeadReviewSaveFormComponent {
   readonly form = input.required<FormGroup>();
   readonly priorities = input<Priority[]>([]);
   readonly users = input<User[]>([]);
+  readonly leadSources = input<LeadLookupItem[]>([]);
+  readonly leadStatuses = input<LeadLookupItem[]>([]);
 
   getUserName(id: number | null): string {
     if (!id) return '—';
@@ -21,13 +24,22 @@ export class LeadReviewSaveFormComponent {
     return user ? user.fullName : '—';
   }
 
-  getStatusColor(status: string): string {
-    const colors: Record<string, string> = { new: '#339AF0', hot: '#EF4444', warm: '#F59E0B', cold: '#6B7280' };
-    return colors[status] || '#6B7280';
+  getSourceName(id: number | null): string {
+    if (!id) return '—';
+    const source = this.leadSources().find(s => s.id === id);
+    return source ? source.name : '—';
   }
 
-  getStatusLabel(status: string): string {
-    return status.charAt(0).toUpperCase() + status.slice(1);
+  getStatusColor(id: number | null): string {
+    if (!id) return '#6B7280';
+    const item = this.leadStatuses().find(s => s.id === id);
+    return item?.colorCode || '#6B7280';
+  }
+
+  getStatusLabel(id: number | null): string {
+    if (!id) return '';
+    const item = this.leadStatuses().find(s => s.id === id);
+    return item?.name || '';
   }
 
   formatCurrency(amount: number | string): string {

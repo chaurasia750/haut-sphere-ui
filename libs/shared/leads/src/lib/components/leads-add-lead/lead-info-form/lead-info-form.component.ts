@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SharedTitleSelectComponent, PhoneFormatDirective, CurrencyFormatDirective } from '@shared/ui/src';
+import { LeadLookupItem } from '../../../models/lead-api.model';
 import { User } from '../../../models/user.model';
 
 @Component({
@@ -12,8 +13,8 @@ import { User } from '../../../models/user.model';
 })
 export class LeadInfoFormComponent {
   readonly form = input.required<FormGroup>();
-  readonly leadSources = input<string[]>([]);
-  readonly leadStatuses = input<string[]>([]);
+  readonly leadSources = input<LeadLookupItem[]>([]);
+  readonly leadStatuses = input<LeadLookupItem[]>([]);
   readonly users = input<User[]>([]);
 
   isInvalid(controlName: string): boolean {
@@ -51,12 +52,15 @@ export class LeadInfoFormComponent {
     return 'Invalid input.';
   }
 
-  getStatusColor(status: string): string {
-    const colors: Record<string, string> = { new: '#339AF0', hot: '#EF4444', warm: '#F59E0B', cold: '#6B7280' };
-    return colors[status] || '#6B7280';
+  getStatusColor(id: number | null): string {
+    if (!id) return '#6B7280';
+    const item = this.leadStatuses().find(s => s.id === id);
+    return item?.colorCode || '#6B7280';
   }
 
-  getStatusLabel(status: string): string {
-    return status.charAt(0).toUpperCase() + status.slice(1);
+  getStatusLabel(id: number | null): string {
+    if (!id) return '';
+    const item = this.leadStatuses().find(s => s.id === id);
+    return item?.name || '';
   }
 }

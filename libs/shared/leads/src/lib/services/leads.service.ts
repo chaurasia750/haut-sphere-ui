@@ -3,10 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { apiConfig } from '@shared/environments/api.dev';
 import { KpiCard, Lead, StatusBreakdown, MonthlyTrend } from '../models/lead.model';
-import { AddLeadRequest, AddLeadResponse } from '../models/lead-api.model';
+import { AddLeadRequest, AddLeadResponse, LeadLookupItem } from '../models/lead-api.model';
 
 export const LEAD_API_BASE_URL = new InjectionToken<string>('LEAD_API_BASE_URL', {
   factory: () => `${apiConfig.baseUrl}/leads`,
+});
+
+export const LEADS_LOOKUP_API_BASE_URL = new InjectionToken<string>('LEADS_LOOKUP_API_BASE_URL', {
+  factory: () => `${apiConfig.baseUrl}/leads-lookup`,
 });
 
 export const LEADS_SERVICE = new InjectionToken<ILeadsService>('LEADS_SERVICE', {
@@ -20,12 +24,15 @@ export interface ILeadsService {
   getRecentLeads(): Observable<Lead[]>;
   getLeads(): Observable<Lead[]>;
   addLead(payload: AddLeadRequest): Observable<AddLeadResponse>;
+  getLeadSources(): Observable<LeadLookupItem[]>;
+  getLeadStatusLookup(): Observable<LeadLookupItem[]>;
 }
 
 @Injectable({ providedIn: 'root' })
 export class LeadsService implements ILeadsService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = inject(LEAD_API_BASE_URL);
+  private readonly lookupBaseUrl = inject(LEADS_LOOKUP_API_BASE_URL);
 
   getKpiCards(): Observable<KpiCard[]> {
     return of([
@@ -97,5 +104,13 @@ export class LeadsService implements ILeadsService {
 
   addLead(payload: AddLeadRequest): Observable<AddLeadResponse> {
     return this.http.post<AddLeadResponse>(this.baseUrl, payload);
+  }
+
+  getLeadSources(): Observable<LeadLookupItem[]> {
+    return this.http.get<LeadLookupItem[]>(`${this.lookupBaseUrl}/sources`);
+  }
+
+  getLeadStatusLookup(): Observable<LeadLookupItem[]> {
+    return this.http.get<LeadLookupItem[]>(`${this.lookupBaseUrl}/statuses`);
   }
 }

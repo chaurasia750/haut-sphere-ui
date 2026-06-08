@@ -147,8 +147,8 @@
         [ngClass]="isInvalid('leadSource') ? 'border-red-500 bg-red-500/5 focus:border-red-500 focus:ring-red-500/20 text-red-500' : 'border-default bg-surface text-primary-fg focus:border-[#FFD000] focus:ring-[#FFD000]/20'"
       >
         <option value="" disabled>Select a source</option>
-        @for (src of leadSources(); track src) {
-          <option [value]="src">{{ src }}</option>
+        @for (src of leadSources(); track src.id) {
+          <option [ngValue]="src.id">{{ src.name }}</option>
         }
       </select>
       <label for="leadSource" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50">
@@ -168,8 +168,9 @@
         class="peer block w-full appearance-none rounded-xl border px-4 pb-2.5 pt-5 pr-10 text-sm transition-colors focus:outline-none focus:ring-2 cursor-pointer"
         [ngClass]="isInvalid('leadStatus') ? 'border-red-500 bg-red-500/5 focus:border-red-500 focus:ring-red-500/20 text-red-500' : 'border-default bg-surface text-primary-fg focus:border-[#FFD000] focus:ring-[#FFD000]/20'"
       >
-        @for (st of leadStatuses(); track st) {
-          <option [value]="st">{{ getStatusLabel(st) }}</option>
+        <option value="" disabled>Select a status</option>
+        @for (st of leadStatuses(); track st.id) {
+          <option [ngValue]="st.id">{{ st.name }}</option>
         }
       </select>
       <label for="leadStatus" class="pointer-events-none absolute left-4 z-10 text-primary-fg/50 transition-all duration-200"
@@ -178,7 +179,7 @@
       </label>
       <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary-fg/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
       <div class="mt-2 flex items-center gap-2">
-        <span class="inline-block h-2 w-2 rounded-full" [style.background]="getStatusColor(form().get('leadStatus')?.value)"></span>
+        <span class="inline-block h-2 w-2 rounded-full" [style.background-color]="getStatusColor(form().get('leadStatus')?.value)"></span>
         <span class="text-xs font-medium" [style.color]="getStatusColor(form().get('leadStatus')?.value)">{{ getStatusLabel(form().get('leadStatus')?.value) }}</span>
       </div>
     </div>
@@ -190,7 +191,7 @@
       >
         <option value="" disabled>Select a user</option>
         @for (u of users(); track $index) {
-          <option [value]="u.id">{{ u.fullName }}</option>
+          <option [ngValue]="u.id">{{ u.fullName }}</option>
         }
       </select>
       <label for="assignedUser" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50">
