@@ -4,11 +4,12 @@
       <thead>
         <tr class="border-b border-gray-100 bg-gray-50/80">
           <th class="whitespace-nowrap px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Lead Name</th>
+          <th class="whitespace-nowrap px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Lead For</th>
           <th class="whitespace-nowrap px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Mobile</th>
           <th class="whitespace-nowrap px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Status</th>
           <th class="whitespace-nowrap px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Assigned User</th>
-          <th class="whitespace-nowrap px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Followup Date</th>
-          <th class="whitespace-nowrap px-4 py-3.5 text-right text-xs font-semibold uppercase tracking-wider text-gray-500">Expected Amount</th>
+          <th class="whitespace-nowrap px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Followup</th>
+          <th class="whitespace-nowrap px-4 py-3.5 text-right text-xs font-semibold uppercase tracking-wider text-gray-500">Exp. Amount</th>
           <th class="whitespace-nowrap px-4 py-3.5 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">Actions</th>
         </tr>
       </thead>
@@ -23,6 +24,7 @@
                 <span class="text-sm font-medium text-[#111111]">{{ lead.name }}</span>
               </div>
             </td>
+            <td class="px-4 py-3 text-sm text-gray-600">{{ lead.leadForTitle }}</td>
             <td class="px-4 py-3 text-sm text-gray-600">{{ lead.mobile }}</td>
             <td class="px-4 py-3">
               <span class="inline-block rounded-md border px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide"
@@ -31,7 +33,7 @@
               </span>
             </td>
             <td class="px-4 py-3 text-sm text-gray-600">{{ lead.assignedUser }}</td>
-            <td class="px-4 py-3 text-sm text-gray-600">{{ lead.nextFollowupDate }}</td>
+            <td class="px-4 py-3 text-sm text-gray-600">{{ lead.nextFollowupDate | date:'dd MMM yyyy, hh:mm a' }}</td>
             <td class="px-4 py-3 text-right text-sm font-semibold text-[#111111]">{{ formatCurrency(lead.expectedAmount) }}</td>
             <td class="px-4 py-3 text-center">
               <button (click)="editLead.emit(lead)"
@@ -45,7 +47,7 @@
           </tr>
         } @empty {
           <tr>
-            <td colspan="7" class="px-4 py-10 text-center text-sm text-gray-400">No leads found matching your filters.</td>
+            <td colspan="8" class="px-4 py-10 text-center text-sm text-gray-400">No leads found matching your filters.</td>
           </tr>
         }
       </tbody>

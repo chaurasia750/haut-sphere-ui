@@ -1,14 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { SharedTitleSelectComponent, PhoneFormatDirective, CurrencyFormatDirective } from '@shared/ui/src';
+import { SharedTitleSelectComponent, PhoneFormatDirective } from '@shared/ui/src';
+import { AmountSliderComponent } from '../../amount-slider/amount-slider.component';
 import { LeadLookupItem } from '../../../models/lead-api.model';
 import { User } from '../../../models/user.model';
 
 @Component({
   selector: 'lib-lead-info-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, SharedTitleSelectComponent, PhoneFormatDirective, CurrencyFormatDirective],
+  imports: [CommonModule, ReactiveFormsModule, SharedTitleSelectComponent, PhoneFormatDirective, AmountSliderComponent],
   templateUrl: './lead-info-form.component.html',
 })
 export class LeadInfoFormComponent {

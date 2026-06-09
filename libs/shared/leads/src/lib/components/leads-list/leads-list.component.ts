@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LeadsService } from '../../services/leads.service';
 import { USERS_SERVICE } from '../../services/users.service';
@@ -18,6 +18,8 @@ import { LeadsTableComponent } from '../leads-table/leads-table.component';
   templateUrl: './leads-list.component.html',
 })
 export class LeadsListComponent implements OnInit {
+  @Output() addLead = new EventEmitter<void>();
+
   readonly breadcrumbItems: BreadcrumbItem[] = [
     { label: 'CRM' },
     { label: 'All Leads' },

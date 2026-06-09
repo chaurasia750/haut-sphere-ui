@@ -167,12 +167,12 @@ export class LeadsAddLeadComponent implements OnInit {
 
   private formatDate(dateStr: string, timeStr: string): string {
     if (!dateStr) return '';
-    const d = new Date(dateStr);
+    const [y, m, d] = dateStr.split('-').map(Number);
     if (timeStr) {
-      const [h, m] = timeStr.split(':');
-      d.setHours(+h, +m, 0, 0);
+      const [h, min] = timeStr.split(':');
+      return new Date(y, m - 1, d, +h, +min).toISOString();
     }
-    return d.toISOString();
+    return new Date(y, m - 1, d).toISOString();
   }
 
   private buildPayload(): AddLeadRequest {
@@ -220,7 +220,9 @@ export class LeadsAddLeadComponent implements OnInit {
   }
 
   onExpectedCloseDateChange(date: Date | null): void {
-    const formatted = date ? date.toISOString().split('T')[0] : '';
+    const formatted = date
+      ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+      : '';
     this.form.get('expectedCloseDate')?.setValue(formatted);
   }
 

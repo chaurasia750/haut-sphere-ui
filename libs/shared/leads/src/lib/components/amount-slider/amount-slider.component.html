@@ -1,0 +1,25 @@
+<div class="space-y-3">
+  <div class="flex items-center justify-between">
+    <span class="text-xs font-medium text-gray-500">Expected Amount (₹)</span>
+    <span class="text-lg font-bold text-[#111111]">{{ formattedValue }}</span>
+  </div>
+
+  <div class="relative">
+    <input type="range" [min]="0" [max]="100" [step]="1"
+      [value]="sliderPosition" (input)="onSliderInput($event)"
+      class="h-2 w-full appearance-none rounded-full cursor-pointer accent-[#FFC107]"
+      [style]="'background: linear-gradient(to right, #FFC107 ' + sliderPosition + '%, #E2E5E9 ' + sliderPosition + '%);'">
+  </div>
+
+  <div class="flex flex-wrap gap-1.5">
+    @for (preset of presets; track preset.value) {
+      <button type="button" (click)="selectPreset(preset.value)"
+        class="rounded-lg border px-2.5 py-1 text-[11px] font-medium transition-colors"
+        [ngClass]="isSelected(preset.value)
+          ? 'border-[#FFC107] bg-[#FFC107]/15 text-[#FFC107]'
+          : 'border-gray-200 bg-white text-gray-500 hover:border-gray-300 hover:text-gray-700'">
+        {{ preset.label }}
+      </button>
+    }
+  </div>
+</div>

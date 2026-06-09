@@ -1,4 +1,13 @@
-<ui-breadcrumb class="mb-6" pageTitle="Leads" [items]="breadcrumbItems"/>
+<div class="mb-6 flex items-center justify-between gap-4">
+  <ui-breadcrumb pageTitle="Leads" [items]="breadcrumbItems"/>
+  <button (click)="addLead.emit()"
+    class="inline-flex h-10 shrink-0 items-center gap-2 rounded-xl bg-[#FFC107] px-5 text-sm font-semibold text-black shadow-sm transition-colors hover:bg-[#FFD000]">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+    </svg>
+    Add Lead
+  </button>
+</div>
 
 <div class="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
   <lib-leads-filters (filterChange)="onFilterChange($event)"/>

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Output, signal, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 import { SharedDateRangePickerComponent } from '@shared/ui/src';
 import { SharedUserSelectComponent } from '../shared-user-select/shared-user-select.component';
 import { SharedLeadStatusSelectComponent } from '../shared-lead-status-select/shared-lead-status-select.component';
@@ -27,7 +28,7 @@ export interface LeadFilters {
   ],
   templateUrl: './leads-filters.component.html',
 })
-export class LeadsFiltersComponent {
+export class LeadsFiltersComponent implements OnInit, OnDestroy {
   @Output() filterChange = new EventEmitter<LeadFilters>();
 
   readonly filtersOpen = signal(false);
@@ -38,6 +39,25 @@ export class LeadsFiltersComponent {
   assignedUserId: number | string = '';
   dateFrom: Date | null = null;
   dateTo: Date | null = null;
+
+  private readonly searchSubject = new Subject<string>();
+  private searchSubscription?: Subscription;
+
+  ngOnInit(): void {
+    this.searchSubscription = this.searchSubject.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+    ).subscribe(() => this.applyFilters());
+  }
+
+  ngOnDestroy(): void {
+    this.searchSubscription?.unsubscribe();
+  }
+
+  onSearchInput(value: string): void {
+    this.search = value;
+    this.searchSubject.next(value);
+  }
 
   toggleFilters(): void {
     this.filtersOpen.update(v => !v);

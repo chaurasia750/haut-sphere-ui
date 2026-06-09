@@ -40,7 +40,9 @@ export class LeadNotesFollowupFormComponent {
   }
 
   onFollowUpDateChange(date: Date | null): void {
-    const formatted = date ? date.toISOString().split('T')[0] : '';
+    const formatted = date
+      ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+      : '';
     this.form().get('followUpDate')?.setValue(formatted);
   }
 
