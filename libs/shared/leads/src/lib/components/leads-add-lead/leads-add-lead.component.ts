@@ -43,12 +43,15 @@ interface LookupMap {
 })
 export class LeadsAddLeadComponent implements OnInit {
   @Input() leadId: number | undefined;
+  @Input() appPrefix = '';
 
-  readonly breadcrumbItems: BreadcrumbItem[] = [
-    { label: 'Home', link: '/leads' },
-    { label: 'Leads', link: '/leads/list' },
-    { label: 'Add Lead' },
-  ];
+  get breadcrumbItems(): BreadcrumbItem[] {
+    return [
+      { label: 'Home', link: `/${this.appPrefix}/leads` },
+      { label: 'Leads', link: `/${this.appPrefix}/leads/list` },
+      { label: this.leadId ? 'Edit Lead' : 'Add Lead' },
+    ];
+  }
 
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);

@@ -151,3 +151,49 @@ export interface LeadDetail {
 export interface UpdateLeadResponse {
   message: string;
 }
+
+export interface FollowUpItem {
+  activityId: number;
+  leadId: number;
+  leadTitle: string;
+  contactName: string;
+  contactMobile: string;
+  activityType: string;
+  activityTypeIcon: string;
+  activityTypeColor: string;
+  subject: string;
+  description: string;
+  activityDate: string;
+  nextFollowupDate: string;
+  durationMinutes: number;
+  assignedUserId: number;
+  assignedUserName: string;
+}
+
+export interface CreateActivityRequest {
+  activityTypeId: number;
+  subject: string;
+  description: string;
+  activityDate: string;
+  nextFollowupDate?: string;
+  durationMinutes: number;
+}
+
+export interface UpdateActivityRequest extends CreateActivityRequest {}
+
+export interface ActivityType {
+  id: number;
+  name: string;
+  icon: string;
+  color: string;
+}
+
+export interface GetFollowUpsRequest {
+  FromDate?: string;
+  ToDate?: string;
+  AssignedUserId?: number;
+  LeadId?: number;
+  ActivityTypeId?: number;
+  Page?: number;
+  PageSize?: number;
+}

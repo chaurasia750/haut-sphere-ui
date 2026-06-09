@@ -1,4 +1,7 @@
 <div class="relative w-full">
+  @if (label) {
+    <label class="mb-1 block text-xs font-medium text-gray-500">{{ label }}</label>
+  }
   <input 
     type="text"
     [placeholder]="placeholder"

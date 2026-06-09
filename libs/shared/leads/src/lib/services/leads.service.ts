@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { apiConfig } from '@shared/environments/api.dev';
 import { KpiCard, Lead, StatusBreakdown, MonthlyTrend } from '../models/lead.model';
-import { AddLeadRequest, AddLeadResponse, LeadLookupItem, GetLeadsRequest, PaginatedResponse, LeadDetail, UpdateLeadResponse } from '../models/lead-api.model';
+import { AddLeadRequest, AddLeadResponse, LeadLookupItem, GetLeadsRequest, PaginatedResponse, LeadDetail, UpdateLeadResponse, FollowUpItem, GetFollowUpsRequest, CreateActivityRequest, UpdateActivityRequest } from '../models/lead-api.model';
 
 export const LEAD_API_BASE_URL = new InjectionToken<string>('LEAD_API_BASE_URL', {
   factory: () => `${apiConfig.baseUrl}/leads`,
@@ -12,6 +12,10 @@ export const LEAD_API_BASE_URL = new InjectionToken<string>('LEAD_API_BASE_URL',
 
 export const LEADS_LOOKUP_API_BASE_URL = new InjectionToken<string>('LEADS_LOOKUP_API_BASE_URL', {
   factory: () => `${apiConfig.baseUrl}/leads-lookup`,
+});
+
+export const FOLLOWUPS_API_BASE_URL = new InjectionToken<string>('FOLLOWUPS_API_BASE_URL', {
+  factory: () => `${apiConfig.baseUrl}/followups`,
 });
 
 export const LEADS_SERVICE = new InjectionToken<ILeadsService>('LEADS_SERVICE', {
@@ -29,6 +33,9 @@ export interface ILeadsService {
   updateLead(id: number, payload: AddLeadRequest): Observable<UpdateLeadResponse>;
   getLeadSources(): Observable<LeadLookupItem[]>;
   getLeadStatusLookup(): Observable<LeadLookupItem[]>;
+  getFollowUps(params?: GetFollowUpsRequest): Observable<PaginatedResponse<FollowUpItem>>;
+  createActivity(leadId: number, payload: CreateActivityRequest): Observable<number>;
+  updateActivity(leadId: number, activityId: number, payload: UpdateActivityRequest): Observable<void>;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -36,6 +43,7 @@ export class LeadsService implements ILeadsService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = inject(LEAD_API_BASE_URL);
   private readonly lookupBaseUrl = inject(LEADS_LOOKUP_API_BASE_URL);
+  private readonly followUpBaseUrl = inject(FOLLOWUPS_API_BASE_URL);
 
   getKpiCards(): Observable<KpiCard[]> {
     return of([
@@ -109,5 +117,25 @@ export class LeadsService implements ILeadsService {
 
   getLeadStatusLookup(): Observable<LeadLookupItem[]> {
     return this.http.get<LeadLookupItem[]>(`${this.lookupBaseUrl}/statuses`);
+  }
+
+  getFollowUps(params?: GetFollowUpsRequest): Observable<PaginatedResponse<FollowUpItem>> {
+    const query: Record<string, string | number> = {};
+    if (params) {
+      for (const [key, value] of Object.entries(params)) {
+        if (value !== undefined && value !== null && value !== '') {
+          query[key] = value;
+        }
+      }
+    }
+    return this.http.get<PaginatedResponse<FollowUpItem>>(this.followUpBaseUrl, { params: query });
+  }
+
+  createActivity(leadId: number, payload: CreateActivityRequest): Observable<number> {
+    return this.http.post<number>(`${this.baseUrl}/${leadId}/activities`, payload);
+  }
+
+  updateActivity(leadId: number, activityId: number, payload: UpdateActivityRequest): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/${leadId}/activities/${activityId}`, payload);
   }
 }

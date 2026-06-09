@@ -11,6 +11,7 @@ import { Lead } from '../../models/lead.model';
 export class LeadsTableComponent {
   @Input({ required: true }) leads: Lead[] = [];
   @Output() editLead = new EventEmitter<Lead>();
+  @Output() followUp = new EventEmitter<Lead>();
 
   readonly statusBadge: Record<string, string> = {
     new: 'bg-blue-50 text-blue-600 border-blue-200',

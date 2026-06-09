@@ -5,6 +5,6 @@ import { LeadsAddLeadComponent } from '@shared/leads/src';
   selector: 'app-admin-leads-add-page',
   standalone: true,
   imports: [LeadsAddLeadComponent],
-  template: `<lib-leads-add-lead />`,
+  template: `<lib-leads-add-lead appPrefix="admin" />`,
 })
 export class AdminLeadsAddPageComponent {}

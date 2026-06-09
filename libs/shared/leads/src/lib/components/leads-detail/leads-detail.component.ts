@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { LeadsService, LEADS_SERVICE } from '../../services/leads.service';
 import { LeadDetail } from '../../models/lead-api.model';
 import { UiBreadcrumbComponent, BreadcrumbItem } from '@shared/ui/src';
+import { LeadsFollowupComponent } from '../leads-followup/leads-followup.component';
 
 interface DetailState {
   loading: boolean;
@@ -15,13 +16,14 @@ interface DetailState {
 @Component({
   selector: 'lib-leads-detail',
   standalone: true,
-  imports: [CommonModule, UiBreadcrumbComponent],
+  imports: [CommonModule, UiBreadcrumbComponent, LeadsFollowupComponent],
   templateUrl: './leads-detail.component.html',
 })
 export class LeadsDetailComponent {
   @Input() set leadId(val: number | undefined) {
     if (val) this.loadLead(val);
   }
+  @Input() appPrefix = '';
 
   private readonly leadsService = inject(LEADS_SERVICE);
   private readonly router = inject(Router);
@@ -29,11 +31,13 @@ export class LeadsDetailComponent {
 
   readonly vm$: Observable<DetailState> = this.state.asObservable();
 
-  readonly breadcrumbItems: BreadcrumbItem[] = [
-    { label: 'CRM' },
-    { label: 'Leads', link: '/leads/list' },
-    { label: 'Lead Details' },
-  ];
+  get breadcrumbItems(): BreadcrumbItem[] {
+    return [
+      { label: 'CRM' },
+      { label: 'Leads', link: `/${this.appPrefix}/leads/list` },
+      { label: 'Lead Details' },
+    ];
+  }
 
   private loadLead(id: number): void {
     this.state.next({ loading: true, lead: null, error: '' });

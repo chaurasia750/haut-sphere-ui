@@ -6,7 +6,7 @@ import { LeadsDashboardComponent } from '@shared/leads/src';
   selector: 'app-admin-leads-page',
   standalone: true,
   imports: [LeadsDashboardComponent],
-  template: `<lib-leads-dashboard (viewList)="onViewList()"/>`,
+  template: `<lib-leads-dashboard appPrefix="admin" (viewList)="onViewList()"/>`,
 })
 export class AdminLeadsPageComponent {
   constructor(private readonly router: Router) {}

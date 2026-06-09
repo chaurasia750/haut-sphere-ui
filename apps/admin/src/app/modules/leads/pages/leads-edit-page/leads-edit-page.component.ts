@@ -6,7 +6,7 @@ import { LeadsAddLeadComponent } from '@shared/leads/src';
   selector: 'app-admin-leads-edit-page',
   standalone: true,
   imports: [LeadsAddLeadComponent],
-  template: `<lib-leads-add-lead [leadId]="leadId"/>`,
+  template: `<lib-leads-add-lead appPrefix="admin" [leadId]="leadId"/>`,
 })
 export class AdminLeadsEditPageComponent {
   private readonly route = inject(ActivatedRoute);

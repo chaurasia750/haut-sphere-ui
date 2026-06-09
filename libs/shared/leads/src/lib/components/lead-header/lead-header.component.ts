@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UiBreadcrumbComponent, BreadcrumbItem } from '@shared/ui/src';
 import { SharedUserSelectComponent } from '../shared-user-select/shared-user-select.component';
@@ -12,12 +12,15 @@ import { SharedUserSelectComponent } from '../shared-user-select/shared-user-sel
 })
 export class LeadHeaderComponent {
   @Output() addLead = new EventEmitter<void>();
+  @Input() appPrefix = '';
 
-  readonly breadcrumbItems: BreadcrumbItem[] = [
-    { label: 'CRM' },
-    { label: 'Leads', link: '/leads' },
-    { label: 'Dashboard' },
-  ];
+  get breadcrumbItems(): BreadcrumbItem[] {
+    return [
+      { label: 'CRM' },
+      { label: 'Leads', link: `/${this.appPrefix}/leads` },
+      { label: 'Dashboard' },
+    ];
+  }
 
   selectedUser: number | string = '';
   dateRange = 'Last 30 Days';

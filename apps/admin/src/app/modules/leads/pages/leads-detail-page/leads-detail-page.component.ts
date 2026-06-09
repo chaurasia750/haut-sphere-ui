@@ -6,7 +6,7 @@ import { LeadsDetailComponent } from '@shared/leads/src';
   selector: 'app-admin-leads-detail-page',
   standalone: true,
   imports: [LeadsDetailComponent],
-  template: `<lib-leads-detail [leadId]="leadId"/>`,
+  template: `<lib-leads-detail appPrefix="admin" [leadId]="leadId"/>`,
 })
 export class AdminLeadsDetailPageComponent {
   private readonly route = inject(ActivatedRoute);

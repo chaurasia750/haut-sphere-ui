@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { LeadsService } from '../../services/leads.service';
 import { KpiCard, StatusBreakdown, MonthlyTrend } from '../../models/lead.model';
 import { LeadHeaderComponent } from '../lead-header/lead-header.component';
@@ -18,6 +18,7 @@ import { SharedDateRangePickerComponent } from '@shared/ui/src';
   templateUrl: './leads-dashboard.component.html',
 })
 export class LeadsDashboardComponent implements OnInit {
+  @Input() appPrefix = '';
   kpiCards: KpiCard[] = [];
   statusBreakdown: StatusBreakdown[] = [];
   monthlyTrends: MonthlyTrend[] = [];
