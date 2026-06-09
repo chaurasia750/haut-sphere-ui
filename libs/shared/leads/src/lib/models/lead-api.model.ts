@@ -60,3 +60,94 @@ export interface GetLeadsRequest {
   fromDate?: string;
   toDate?: string;
 }
+
+export interface LeadDetailContact {
+  id: number;
+  firstName: string;
+  lastName: string;
+  mobile: string;
+  alternateMobile: string;
+  email: string;
+  stateName: string;
+  cityName: string;
+  pincode: string;
+  addressLine1: string;
+  addressLine2: string;
+}
+
+export interface LeadDetailStatus {
+  id: number;
+  name: string;
+  colorCode: string;
+}
+
+export interface LeadDetailUser {
+  id: number;
+  userName: string;
+  email: string;
+}
+
+export interface LeadDetailTag {
+  id: number;
+  name: string;
+  colorCode: string;
+}
+
+export interface LeadDetailActivity {
+  id: number;
+  subject: string;
+  description: string;
+  activityType: string;
+  activityDate: string;
+  nextFollowupDate: string;
+  durationMinutes: number;
+}
+
+export interface LeadDetailTask {
+  id: number;
+  title: string;
+  description: string;
+  priority: string;
+  dueDate: string;
+  completedAt: string | null;
+  status: string;
+}
+
+export interface LeadDetailNote {
+  id: number;
+  noteText: string;
+}
+
+export interface LeadDetailComment {
+  id: number;
+  commentText: string;
+}
+
+export interface LeadDetail {
+  id: number;
+  title: string;
+  description: string;
+  priority: string;
+  expectedAmount: number;
+  closingProbability: number;
+  expectedCloseDate: string;
+  nextFollowupDate: string;
+  lastActivityDate: string;
+  isConverted: boolean;
+  createdAt: string;
+  modifiedAt: string | null;
+  contact: LeadDetailContact;
+  status: LeadDetailStatus;
+  assignedUser: LeadDetailUser;
+  createdBy: LeadDetailUser;
+  leadFor: any | null;
+  tags: LeadDetailTag[];
+  activities: LeadDetailActivity[];
+  tasks: LeadDetailTask[];
+  notes: LeadDetailNote[];
+  comments: LeadDetailComment[];
+}
+
+export interface UpdateLeadResponse {
+  message: string;
+}

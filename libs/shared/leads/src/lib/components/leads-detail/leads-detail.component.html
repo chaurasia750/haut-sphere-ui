@@ -1,0 +1,199 @@
+@if (vm$ | async; as vm) {
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <ui-breadcrumb pageTitle="Lead Details" [items]="breadcrumbItems"/>
+    <div class="flex items-center gap-3">
+      <button (click)="onBack()"
+        class="inline-flex h-10 items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 text-sm font-medium text-gray-600 shadow-sm transition-colors hover:bg-gray-50">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Back
+      </button>
+      @if (vm.lead && !vm.loading) {
+        <button (click)="onEdit()"
+          class="inline-flex h-10 items-center gap-2 rounded-xl bg-[#FFC107] px-5 text-sm font-semibold text-black shadow-sm transition-colors hover:bg-[#FFD000]">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Edit Lead
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (vm.loading) {
+    <div class="flex items-center justify-center py-20">
+      <div class="flex flex-col items-center gap-3">
+        <svg class="h-8 w-8 animate-spin text-[#FFC107]" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25"/><path d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" fill="currentColor" class="opacity-75"/></svg>
+        <span class="text-sm text-gray-500">Loading lead details...</span>
+      </div>
+    </div>
+  }
+
+  @if (vm.error) {
+    <div class="rounded-xl border border-red-200 bg-red-50 p-6 text-center text-sm text-red-600">{{ vm.error }}</div>
+  }
+
+  @if (vm.lead) {
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm lg:col-span-2">
+        <div class="mb-4 flex items-center gap-3">
+          <div class="flex h-12 w-12 items-center justify-center rounded-full bg-[#FFC107]/20 text-base font-bold text-[#111111]">{{ getInitials(vm.lead.title) }}</div>
+          <div>
+            <h2 class="text-lg font-bold text-[#111111]">{{ vm.lead.title }}</h2>
+            <p class="text-sm text-gray-500">Created {{ vm.lead.createdAt | date:'dd MMM yyyy, hh:mm a' }} by {{ vm.lead.createdBy.userName }}</p>
+          </div>
+        </div>
+
+        <div class="mb-6 grid grid-cols-2 gap-4 rounded-xl bg-gray-50/80 p-4 text-sm">
+          <div>
+            <span class="text-gray-500">Status</span>
+            <div class="mt-0.5 flex items-center gap-1.5">
+              <span class="h-2.5 w-2.5 rounded-full" [style.background]="vm.lead.status.colorCode"></span>
+              <span class="font-medium text-[#111111]">{{ vm.lead.status.name }}</span>
+            </div>
+          </div>
+          <div>
+            <span class="text-gray-500">Priority</span>
+            <p class="mt-0.5 font-medium text-[#111111]">{{ vm.lead.priority }}</p>
+          </div>
+          <div>
+            <span class="text-gray-500">Expected Amount</span>
+            <p class="mt-0.5 font-semibold text-[#111111]">{{ formatCurrency(vm.lead.expectedAmount) }}</p>
+          </div>
+          <div>
+            <span class="text-gray-500">Closing Probability</span>
+            <div class="mt-0.5 flex items-center gap-2">
+              <div class="h-2 w-24 overflow-hidden rounded-full bg-gray-200">
+                <div class="h-full rounded-full" [style.width.%]="vm.lead.closingProbability" [style.background]="vm.lead.closingProbability >= 70 ? '#51CF66' : vm.lead.closingProbability >= 40 ? '#FFC107' : '#FF6B6B'"></div>
+              </div>
+              <span class="text-xs font-medium text-gray-500">{{ vm.lead.closingProbability }}%</span>
+            </div>
+          </div>
+          <div>
+            <span class="text-gray-500">Assigned To</span>
+            <p class="mt-0.5 font-medium text-[#111111]">{{ vm.lead.assignedUser.userName }}</p>
+          </div>
+          <div>
+            <span class="text-gray-500">Lead For</span>
+            <p class="mt-0.5 font-medium text-[#111111]">{{ vm.lead.leadFor ? vm.lead.leadFor : 'N/A' }}</p>
+          </div>
+        </div>
+
+        @if (vm.lead.description) {
+          <div class="mb-6">
+            <h4 class="mb-2 text-sm font-semibold text-gray-500 uppercase tracking-wider">Description</h4>
+            <p class="text-sm text-[#111111]">{{ vm.lead.description }}</p>
+          </div>
+        }
+
+        <h4 class="mb-3 text-sm font-semibold text-gray-500 uppercase tracking-wider">Contact Information</h4>
+        <div class="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
+          <div><span class="text-gray-500">Name</span><p class="font-medium text-[#111111]">{{ vm.lead.contact.firstName }} {{ vm.lead.contact.lastName }}</p></div>
+          <div><span class="text-gray-500">Mobile</span><p class="font-medium text-[#111111]">{{ vm.lead.contact.mobile }}</p></div>
+          <div><span class="text-gray-500">Alternate Mobile</span><p class="font-medium text-[#111111]">{{ vm.lead.contact.alternateMobile || 'N/A' }}</p></div>
+          <div><span class="text-gray-500">Email</span><p class="font-medium text-[#111111]">{{ vm.lead.contact.email }}</p></div>
+          <div class="col-span-2"><span class="text-gray-500">Address</span><p class="font-medium text-[#111111]">{{ formatAddress(vm.lead) }}</p></div>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+          <h4 class="mb-3 text-sm font-semibold text-gray-500 uppercase tracking-wider">Schedule</h4>
+          <div class="space-y-3 text-sm">
+            <div>
+              <span class="text-gray-500">Expected Close Date</span>
+              <p class="font-medium text-[#111111]">{{ vm.lead.expectedCloseDate ? (vm.lead.expectedCloseDate | date:'dd MMM yyyy') : 'Not set' }}</p>
+            </div>
+            <div>
+              <span class="text-gray-500">Next Follow-up</span>
+              <p class="font-medium text-[#111111]">{{ vm.lead.nextFollowupDate ? (vm.lead.nextFollowupDate | date:'dd MMM yyyy, hh:mm a') : 'Not set' }}</p>
+            </div>
+            <div>
+              <span class="text-gray-500">Last Activity</span>
+              <p class="font-medium text-[#111111]">{{ vm.lead.lastActivityDate ? (vm.lead.lastActivityDate | date:'dd MMM yyyy, hh:mm a') : 'N/A' }}</p>
+            </div>
+          </div>
+        </div>
+
+        @if (vm.lead.tags.length) {
+          <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+            <h4 class="mb-3 text-sm font-semibold text-gray-500 uppercase tracking-wider">Tags</h4>
+            <div class="flex flex-wrap gap-2">
+              @for (tag of vm.lead.tags; track tag.id) {
+                <span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium" [style.background]="tag.colorCode + '20'" [style.color]="tag.colorCode">
+                  <span class="h-2 w-2 rounded-full" [style.background]="tag.colorCode"></span>
+                  {{ tag.name }}
+                </span>
+              }
+            </div>
+          </div>
+        }
+
+        <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+          <h4 class="mb-3 text-sm font-semibold text-gray-500 uppercase tracking-wider">Notes</h4>
+          @if (vm.lead.notes.length) {
+            <div class="space-y-2">
+              @for (note of vm.lead.notes; track note.id) {
+                <p class="text-sm text-[#111111]">{{ note.noteText }}</p>
+              }
+            </div>
+          } @else {
+            <p class="text-sm text-gray-400">No notes added</p>
+          }
+        </div>
+      </div>
+    </div>
+
+    @if (vm.lead.activities.length) {
+      <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+        <h4 class="mb-4 text-sm font-semibold text-gray-500 uppercase tracking-wider">Activities ({{ vm.lead.activities.length }})</h4>
+        <div class="space-y-3">
+          @for (a of vm.lead.activities; track a.id) {
+            <div class="flex gap-3 rounded-xl border border-gray-100 p-3">
+              <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#339AF0]/10 text-xs font-bold text-[#339AF0]">{{ a.activityType[0] }}</div>
+              <div class="min-w-0 flex-1">
+                <p class="text-sm font-medium text-[#111111]">{{ a.subject }}</p>
+                @if (a.description) { <p class="mt-0.5 text-xs text-gray-500">{{ a.description }}</p> }
+                <p class="mt-1 text-[11px] text-gray-400">{{ a.activityDate | date:'dd MMM yyyy, hh:mm a' }} · {{ a.durationMinutes }} min</p>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    @if (vm.lead.tasks.length) {
+      <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+        <h4 class="mb-4 text-sm font-semibold text-gray-500 uppercase tracking-wider">Tasks ({{ vm.lead.tasks.length }})</h4>
+        <div class="space-y-2">
+          @for (t of vm.lead.tasks; track t.id) {
+            <div class="flex items-center gap-3 rounded-xl border border-gray-100 p-3">
+              <div class="flex h-5 w-5 shrink-0 items-center justify-center rounded border-2"
+                [ngClass]="t.completedAt ? 'border-green-500 bg-green-50' : 'border-gray-300'">
+                @if (t.completedAt) {
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                }
+              </div>
+              <div class="min-w-0 flex-1">
+                <p class="text-sm font-medium text-[#111111]" [ngClass]="t.completedAt ? 'line-through text-gray-400' : ''">{{ t.title }}</p>
+                <p class="text-xs text-gray-500">{{ t.dueDate | date:'dd MMM yyyy' }} · {{ t.priority }}</p>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    @if (vm.lead.comments.length) {
+      <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+        <h4 class="mb-4 text-sm font-semibold text-gray-500 uppercase tracking-wider">Comments ({{ vm.lead.comments.length }})</h4>
+        <div class="space-y-3">
+          @for (c of vm.lead.comments; track c.id) {
+            <div class="rounded-xl border border-gray-100 bg-gray-50/50 p-3">
+              <p class="text-sm text-[#111111]">{{ c.commentText }}</p>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  }
+</div>
+}

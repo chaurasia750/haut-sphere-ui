@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { apiConfig } from '@shared/environments/api.dev';
 import { KpiCard, Lead, StatusBreakdown, MonthlyTrend } from '../models/lead.model';
-import { AddLeadRequest, AddLeadResponse, LeadLookupItem, GetLeadsRequest, PaginatedResponse } from '../models/lead-api.model';
+import { AddLeadRequest, AddLeadResponse, LeadLookupItem, GetLeadsRequest, PaginatedResponse, LeadDetail, UpdateLeadResponse } from '../models/lead-api.model';
 
 export const LEAD_API_BASE_URL = new InjectionToken<string>('LEAD_API_BASE_URL', {
   factory: () => `${apiConfig.baseUrl}/leads`,
@@ -24,7 +24,9 @@ export interface ILeadsService {
   getMonthlyTrends(): Observable<MonthlyTrend[]>;
   getRecentLeads(): Observable<Lead[]>;
   getLeads(params?: GetLeadsRequest): Observable<PaginatedResponse<Lead>>;
+  getLeadById(id: number): Observable<LeadDetail>;
   addLead(payload: AddLeadRequest): Observable<AddLeadResponse>;
+  updateLead(id: number, payload: AddLeadRequest): Observable<UpdateLeadResponse>;
   getLeadSources(): Observable<LeadLookupItem[]>;
   getLeadStatusLookup(): Observable<LeadLookupItem[]>;
 }
@@ -89,8 +91,16 @@ export class LeadsService implements ILeadsService {
     return this.http.get<PaginatedResponse<Lead>>(this.baseUrl, { params: query });
   }
 
+  getLeadById(id: number): Observable<LeadDetail> {
+    return this.http.get<LeadDetail>(`${this.baseUrl}/${id}`);
+  }
+
   addLead(payload: AddLeadRequest): Observable<AddLeadResponse> {
     return this.http.post<AddLeadResponse>(this.baseUrl, payload);
+  }
+
+  updateLead(id: number, payload: AddLeadRequest): Observable<UpdateLeadResponse> {
+    return this.http.put<UpdateLeadResponse>(`${this.baseUrl}/${id}`, payload);
   }
 
   getLeadSources(): Observable<LeadLookupItem[]> {

@@ -38,6 +38,7 @@
           "apps/member/src/styles.scss"
         ],
         "scripts": [],
+        "polyfills": ["apps/member/src/polyfills.ts"],
         "customWebpackConfig": {
           "path": "apps/member/webpack.config.ts"
         }

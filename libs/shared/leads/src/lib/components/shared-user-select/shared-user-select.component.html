@@ -3,8 +3,8 @@
   [ngClass]="theme === 'light'
     ? 'h-10 border-gray-200 text-gray-700 focus:border-[#FFC107] focus:ring-[#FFC107]/20'
     : 'h-11 border-default bg-surface text-primary-fg focus:border-[#FFD000] focus:ring-[#FFD000]/20'">
-  <option value="" disabled>{{ loading ? 'Loading...' : placeholderText }}</option>
-  @for (u of users; track u.id) {
+  <option value="" disabled>{{ placeholderText }}</option>
+  @for (u of users$ | async; track u.id) {
     <option [value]="u.id">{{ u.fullName }}</option>
   }
 </select>

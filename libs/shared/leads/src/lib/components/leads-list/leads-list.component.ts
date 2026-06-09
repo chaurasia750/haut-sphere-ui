@@ -19,6 +19,7 @@ import { LeadsTableComponent } from '../leads-table/leads-table.component';
 })
 export class LeadsListComponent implements OnInit {
   @Output() addLead = new EventEmitter<void>();
+  @Output() viewLead = new EventEmitter<number>();
 
   readonly breadcrumbItems: BreadcrumbItem[] = [
     { label: 'CRM' },
@@ -100,6 +101,6 @@ export class LeadsListComponent implements OnInit {
   }
 
   onEditLead(lead: Lead): void {
-    console.log('Edit lead:', lead.id);
+    this.viewLead.emit(lead.id);
   }
 }

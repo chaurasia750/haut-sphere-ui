@@ -19,3 +19,4 @@ export * from './lib/components/amount-slider/amount-slider.component';
 export * from './lib/components/shared-user-select/shared-user-select.component';
 export * from './lib/components/shared-lead-status-select/shared-lead-status-select.component';
 export * from './lib/components/shared-lead-source-select/shared-lead-source-select.component';
+export * from './lib/components/leads-detail/leads-detail.component';

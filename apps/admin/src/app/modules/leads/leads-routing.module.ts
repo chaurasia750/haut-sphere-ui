@@ -3,6 +3,8 @@ import { ROUTES, Routes } from '@angular/router';
 import { AdminLeadsPageComponent } from './pages/leads-page/leads-page.component';
 import { AdminLeadsListPageComponent } from './pages/leads-list-page/leads-list-page.component';
 import { AdminLeadsAddPageComponent } from './pages/leads-add-page/leads-add-page.component';
+import { AdminLeadsDetailPageComponent } from './pages/leads-detail-page/leads-detail-page.component';
+import { AdminLeadsEditPageComponent } from './pages/leads-edit-page/leads-edit-page.component';
 
 const routes: Routes = [
   {
@@ -16,6 +18,14 @@ const routes: Routes = [
   {
     path: 'add',
     component: AdminLeadsAddPageComponent,
+  },
+  {
+    path: ':id',
+    component: AdminLeadsDetailPageComponent,
+  },
+  {
+    path: ':id/edit',
+    component: AdminLeadsEditPageComponent,
   },
 ];
 

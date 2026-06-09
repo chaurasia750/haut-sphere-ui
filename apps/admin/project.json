@@ -36,6 +36,7 @@
           "apps/admin/src/styles.scss"
         ],
         "scripts": [],
+        "polyfills": ["apps/admin/src/polyfills.ts"],
         "customWebpackConfig": {
           "path": "apps/admin/webpack.config.ts"
         }

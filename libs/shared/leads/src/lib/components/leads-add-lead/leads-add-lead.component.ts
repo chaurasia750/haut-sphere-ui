@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SharedAddressFormComponent, SharedDatePickerComponent, UiBreadcrumbComponent, BreadcrumbItem } from '@shared/ui/src';
 import { apiConfig } from '@shared/environments/api.dev';
 import { LEADS_SERVICE } from '../../services/leads.service';
 import { USERS_SERVICE } from '../../services/users.service';
-import { AddLeadRequest, LeadLookupItem } from '../../models/lead-api.model';
+import { AddLeadRequest, LeadLookupItem, LeadDetail } from '../../models/lead-api.model';
 import { User } from '../../models/user.model';
 import { LeadInfoFormComponent } from './lead-info-form/lead-info-form.component';
 import { LeadStepperComponent } from './lead-stepper/lead-stepper.component';
@@ -42,6 +42,8 @@ interface LookupMap {
   templateUrl: './leads-add-lead.component.html',
 })
 export class LeadsAddLeadComponent implements OnInit {
+  @Input() leadId: number | undefined;
+
   readonly breadcrumbItems: BreadcrumbItem[] = [
     { label: 'Home', link: '/leads' },
     { label: 'Leads', link: '/leads/list' },
@@ -53,6 +55,7 @@ export class LeadsAddLeadComponent implements OnInit {
   private readonly leadsService = inject(LEADS_SERVICE);
   private readonly usersService = inject(USERS_SERVICE);
 
+  isEditMode = signal(false);
   submitting = signal(false);
   submitError = signal('');
 
@@ -78,6 +81,12 @@ export class LeadsAddLeadComponent implements OnInit {
   readonly availableTags = ['Urgent', 'High Budget', 'Decision Maker', 'Follow-up', 'New', 'VIP', 'Corporate', 'Individual'];
 
   ngOnInit(): void {
+    this.isEditMode.set(!!this.leadId);
+
+    if (this.leadId) {
+      this.breadcrumbItems[2].label = 'Edit Lead';
+    }
+
     this.leadsService.getLeadSources().subscribe({
       next: (data) => this.leadSources.set(data),
       error: () => this.leadSources.set([]),
@@ -91,6 +100,53 @@ export class LeadsAddLeadComponent implements OnInit {
     this.usersService.getUsers().subscribe({
       next: (data) => this.users.set(data),
       error: () => this.users.set([]),
+    });
+
+    if (this.leadId) {
+      this.loadLeadForEdit(this.leadId);
+    }
+  }
+
+  private loadLeadForEdit(id: number): void {
+    this.leadsService.getLeadById(id).subscribe({
+      next: (lead) => this.patchForm(lead),
+      error: () => this.submitError.set('Failed to load lead data for editing.'),
+    });
+  }
+
+  private patchForm(lead: LeadDetail): void {
+    const names = lead.title.split(' ');
+    const salutation = ['Mr.', 'Mrs.', 'Ms.', 'Dr.', 'Mr', 'Mrs', 'Ms', 'Dr'].includes(names[0]) ? names[0] : '';
+    const firstName = salutation ? names[1] || '' : names[0] || '';
+    const lastName = salutation ? names.slice(2).join(' ') : names.slice(1).join(' ');
+
+    const mobile = lead.contact.mobile.replace(/(\d{4})(\d{4})(\d{2})/, '$1 $2 $3');
+
+    this.form.patchValue({
+      title: salutation,
+      firstName,
+      lastName,
+      mobileNumber: mobile,
+      alternateMobile: lead.contact.alternateMobile,
+      email: lead.contact.email,
+      leadSource: 0,
+      leadStatus: lead.status.id,
+      assignedUser: lead.assignedUser.id,
+      expectedAmount: lead.expectedAmount,
+      probabilityPercentage: lead.closingProbability,
+      description: lead.description,
+      expectedCloseDate: lead.expectedCloseDate ? lead.expectedCloseDate.split('T')[0] : '',
+      addressLine1: lead.contact.addressLine1,
+      addressLine2: lead.contact.addressLine2,
+      postalCode: lead.contact.pincode,
+      city: lead.contact.cityName,
+      country: '',
+      state: lead.contact.stateName,
+      notes: lead.notes.map(n => n.noteText).join('\n'),
+      followUpDate: lead.nextFollowupDate ? lead.nextFollowupDate.split('T')[0] : '',
+      followUpTime: lead.nextFollowupDate ? lead.nextFollowupDate.split('T')[1]?.slice(0, 5) : '',
+      priority: lead.priority.toLowerCase(),
+      tags: lead.tags.map(t => t.name),
     });
   }
 
@@ -247,19 +303,27 @@ export class LeadsAddLeadComponent implements OnInit {
 
     const payload = this.buildPayload();
 
-    this.leadsService.addLead(payload).subscribe({
+    const obs = this.isEditMode() && this.leadId
+      ? this.leadsService.updateLead(this.leadId, payload)
+      : this.leadsService.addLead(payload);
+
+    (obs as any).subscribe({
       next: () => {
         this.submitting.set(false);
-        this.router.navigate(['/admin/leads']);
+        this.router.navigate(['/admin/leads', this.leadId || '']);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.submitting.set(false);
-        this.submitError.set(err?.error?.message || err?.message || 'Failed to create lead');
+        this.submitError.set(err?.error?.message || err?.message || 'Failed to save lead');
       },
     });
   }
 
   onCancel(): void {
-    this.router.navigate(['/admin/leads']);
+    if (this.leadId) {
+      this.router.navigate(['/admin/leads', this.leadId]);
+    } else {
+      this.router.navigate(['/admin/leads']);
+    }
   }
 }
