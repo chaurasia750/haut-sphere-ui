@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, forwardRef, inject, Input, OnInit } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ChangeDetectorRef, Component, forwardRef, inject, Input, OnInit } from '@angular/core';
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { USERS_SERVICE } from '../../services/users.service';
 import { User } from '../../models/user.model';
 
 @Component({
   selector: 'shared-user-select',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './shared-user-select.component.html',
   providers: [
     {
@@ -19,6 +19,7 @@ import { User } from '../../models/user.model';
 })
 export class SharedUserSelectComponent implements ControlValueAccessor, OnInit {
   private readonly usersService = inject(USERS_SERVICE);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   @Input() placeholderText = 'Select user';
   @Input() theme: 'light' | 'dark' = 'dark';
@@ -33,8 +34,8 @@ export class SharedUserSelectComponent implements ControlValueAccessor, OnInit {
 
   ngOnInit(): void {
     this.usersService.getUsers().subscribe({
-      next: (data) => { this.users = data; this.loading = false; },
-      error: () => { this.users = []; this.loading = false; },
+      next: (data) => { this.users = data; this.loading = false; this.cdr.detectChanges(); },
+      error: () => { this.users = []; this.loading = false; this.cdr.detectChanges(); },
     });
   }
 
@@ -54,9 +55,7 @@ export class SharedUserSelectComponent implements ControlValueAccessor, OnInit {
     this.disabled = isDisabled;
   }
 
-  onSelect(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    const val = select.value;
+  onSelect(val: any): void {
     const num = parseInt(val, 10);
     this.value = isNaN(num) ? val : num;
     this.onChange(this.value);

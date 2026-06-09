@@ -1,14 +1,10 @@
-<select (change)="onSelect($event)" [disabled]="disabled"
+<select [ngModel]="value" (ngModelChange)="onSelect($event)" [disabled]="disabled"
   class="block w-full appearance-none rounded-xl border bg-white px-4 pr-10 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2 cursor-pointer"
   [ngClass]="theme === 'light'
     ? 'h-10 border-gray-200 text-gray-700 focus:border-[#FFC107] focus:ring-[#FFC107]/20'
     : 'h-11 border-default bg-surface text-primary-fg focus:border-[#FFD000] focus:ring-[#FFD000]/20'">
-  @if (loading) {
-    <option value="" disabled selected>Loading...</option>
-  } @else {
-    <option value="" disabled selected>{{ placeholderText }}</option>
-    @for (u of users; track u.id) {
-      <option [value]="u.id" [selected]="value === u.id">{{ u.fullName }}</option>
-    }
+  <option value="" disabled>{{ loading ? 'Loading...' : placeholderText }}</option>
+  @for (u of users; track u.id) {
+    <option [value]="u.id">{{ u.fullName }}</option>
   }
 </select>

@@ -17,15 +17,7 @@
       <svg class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
 
-    <div class="relative">
-      <select [(ngModel)]="selectedUser"
-        class="h-10 w-44 appearance-none rounded-xl border border-gray-200 bg-white pl-4 pr-8 text-sm text-gray-700 shadow-sm focus:border-[#FFC107] focus:outline-none focus:ring-2 focus:ring-[#FFC107]/20 cursor-pointer">
-        @for (u of assignedUsers; track u) {
-          <option [value]="u">{{ u }}</option>
-        }
-      </select>
-      <svg class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-    </div>
+    <shared-user-select [(ngModel)]="selectedUser" placeholderText="All Users" theme="light"/>
 
     <button (click)="addLead.emit()"
       class="inline-flex items-center gap-2 rounded-xl bg-[#FFC107] px-5 py-2.5 text-sm font-semibold text-black shadow-lg shadow-[#FFC107]/25 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#FFC107]/35 focus:outline-none focus:ring-2 focus:ring-[#FFC107] focus:ring-offset-2">
