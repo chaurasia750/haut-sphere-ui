@@ -41,7 +41,7 @@ export class LeadsService implements ILeadsService {
       { label: 'Hot Leads', value: 186, icon: 'fire', growth: 8.2, color: '#FF6B6B' },
       { label: 'Follow-ups Today', value: 43, icon: 'phone', growth: -3.1, color: '#FFC107' },
       { label: 'Converted', value: 527, icon: 'check', growth: 15.7, color: '#51CF66' },
-      { label: 'Expected Revenue', value: 14500000, icon: 'dollar', growth: 22.4, color: '#CC5DE8' },
+      { label: 'Today Leads', value: 12, icon: 'trending-up', growth: 0, color: '#CC5DE8' },
     ]);
   }
 
