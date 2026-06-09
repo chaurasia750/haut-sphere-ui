@@ -3,7 +3,7 @@ import { RemoteConfig } from '@shared/types';
 export const remoteConfig: RemoteConfig[] = [
   {
     key: 'admin',
-    entry: 'https://staging-cdn.company.com/admin/remoteEntry.js',
+    entry: 'https://aroneapp.bankatm.in/remoteEntry.mjs',
     exposedModule: './Module',
     route: '/admin',
     displayName: 'Admin Portal',
