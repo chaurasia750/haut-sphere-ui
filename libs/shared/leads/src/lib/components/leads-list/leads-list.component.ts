@@ -40,11 +40,10 @@ export class LeadsListComponent implements OnInit {
     pageSize: 20,
     search: '',
     statusId: '',
+    sourceId: '',
     assignedUserId: '',
-    fromDate: '',
-    toDate: '',
-    followupFromDate: '',
-    followupToDate: '',
+    dateFrom: '',
+    dateTo: '',
   };
 
   ngOnInit(): void {
@@ -67,11 +66,10 @@ export class LeadsListComponent implements OnInit {
       pageSize: this.currentFilters.pageSize,
       search: this.currentFilters.search || undefined,
       statusId: this.currentFilters.statusId ? +this.currentFilters.statusId : undefined,
+      sourceId: this.currentFilters.sourceId ? +this.currentFilters.sourceId : undefined,
       assignedUserId: this.currentFilters.assignedUserId ? +this.currentFilters.assignedUserId : undefined,
-      fromDate: this.currentFilters.fromDate || undefined,
-      toDate: this.currentFilters.toDate || undefined,
-      followupFromDate: this.currentFilters.followupFromDate || undefined,
-      followupToDate: this.currentFilters.followupToDate || undefined,
+      fromDate: this.currentFilters.dateFrom || undefined,
+      toDate: this.currentFilters.dateTo || undefined,
     };
 
     this.leadsService.getLeads(params).subscribe({

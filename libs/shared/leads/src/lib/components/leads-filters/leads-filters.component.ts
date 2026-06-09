@@ -1,84 +1,76 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SharedDatePickerComponent } from '@shared/ui/src';
+import { SharedDateRangePickerComponent } from '@shared/ui/src';
 import { SharedUserSelectComponent } from '../shared-user-select/shared-user-select.component';
 import { SharedLeadStatusSelectComponent } from '../shared-lead-status-select/shared-lead-status-select.component';
+import { SharedLeadSourceSelectComponent } from '../shared-lead-source-select/shared-lead-source-select.component';
 
 export interface LeadFilters {
   page: number;
   pageSize: number;
   search: string;
   statusId: number | string;
+  sourceId: number | string;
   assignedUserId: number | string;
-  fromDate: string;
-  toDate: string;
-  followupFromDate: string;
-  followupToDate: string;
+  dateFrom: string;
+  dateTo: string;
 }
 
 @Component({
   selector: 'lib-leads-filters',
   standalone: true,
   imports: [
-    CommonModule, FormsModule, SharedDatePickerComponent,
+    CommonModule, FormsModule, SharedDateRangePickerComponent,
     SharedUserSelectComponent, SharedLeadStatusSelectComponent,
+    SharedLeadSourceSelectComponent,
   ],
   templateUrl: './leads-filters.component.html',
 })
 export class LeadsFiltersComponent {
   @Output() filterChange = new EventEmitter<LeadFilters>();
 
-  readonly isOpen = signal(true);
+  readonly filtersOpen = signal(false);
 
   search = '';
   statusId: number | string = '';
+  sourceId: number | string = '';
   assignedUserId: number | string = '';
-  fromDate = '';
-  toDate = '';
-  followupFromDate = '';
-  followupToDate = '';
-  fromDateValue: Date | null = null;
-  toDateValue: Date | null = null;
-  followupFromDateValue: Date | null = null;
-  followupToDateValue: Date | null = null;
+  dateFrom: Date | null = null;
+  dateTo: Date | null = null;
 
-  toggle(): void {
-    this.isOpen.update(v => !v);
+  toggleFilters(): void {
+    this.filtersOpen.update(v => !v);
   }
 
-  formatDate(date: Date | null): string {
-    return date
-      ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-      : '';
+  onDateRangeChange(range: { start: Date | null; end: Date | null }): void {
+    this.dateFrom = range.start;
+    this.dateTo = range.end;
   }
 
-  onFilter(): void {
+  applyFilters(): void {
+    const format = (d: Date | null) =>
+      d ? `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}` : '';
+
     this.filterChange.emit({
       page: 1,
       pageSize: 20,
       search: this.search,
       statusId: this.statusId,
+      sourceId: this.sourceId,
       assignedUserId: this.assignedUserId,
-      fromDate: this.fromDate,
-      toDate: this.toDate,
-      followupFromDate: this.followupFromDate,
-      followupToDate: this.followupToDate,
+      dateFrom: format(this.dateFrom),
+      dateTo: format(this.dateTo),
     });
   }
 
   clearFilters(): void {
     this.search = '';
     this.statusId = '';
+    this.sourceId = '';
     this.assignedUserId = '';
-    this.fromDate = '';
-    this.toDate = '';
-    this.followupFromDate = '';
-    this.followupToDate = '';
-    this.fromDateValue = null;
-    this.toDateValue = null;
-    this.followupFromDateValue = null;
-    this.followupToDateValue = null;
-    this.onFilter();
+    this.dateFrom = null;
+    this.dateTo = null;
+    this.applyFilters();
   }
 }

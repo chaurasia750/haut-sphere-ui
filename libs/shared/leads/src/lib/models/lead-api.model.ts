@@ -54,10 +54,9 @@ export interface GetLeadsRequest {
   pageSize?: number;
   search?: string;
   statusId?: number;
+  sourceId?: number;
   assignedUserId?: number;
   leadForId?: number;
   fromDate?: string;
   toDate?: string;
-  followupFromDate?: string;
-  followupToDate?: string;
 }

@@ -17,3 +17,4 @@ export * from './lib/components/leads-add-lead/lead-notes-followup-form/lead-not
 export * from './lib/components/leads-add-lead/lead-review-save-form/lead-review-save-form.component';
 export * from './lib/components/shared-user-select/shared-user-select.component';
 export * from './lib/components/shared-lead-status-select/shared-lead-status-select.component';
+export * from './lib/components/shared-lead-source-select/shared-lead-source-select.component';
