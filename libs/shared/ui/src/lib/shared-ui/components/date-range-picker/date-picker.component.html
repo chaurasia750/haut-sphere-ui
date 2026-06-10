@@ -1,6 +1,6 @@
 <div class="relative w-full">
   @if (label) {
-    <label class="mb-1 block text-xs font-medium text-gray-500">{{ label }}</label>
+    <label class="mb-1 block text-xs font-medium text-gray-500">{{ label }}@if (required) {<span class="text-red-400"> *</span>}</label>
   }
   <input 
     type="text"
