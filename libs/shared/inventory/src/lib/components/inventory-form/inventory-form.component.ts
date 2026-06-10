@@ -22,6 +22,7 @@ import { UiBackButtonComponent, UiButtonComponent, UiBreadcrumbComponent, Breadc
   standalone: true,
   imports: [CommonModule, FormsModule, DynamicFieldsCardComponent, InventorySummaryCardComponent, UiBackButtonComponent, UiButtonComponent, UiBreadcrumbComponent, UiLoadingSpinnerComponent, SharedSidePanelComponent],
   templateUrl: './inventory-form.component.html',
+  styleUrls: ['./inventory-form.component.scss'],
 })
 export class InventoryFormComponent implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);

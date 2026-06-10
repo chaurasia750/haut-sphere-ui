@@ -46,14 +46,14 @@
           </div>
           <div class="border-t border-default"></div>
           <div class="p-4 sm:p-6 space-y-5">
-            <div class="relative rounded-2xl border-2 border-dashed border-default bg-body/50 overflow-hidden transition-all hover:border-accent/50 hover:bg-accent/[0.02] cursor-pointer group"
+            <div class="img-upload-area relative rounded-2xl border-2 border-dashed border-default bg-body/50 overflow-hidden transition-all hover:border-accent/50 hover:bg-accent/[0.02] cursor-pointer"
               (click)="propertyImageInput.click()">
               <input #propertyImageInput type="file" (change)="onPropertyImageSelect($event)" accept="image/*"
                 class="hidden"/>
               @if (propertyImage) {
-                <div class="aspect-[3/1] w-full">
+                <div class="h-52 w-full">
                   <img [src]="propertyImage" alt="Inventory image" class="w-full h-full object-cover"/>
-                  <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <div class="img-upload-overlay absolute inset-0 bg-black/40 opacity-0 transition-opacity flex items-center justify-center">
                     <div class="flex items-center gap-3">
                       <span class="inline-flex items-center gap-2 rounded-xl bg-white/90 px-4 py-2 text-sm font-medium text-gray-800 shadow-lg backdrop-blur-sm transition-all hover:bg-white">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
@@ -67,8 +67,8 @@
                   </div>
                 </div>
               } @else {
-                <div class="aspect-[3/1] w-full flex flex-col items-center justify-center gap-3">
-                  <div class="h-14 w-14 rounded-2xl bg-accent/5 flex items-center justify-center group-hover:bg-accent/10 transition-colors">
+                <div class="h-52 w-full flex flex-col items-center justify-center gap-3">
+                  <div class="img-upload-icon h-14 w-14 rounded-2xl bg-accent/5 flex items-center justify-center transition-colors">
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                       <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
                     </svg>
