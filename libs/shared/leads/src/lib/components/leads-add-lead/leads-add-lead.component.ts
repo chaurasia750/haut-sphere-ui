@@ -145,6 +145,7 @@ export class LeadsAddLeadComponent implements OnInit {
       title: salutation,
       firstName,
       lastName,
+      gender: lead.contact.gender,
       mobileNumber: mobile,
       alternateMobile: lead.contact.alternateMobile,
       email: lead.contact.email,
@@ -167,6 +168,20 @@ export class LeadsAddLeadComponent implements OnInit {
       priority: lead.priority.toLowerCase(),
       tags: lead.tags.map(t => t.name),
     });
+
+    const leadAny = lead as any;
+    const propertyId: number | undefined =
+      (lead.leadFor && typeof lead.leadFor === 'object' ? (lead.leadFor as any).id : undefined) ??
+      leadAny.leadForId ??
+      undefined;
+    const propertyTypeId: number | undefined =
+      lead.leadFor && typeof lead.leadFor === 'object' ? (lead.leadFor as any).propertyType : undefined;
+
+    if (propertyId || propertyTypeId) {
+      if (propertyTypeId) this.form.get('inventoryTypeId')?.setValue(propertyTypeId);
+      if (propertyId) this.form.get('inventoryPropertyId')?.setValue(propertyId);
+      if (propertyId && !propertyTypeId) this.loadInitialProperty(propertyId);
+    }
   }
 
   private readonly tagMap: LookupMap = {
@@ -267,6 +282,7 @@ export class LeadsAddLeadComponent implements OnInit {
         mobile: this.stripMobile(v.mobileNumber),
         alternateMobile: this.stripMobile(v.alternateMobile),
         email: v.email,
+        gender: v.gender,
         stateName: v.state,
         cityName: v.city,
         pincode: v.postalCode,
@@ -329,7 +345,7 @@ export class LeadsAddLeadComponent implements OnInit {
     (obs as any).subscribe({
       next: () => {
         this.submitting.set(false);
-        this.router.navigate(['/admin/leads', this.leadId || '']);
+        this.router.navigate(['/admin/leads/list', this.leadId || '']);
       },
       error: (err: any) => {
         this.submitting.set(false);
@@ -340,9 +356,9 @@ export class LeadsAddLeadComponent implements OnInit {
 
   onCancel(): void {
     if (this.leadId) {
-      this.router.navigate(['/admin/leads', this.leadId]);
+      this.router.navigate(['/admin/leads/list', this.leadId]);
     } else {
-      this.router.navigate(['/admin/leads']);
+      this.router.navigate(['/admin/leads/list']);
     }
   }
 }

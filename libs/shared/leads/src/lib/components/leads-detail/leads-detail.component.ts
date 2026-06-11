@@ -20,9 +20,12 @@ interface DetailState {
   templateUrl: './leads-detail.component.html',
 })
 export class LeadsDetailComponent {
+  private _leadId: number | undefined;
   @Input() set leadId(val: number | undefined) {
+    this._leadId = val;
     if (val) this.loadLead(val);
   }
+  get leadId(): number | undefined { return this._leadId; }
   @Input() appPrefix = '';
 
   private readonly leadsService = inject(LEADS_SERVICE);
@@ -56,11 +59,11 @@ export class LeadsDetailComponent {
   }
 
   onEdit(): void {
-    this.router.navigate(['/admin/leads', this.leadId, 'edit']);
+    this.router.navigate(['/' + this.appPrefix + '/leads', this.leadId, 'edit']);
   }
 
   onBack(): void {
-    this.router.navigate(['/admin/leads/list']);
+    this.router.navigate(['/' + this.appPrefix + '/leads/list']);
   }
 
   formatAddress(lead: LeadDetail): string {

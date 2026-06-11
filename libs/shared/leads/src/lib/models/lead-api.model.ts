@@ -9,6 +9,7 @@ export interface AddLeadCustomerInfo {
   pincode: string;
   addressLine1: string;
   addressLine2: string;
+  gender: string;
 }
 
 export interface AddLeadRequest {
@@ -66,6 +67,7 @@ export interface LeadDetailContact {
   firstName: string;
   lastName: string;
   mobile: string;
+  gender: string;
   alternateMobile: string;
   email: string;
   stateName: string;
