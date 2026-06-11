@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { finalize } from 'rxjs/operators';
 import { LeadDetail, FollowUpItem, CreateActivityRequest, ActivityType } from '../../models/lead-api.model';
 import { LEADS_SERVICE } from '../../services/leads.service';
-import { SharedSidePanelComponent, SharedDatePickerComponent } from '@shared/ui/src';
+import { SharedSidePanelComponent, SharedDatePickerComponent, UiButtonComponent } from '@shared/ui/src';
 
 const ACTIVITY_TYPES: ActivityType[] = [
   { id: 1, name: 'Call', icon: 'phone', color: '#4CAF50' },
@@ -17,7 +17,7 @@ const ACTIVITY_TYPES: ActivityType[] = [
 @Component({
   selector: 'lib-leads-followup',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, SharedSidePanelComponent, SharedDatePickerComponent],
+  imports: [CommonModule, ReactiveFormsModule, SharedSidePanelComponent, SharedDatePickerComponent, UiButtonComponent],
   templateUrl: './leads-followup.component.html',
 })
 export class LeadsFollowupComponent implements OnInit {

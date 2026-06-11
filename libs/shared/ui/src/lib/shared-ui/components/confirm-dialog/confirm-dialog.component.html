@@ -1,0 +1,13 @@
+@if (isOpen) {
+  <div class="fixed inset-0 z-[99999] flex items-center justify-center">
+    <div class="fixed inset-0 bg-black/40 backdrop-blur-sm" (click)="onBackdropClick()"></div>
+    <div class="relative w-full rounded-2xl bg-white p-6 shadow-xl mx-4" [class]="maxWidth">
+      <h3 class="text-lg font-semibold text-[#111111]">{{ title }}</h3>
+      <ng-content></ng-content>
+      <div class="mt-5 flex items-center justify-end gap-3">
+        <ui-button variant="outline" (onClick)="cancel.emit()">{{ cancelText }}</ui-button>
+        <ui-button variant="yellow" (onClick)="confirm.emit()" [loading]="confirmLoading">{{ confirmText }}</ui-button>
+      </div>
+    </div>
+  </div>
+}

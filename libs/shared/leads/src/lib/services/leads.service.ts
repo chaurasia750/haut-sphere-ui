@@ -22,6 +22,11 @@ export const LEADS_SERVICE = new InjectionToken<ILeadsService>('LEADS_SERVICE', 
   factory: () => inject(LeadsService),
 });
 
+export interface BulkAssignRequest {
+  leadIds: number[];
+  assignedUserId: number;
+}
+
 export interface ILeadsService {
   getKpiCards(): Observable<KpiCard[]>;
   getLeadStatuses(): Observable<StatusBreakdown[]>;
@@ -36,6 +41,7 @@ export interface ILeadsService {
   getFollowUps(params?: GetFollowUpsRequest): Observable<PaginatedResponse<FollowUpItem>>;
   createActivity(leadId: number, payload: CreateActivityRequest): Observable<number>;
   updateActivity(leadId: number, activityId: number, payload: UpdateActivityRequest): Observable<void>;
+  bulkAssignLead(payload: BulkAssignRequest): Observable<{ message: string }>;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -137,5 +143,9 @@ export class LeadsService implements ILeadsService {
 
   updateActivity(leadId: number, activityId: number, payload: UpdateActivityRequest): Observable<void> {
     return this.http.put<void>(`${this.baseUrl}/${leadId}/activities/${activityId}`, payload);
+  }
+
+  bulkAssignLead(payload: BulkAssignRequest): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.baseUrl}/bulk-assign`, payload);
   }
 }

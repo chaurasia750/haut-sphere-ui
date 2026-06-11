@@ -10,6 +10,10 @@ import { Lead } from '../../models/lead.model';
 })
 export class LeadsTableComponent {
   @Input({ required: true }) leads: Lead[] = [];
+  @Input() selectedIds = new Set<number>();
+  @Input() allSelected = false;
+  @Output() selectionChange = new EventEmitter<{ leadId: number; checked: boolean }>();
+  @Output() toggleAll = new EventEmitter<void>();
   @Output() editLead = new EventEmitter<Lead>();
   @Output() followUp = new EventEmitter<Lead>();
 

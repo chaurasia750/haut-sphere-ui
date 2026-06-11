@@ -192,15 +192,8 @@
             }
           </div>
           <div class="flex items-center gap-2 pt-1">
-            <button (click)="submitFollowUp()" [disabled]="submitting || followUpForm.invalid"
-              class="inline-flex items-center gap-1.5 rounded-lg bg-[#FFC107] px-5 py-2.5 text-sm font-semibold text-black shadow-sm transition-colors hover:bg-[#FFD000] disabled:opacity-50">
-              @if (submitting) {
-                <svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25"/><path d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" fill="currentColor" class="opacity-75"/></svg>
-              }
-              Save
-            </button>
-            <button (click)="panelOpen = false"
-              class="rounded-lg border border-gray-200 px-5 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50">Cancel</button>
+            <ui-button variant="yellow" (onClick)="submitFollowUp()" [disabled]="submitting || followUpForm.invalid" [loading]="submitting">Save</ui-button>
+            <ui-button variant="outline" (onClick)="panelOpen = false">Cancel</ui-button>
           </div>
         </div>
       }
