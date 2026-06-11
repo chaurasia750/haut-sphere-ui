@@ -12,7 +12,7 @@ import { LeadInfoFormComponent } from './lead-info-form/lead-info-form.component
 import { LeadStepperComponent } from './lead-stepper/lead-stepper.component';
 import { LeadNotesFollowupFormComponent } from './lead-notes-followup-form/lead-notes-followup-form.component';
 import { LeadReviewSaveFormComponent } from './lead-review-save-form/lead-review-save-form.component';
-import { InventoryTypeSelectComponent } from '@shared/inventory/src';
+import { InventoryTypeSelectComponent, INVENTORY_SERVICE } from '@shared/inventory/src';
 
 export interface Priority {
   value: string;
@@ -44,6 +44,7 @@ interface LookupMap {
 export class LeadsAddLeadComponent implements OnInit {
   @Input() leadId: number | undefined;
   @Input() appPrefix = '';
+  @Input() initialPropertyId: number | undefined;
 
   get breadcrumbItems(): BreadcrumbItem[] {
     return [
@@ -57,6 +58,7 @@ export class LeadsAddLeadComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly leadsService = inject(LEADS_SERVICE);
   private readonly usersService = inject(USERS_SERVICE);
+  private readonly inventoryService = inject(INVENTORY_SERVICE);
 
   isEditMode = signal(false);
   submitting = signal(false);
@@ -108,6 +110,20 @@ export class LeadsAddLeadComponent implements OnInit {
     if (this.leadId) {
       this.loadLeadForEdit(this.leadId);
     }
+
+    if (this.initialPropertyId) {
+      this.loadInitialProperty(this.initialPropertyId);
+    }
+  }
+
+  private loadInitialProperty(propertyId: number): void {
+    this.inventoryService.getPropertyById(propertyId).subscribe({
+      next: (detail) => {
+        const typeId = detail.propertyType;
+        this.form.get('inventoryTypeId')?.setValue(typeId);
+        this.form.get('inventoryPropertyId')?.setValue(propertyId);
+      },
+    });
   }
 
   private loadLeadForEdit(id: number): void {

@@ -20,4 +20,8 @@ export class InventoryListPageComponent {
   onEditInventory(id: number): void {
     this.router.navigate(['/admin/inventory', id, 'edit']);
   }
+
+  onAddLeadFromInventory(propertyId: number): void {
+    this.router.navigate(['/admin/leads/add'], { queryParams: { propertyId } });
+  }
 }

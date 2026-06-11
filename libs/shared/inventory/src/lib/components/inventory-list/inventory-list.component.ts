@@ -27,6 +27,7 @@ export class InventoryListComponent implements OnInit {
   readonly addInventory = output<void>();
   readonly viewDetails = output<number>();
   readonly editInventory = output<number>();
+  readonly addLeadForProperty = output<number>();
 
   readonly properties = signal<PropertyListItem[]>([]);
   readonly loading = signal(true);
@@ -103,5 +104,10 @@ export class InventoryListComponent implements OnInit {
 
   onAdd(): void {
     this.addInventory.emit();
+  }
+
+  onAddLead(event: Event, id: number): void {
+    event.stopPropagation();
+    this.addLeadForProperty.emit(id);
   }
 }
