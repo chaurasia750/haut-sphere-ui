@@ -34,7 +34,7 @@ export class LeadsFollowupComponent implements OnInit {
   panelOpen = false;
   submitting = false;
   formExpanded = true;
-  historyExpanded = true;
+  historyExpanded = false;
 
   activityTypes = ACTIVITY_TYPES;
 
