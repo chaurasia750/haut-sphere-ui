@@ -145,11 +145,11 @@ export class LeadsAddLeadComponent implements OnInit {
       title: salutation,
       firstName,
       lastName,
-      gender: lead.contact.gender,
+      gender: lead.contact.gender || '',
       mobileNumber: mobile,
       alternateMobile: lead.contact.alternateMobile,
       email: lead.contact.email,
-      leadSource: 0,
+      leadSource: lead.contact.sourceId ?? 0,
       leadStatus: lead.status.id,
       assignedUser: lead.assignedUser.id,
       expectedAmount: lead.expectedAmount,
@@ -345,7 +345,7 @@ export class LeadsAddLeadComponent implements OnInit {
     (obs as any).subscribe({
       next: () => {
         this.submitting.set(false);
-        this.router.navigate(['/admin/leads/list', this.leadId || '']);
+        this.router.navigate(['/' + this.appPrefix + '/leads/list']);
       },
       error: (err: any) => {
         this.submitting.set(false);
@@ -355,10 +355,6 @@ export class LeadsAddLeadComponent implements OnInit {
   }
 
   onCancel(): void {
-    if (this.leadId) {
-      this.router.navigate(['/admin/leads/list', this.leadId]);
-    } else {
-      this.router.navigate(['/admin/leads/list']);
-    }
+    this.router.navigate(['/' + this.appPrefix + '/leads/list']);
   }
 }

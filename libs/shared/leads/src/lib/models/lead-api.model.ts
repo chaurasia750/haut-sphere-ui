@@ -75,6 +75,7 @@ export interface LeadDetailContact {
   pincode: string;
   addressLine1: string;
   addressLine2: string;
+  sourceId?: number;
 }
 
 export interface LeadDetailStatus {
