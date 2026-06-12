@@ -26,3 +26,6 @@ export * from './lib/shared-ui/components/ui-search-input/ui-search-input.compon
 export * from './lib/shared-ui/components/ui-back-button/ui-back-button.component';
 export * from './lib/shared-ui/components/ui-breadcrumb/ui-breadcrumb.component';
 export * from './lib/shared-ui/components/ui-pagination/ui-pagination.component';
+export * from './lib/shared-ui/models/genealogy-api.model';
+export * from './lib/shared-ui/services/genealogy-api.service';
+export * from './lib/shared-ui/components/genealogy-tree/genealogy-tree.component';

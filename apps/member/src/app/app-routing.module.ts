@@ -15,6 +15,7 @@ import { KycDetailsComponent } from './features/upgrade-manager/kyc-details/kyc-
 import { SponsorListComponent } from './features/network-manager/sponsor-list/sponsor-list.component';
 import { MatchingTreeComponent } from './features/network-manager/matching-tree/matching-tree.component';
 import { MatrixTreeComponent } from './features/network-manager/matrix-tree/matrix-tree.component';
+import { MemberGenealogyTreeComponent } from './features/network-manager/genealogy-tree/genealogy-tree.component';
 import { DownlineListComponent } from './features/network-manager/downline-list/downline-list.component';
 import { LevelDetailsComponent } from './features/level-manager/level-details/level-details.component';
 import { PayoutRequestComponent } from './features/financial-manager/payout-request/payout-request.component';
@@ -64,6 +65,7 @@ const routes: Routes = [
       { path: 'upgrade-request', component: UpgradeRequestComponent },
       { path: 'kyc-details', component: KycDetailsComponent },
       { path: 'sponsor-list', component: SponsorListComponent },
+      { path: 'genealogy', component: MemberGenealogyTreeComponent },
       { path: 'matching-tree', component: MatchingTreeComponent },
       { path: 'matrix-tree', component: MatrixTreeComponent },
       { path: 'downline-list', component: DownlineListComponent },

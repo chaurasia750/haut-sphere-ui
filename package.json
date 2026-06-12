@@ -83,6 +83,8 @@
     "ng-apexcharts": "^2.4.0",
     "ngx-drag-drop": "^21.0.6",
     "ngx-toastr": "^20.0.5",
+    "primeicons": "^7.0.0",
+    "primeng": "^21.1.9",
     "prismjs": "^1.30.0",
     "reflect-metadata": "^0.2.2",
     "swiper": "^12.1.4",

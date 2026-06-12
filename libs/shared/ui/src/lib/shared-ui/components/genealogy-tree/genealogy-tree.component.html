@@ -1,0 +1,189 @@
+<div class="flex h-full w-full flex-col overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100" [class.fixed!]="isFullscreen" [class.inset-0!]="isFullscreen" [class.z-[9999]!]="isFullscreen" [class.h-screen!]="isFullscreen">
+  
+  <!-- Toolbar -->
+  <div class="flex shrink-0 flex-col border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
+    
+    <!-- Button Row -->
+    <div class="flex items-center gap-1.5 px-2.5 py-1.5 flex-wrap">
+      <button (click)="goBack()" [class.opacity-30!]="!store.canGoBack()" [class.cursor-not-allowed!]="!store.canGoBack()" class="inline-flex items-center justify-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-800 disabled:opacity-30 disabled:cursor-not-allowed" title="Back (Ctrl+Z)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
+      </button>
+      <button (click)="goForward()" [class.opacity-30!]="!store.canGoForward()" [class.cursor-not-allowed!]="!store.canGoForward()" class="inline-flex items-center justify-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-800 disabled:opacity-30 disabled:cursor-not-allowed" title="Forward (Ctrl+Y)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+      </button>
+
+      <span class="mx-1 h-4 w-px bg-slate-200"></span>
+
+      <button (click)="fit()" class="inline-flex items-center justify-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-800" title="Fit to screen">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+      </button>
+
+      <span class="mx-1 h-4 w-px bg-slate-200 max-sm:hidden"></span>
+
+      <button (click)="exportPNG()" class="inline-flex items-center justify-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-800 max-sm:hidden" title="Export PNG (Ctrl+E)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span class="hidden sm:inline">Export</span>
+      </button>
+
+      <span class="mx-1 h-4 w-px bg-slate-200 max-sm:hidden"></span>
+
+      <button (click)="resetTree()" class="inline-flex items-center justify-center gap-1 rounded-lg border border-orange-200 bg-orange-50 px-2.5 py-1.5 text-xs font-medium text-orange-700 hover:bg-orange-100" title="Back to root">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        <span class="hidden sm:inline">Root</span>
+      </button>
+
+      <button (click)="toggleFullscreen()" class="inline-flex items-center justify-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-800 max-sm:hidden" [title]="isFullscreen ? 'Exit fullscreen' : 'Fullscreen'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          @if (!isFullscreen) {
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+          } @else {
+            <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>
+          }
+        </svg>
+      </button>
+
+      <div class="ml-2 flex items-center gap-1.5">
+        <button class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-2 py-1 text-sm font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed" (click)="decreaseDepth()" [disabled]="store.visibleDepth() <= 1" title="Decrease depth">−</button>
+        <span class="min-w-[52px] text-center text-[11px] font-semibold text-slate-600">Depth {{ store.visibleDepth() }}/{{ store.maxDepth() }}</span>
+        <button class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-2 py-1 text-sm font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed" (click)="increaseDepth()" [disabled]="store.visibleDepth() >= store.maxDepth()" title="Increase depth">+</button>
+        <span class="min-w-[44px] text-center text-[11px] text-slate-400">{{ store.visibleCount() }}/{{ store.totalMemberCount() }}</span>
+      </div>
+
+      <span class="ml-2 flex items-center gap-1.5 text-[11px] text-slate-400">
+        <span class="inline-block h-2.5 w-2.5 rounded-full bg-blue-400"></span> L
+        <span class="inline-block h-2.5 w-2.5 rounded-full bg-emerald-400"></span> R
+      </span>
+
+      <!-- Search -->
+      <div class="relative ml-auto flex flex-[0_1_200px] items-center min-w-[100px]">
+        <svg class="pointer-events-none absolute left-2 text-slate-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input
+          class="w-full rounded-lg border border-slate-200 bg-white py-1 pl-7 pr-2 text-xs focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/15"
+          type="text"
+          [(ngModel)]="searchInputQuery"
+          (input)="onSearchInput()"
+          (focus)="showSearch = true"
+          (keydown)="onSearchKeydown($event)"
+          placeholder="Search name / ID..."
+          autocomplete="off"
+        />
+        @if (showSearch && searchInputQuery && searchResults.length) {
+          <div class="absolute left-0 right-0 top-full z-[1000] mt-1 max-h-72 overflow-y-auto rounded-lg border border-slate-200 bg-white shadow-lg">
+            @for (r of searchResults; track r.id) {
+              <button class="flex w-full items-center gap-2 px-3 py-2 text-left text-xs hover:bg-slate-50" (click)="onSearchSelect(r.id)">
+                <img [src]="r.image || ''" alt="" class="h-7 w-7 shrink-0 rounded-full bg-slate-100 object-cover" />
+                <span class="min-w-0 flex-1">
+                  <strong class="block text-xs text-slate-800">{{ r.name }}</strong>
+                  <small class="block text-[10px] text-slate-400">#{{ r.id }} · {{ r.package }}</small>
+                </span>
+                <span class="shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold" [class.bg-green-100]="r.status === 'Active'" [class.text-green-700]="r.status === 'Active'" [class.bg-amber-100]="r.status === 'Pending'" [class.text-amber-700]="r.status === 'Pending'">{{ r.status }}</span>
+              </button>
+            }
+          </div>
+        }
+        @if (showSearch && searchInputQuery && searchInputQuery.trim() && !searchResults.length && !store.isSearching()) {
+          <div class="absolute left-0 right-0 top-full z-[1000] mt-1 rounded-lg border border-slate-200 bg-white px-4 py-3 text-center text-xs text-slate-400 shadow-lg">
+            No members found
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Breadcrumb -->
+    <div class="flex items-center gap-0.5 border-t border-slate-100 px-2.5 py-1">
+      <nav class="flex min-w-0 flex-1 flex-wrap items-center gap-0.5">
+        @for (crumb of breadcrumbPath; track crumb.id; let last = $last) {
+          <button class="inline-flex items-center gap-1 rounded-md border-none px-1.5 py-0.5 text-xs font-medium whitespace-nowrap cursor-pointer hover:bg-slate-200 hover:text-slate-800" [class.bg-orange-50!]="last" [class.text-orange-600!]="last" [class.font-semibold!]="last" [class.text-slate-400]="!last" (click)="selectRoot(crumb.id)">
+            {{ crumb.name }}
+            <span class="text-[10px] font-normal text-slate-400">{{ crumb.registrationNumber }}</span>
+          </button>
+          @if (!last) {
+            <span class="inline-flex items-center text-slate-300">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </span>
+          }
+        }
+      </nav>
+    </div>
+  </div>
+
+  <!-- Main Area -->
+  <div class="relative flex-1 overflow-hidden">
+    <div #networkContainer class="h-full w-full">
+      @if (store.loading() && store.totalLoadedNodes() === 0) {
+        <div class="absolute inset-0 z-50 flex flex-col items-center justify-center gap-3 bg-slate-50/80 text-sm text-slate-400">
+          <div class="h-9 w-9 animate-spin rounded-full border-[3px] border-slate-200 border-t-orange-500"></div>
+          <span>{{ store.loadingMessage() }}</span>
+        </div>
+      }
+      @if (store.error(); as err) {
+        <div class="absolute inset-0 z-50 flex flex-col items-center justify-center gap-3">
+          <p class="text-sm text-red-500">{{ err }}</p>
+          <button class="rounded-lg bg-orange-500 px-5 py-2 text-xs font-semibold text-white hover:bg-orange-600" (click)="loadRoot(store.rootId())">Retry</button>
+        </div>
+      }
+    </div>
+
+    <!-- Badges (vis-network overlay) -->
+    <div class="node-badges pointer-events-none absolute inset-0 z-10" #badgesContainer>
+      @for (badge of nodeBadges; track badge.id) {
+        <div class="node-badge absolute flex flex-col items-center gap-0.5 max-w-[80px] z-10"
+          [style.left.px]="badge.x" [style.top.px]="badge.y"
+          [style.transform]="badge.empty ? 'translate(-50%, -50%)' : 'translate(-50%, 0)'">
+          @if (!badge.empty) {
+            <span class="max-w-[80px] overflow-hidden text-ellipsis whitespace-nowrap text-[10px] font-semibold text-slate-800" style="text-shadow: 0 0 4px rgba(255,255,255,0.9), 0 0 8px rgba(255,255,255,0.7)">
+              {{ badge.name }}
+            </span>
+            @if (badge.reg) {
+              <span class="whitespace-nowrap text-[9px] text-slate-400" style="text-shadow: 0 0 4px rgba(255,255,255,0.9)">{{ badge.reg }}</span>
+            }
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Context Menu -->
+  @if (ctxVisible && ctxMember) {
+    <div class="fixed z-[2000] min-w-[180px] rounded-xl border border-slate-200 bg-white py-1.5 shadow-xl" [style.left.px]="ctxX" [style.top.px]="ctxY">
+      <div class="flex items-center gap-2 px-3 py-2">
+        <img [src]="resolveImg(ctxMember)" alt="" class="h-7 w-7 shrink-0 rounded-full bg-slate-100 object-cover" />
+        <div class="min-w-0 flex-1">
+          <strong class="block text-xs text-slate-800">{{ ctxMember.name }}</strong>
+          <small class="block text-[10px] text-slate-400">#{{ ctxMember.id }} · {{ ctxMember.package }}</small>
+        </div>
+      </div>
+      <div class="mx-2 my-1 h-px bg-slate-100"></div>
+      <button class="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-800" (click)="ctxSelectRoot()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+        View as Root
+      </button>
+      <button class="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-800" (click)="ctxShowDetail()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Show Details
+      </button>
+      <button class="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-800" (click)="ctxToggleCollapse()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+        Toggle Collapse
+      </button>
+      <button class="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-800" (click)="ctxCopyId()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy ID
+      </button>
+      <button class="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-800" (click)="ctxLocate()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+        Locate in Tree
+      </button>
+    </div>
+  }
+
+  <!-- Member Detail Panel -->
+  @if (showPanel) {
+    <shared-genealogy-member-detail
+      [store]="store"
+      (onClose)="closePanel()"
+      (onLocate)="locateMember($event)"
+      (onSetRoot)="selectRoot($event)"
+    />
+  }
+</div>

@@ -76,6 +76,7 @@ export class AppSidebarComponent {
       section: "NETWORK",
       subItems: [
         { name: "Sponsor List", path: "/member/sponsor-list" },
+        { name: "Genealogy", path: "/member/genealogy" },
         { name: "matching Tree", path: "/member/matching-tree" },
         { name: "Matrix tree", path: "/member/matrix-tree" },
         { name: "Downline List", path: "/member/downline-list" },
