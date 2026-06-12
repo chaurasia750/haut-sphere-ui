@@ -1,14 +1,15 @@
 import { OnInit, OnDestroy, AfterViewInit, Component, ElementRef, HostListener, ViewChild, inject, ChangeDetectorRef } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { Network, Options } from 'vis-network';
 import { DataSet } from 'vis-data';
-import { Subject, of, EMPTY, takeUntil, debounceTime, switchMap, map, catchError, tap } from 'rxjs';
+import { Subject, EMPTY, Observable, takeUntil, switchMap, map, catchError, tap } from 'rxjs';
 import { MlmTreeService, Member, MemberDetail } from '../../services/mlm-tree.service';
+import { SearchResult } from '../../services/genealogy-api.service';
+import { GenealogySearchComponent } from '../genealogy-search/genealogy-search.component';
 
 @Component({
   selector: 'shared-mlm-tree-vis',
   standalone: true,
-  imports: [FormsModule],
+  imports: [GenealogySearchComponent],
   templateUrl: './mlm-tree-vis.component.html',
   styleUrl: './mlm-tree-vis.component.scss',
 })
@@ -18,8 +19,17 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
   private cdr = inject(ChangeDetectorRef);
   private destroy$ = new Subject<void>();
 
+  readonly searchFn = (q: string): Observable<SearchResult[]> =>
+    this.service.search(q).pipe(
+      map(r => r.results.map(m => ({
+        id: m.id,
+        name: m.name,
+        registrationNumber: m.registrationNumber ?? String(m.id),
+        joiningDate: (m as any).joiningDate ?? (m as any).joinDate ?? '',
+      }))),
+    );
+
   @ViewChild('networkContainer') networkContainer!: ElementRef;
-  @ViewChild('searchBox') searchBox!: ElementRef;
   @ViewChild('badgesContainer') badgesContainer!: ElementRef;
 
   nodeBadges: { id: number; x: number; y: number; name: string; reg: string; active: boolean; pending: boolean; deactivated: boolean; empty: boolean }[] = [];
@@ -30,15 +40,10 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
   maxRenderDepthValue = 0;
   renderDepth = 3;
   private collapsedIds = new Set<number>();
-  searchQuery = '';
-  showSearch = false;
-
   breadcrumbPathData: { id: number; name: string; role: string }[] = [];
-  searchResultsData: Member[] = [];
   totalMemberCount = 0;
   private treeLoad$ = new Subject<{ rootId: number; depth: number }>();
   private breadcrumbLoad$ = new Subject<number>();
-  private search$ = new Subject<string>();
   private subtreeLoad$ = new Subject<{ parentId: number; depth: number }>();
   private memberLoad$ = new Subject<number>();
 
@@ -86,10 +91,6 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @HostListener('document:click', ['$event'])
   onDocClick(event: MouseEvent) {
-    const el = this.searchBox?.nativeElement;
-    if (el && !el.contains(event.target as Node)) {
-      this.showSearch = false;
-    }
     if (this.ctxVisible) {
       this.ctxVisible = false;
     }
@@ -108,15 +109,6 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     if (event.key === 'Escape' && this.isFullscreen) {
       this.toggleFullscreen();
-      return;
-    }
-    if ((event.ctrlKey || event.metaKey) && event.key === 'f') {
-      event.preventDefault();
-      this.showSearch = true;
-      setTimeout(() => {
-        const inp = this.searchBox?.nativeElement?.querySelector('input');
-        if (inp) inp.focus();
-      }, 50);
       return;
     }
     if ((event.ctrlKey || event.metaKey) && event.key === 'z') {
@@ -216,18 +208,6 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
         this.breadcrumbPathData = res.path;
       }
       this.cdr.detectChanges();
-    });
-
-    this.search$.pipe(
-      debounceTime(300),
-      switchMap(query => {
-        if (!query.trim()) return of([] as Member[]);
-        return this.service.search(query).pipe(map(r => r.results));
-      }),
-      takeUntil(this.destroy$),
-    ).subscribe(results => {
-      this.searchResultsData = results;
-      setTimeout(() => this.positionSearchDropdown(), 0);
     });
 
     this.treeLoad$.next({ rootId: 1, depth: this.renderDepth });
@@ -947,44 +927,8 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get isAtRoot(): boolean { return this.currentRoot === 1; }
 
-  get searchResults(): Member[] {
-    return this.searchResultsData;
-  }
-
-  onSearchSelect(event: MouseEvent, id: number) {
-    event.stopPropagation();
+  onSearchSelect(id: number) {
     this.selectRoot(id);
-    this.searchQuery = '';
-    this.showSearch = false;
-  }
-
-  onSearchInput() {
-    this.showSearch = true;
-    this.search$.next(this.searchQuery);
-  }
-
-  private positionSearchDropdown() {
-    if (!this.isSmallScreen()) return;
-    setTimeout(() => {
-      const input = this.searchBox?.nativeElement?.querySelector('input');
-      const dropdown = this.searchBox?.nativeElement?.querySelector('.search-dropdown');
-      if (input && dropdown) {
-        const rect = input.getBoundingClientRect();
-        (dropdown as HTMLElement).style.position = 'fixed';
-        (dropdown as HTMLElement).style.left = rect.left + 'px';
-        (dropdown as HTMLElement).style.top = (rect.bottom + 4) + 'px';
-        (dropdown as HTMLElement).style.width = rect.width + 'px';
-        (dropdown as HTMLElement).style.zIndex = '9999';
-      }
-    }, 50);
-  }
-
-  onSearchKeydown(event: KeyboardEvent) {
-    if (event.key === 'Escape') {
-      this.searchQuery = '';
-      this.showSearch = false;
-      (event.target as HTMLInputElement).blur();
-    }
   }
 
   selectRoot(id: number) {

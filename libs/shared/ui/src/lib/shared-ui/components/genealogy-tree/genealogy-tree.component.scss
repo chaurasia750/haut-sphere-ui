@@ -1,6 +1,53 @@
-:host {
-  display: block;
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
+:host { display: block; width: 100%; height: 100%; }
+
+:host ::ng-deep .genealogy-tree.p-tree {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+:host ::ng-deep .genealogy-tree .p-tree-node-content {
+  padding: 3px 0 !important;
+}
+
+:host ::ng-deep .genealogy-tree .p-tree-node-toggler {
+  display: none !important;
+}
+
+:host ::ng-deep .genealogy-tree .p-tree-node-children {
+  position: relative !important;
+  padding-left: 32px !important;
+}
+
+:host ::ng-deep .genealogy-tree .p-tree-node-children::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, #93c5fd, #bfdbfe);
+  border-radius: 1px;
+}
+
+:host ::ng-deep .genealogy-tree .p-tree-node {
+  position: relative !important;
+}
+
+:host ::ng-deep .genealogy-tree .p-tree-node::before {
+  content: '';
+  position: absolute;
+  left: -17px;
+  top: 24px;
+  width: 17px;
+  height: 2px;
+  background: linear-gradient(to right, #93c5fd, #bfdbfe);
+}
+
+:host ::ng-deep .genealogy-tree .p-tree-root-children > .p-tree-node::before {
+  display: none;
+}
+
+:host ::ng-deep .genealogy-tree .p-tree-container {
+  padding: 0 !important;
 }

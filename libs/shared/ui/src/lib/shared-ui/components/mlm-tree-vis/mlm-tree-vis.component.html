@@ -46,36 +46,12 @@
         <span class="dot" style="background:#94a3b8;border:1px dashed #64748b;"></span> Empty
       </span>
 
-      <div #searchBox class="search-box tb-search-inline">
-        <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-        <input
-          type="text"
-          [(ngModel)]="searchQuery"
-          (input)="onSearchInput()"
-          (keydown)="onSearchKeydown($event)"
-          placeholder="Search name / ID..."
-          autocomplete="off"
-        />
-        @if (showSearch && searchQuery && searchResults.length) {
-          <div class="search-dropdown show">
-            @for (r of searchResults; track r.id) {
-              <button class="search-item" (click)="onSearchSelect($event, r.id)">
-                <img [src]="r.img" />
-                <span class="si-info">
-                  <strong>{{ r.name }}</strong>
-                  <small>#{{ r.id }} · {{ r.role }} · {{ r.pkg }}</small>
-                </span>
-                <span class="si-glow" [style.background]="roleColor(r.role)"></span>
-              </button>
-            }
-          </div>
-        }
-        @if (showSearch && searchQuery && searchQuery.trim() && !searchResults.length) {
-          <div class="search-dropdown empty show">
-            <span class="search-item no-result">No members found</span>
-          </div>
-        }
-      </div>
+      <shared-genealogy-search
+        class="tb-search-inline"
+        [searchFn]="searchFn"
+        (onSelect)="onSearchSelect($event)"
+        placeholder="Search name / ID..."
+      />
     </div>
 
     <div class="tb-row tb-row-breadcrumb">
@@ -96,7 +72,7 @@
   </div>
 
   <div class="main-area">
-    <div #networkContainer class="network-container" [class.searching]="showSearch">
+    <div #networkContainer class="network-container">
       @if (loading && !members.length) {
         <div class="loading-overlay">
           <div class="spinner"></div>

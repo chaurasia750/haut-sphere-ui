@@ -7,22 +7,44 @@ import { ApiMember } from '../models/genealogy-api.model';
 export interface TreeNode {
   id: number;
   name: string;
-  memberCode: string;
+  registrationNumber: string;
+  joiningDate: string;
   parentId: number | null;
   hasChildren: boolean;
   childrenCount: number;
   children: TreeNode[];
 }
 
+export interface SearchResult {
+  id: number;
+  name: string;
+  registrationNumber: string;
+  joiningDate: string;
+}
+
+function getJoinDate(a: any): string {
+  return a.joiningDate || a.joinDate || a.registrationDate || a.createdDate || '';
+}
+
 function mapMember(a: ApiMember): TreeNode {
   return {
     id: Number(a.id),
     name: a.fullName || '',
-    memberCode: a.memberCode || '',
+    registrationNumber: a.registrationNumber || '',
+    joiningDate: getJoinDate(a),
     parentId: a.parentId ? Number(a.parentId) : null,
     hasChildren: a.hasChildren,
     childrenCount: a.childrenCount || 0,
     children: [],
+  };
+}
+
+function mapSearchResult(a: ApiMember): SearchResult {
+  return {
+    id: Number(a.id),
+    name: a.fullName || '',
+    registrationNumber: a.registrationNumber || '',
+    joiningDate: getJoinDate(a),
   };
 }
 
@@ -32,8 +54,23 @@ export class GenealogyApiService {
   private readonly baseUrl = `${apiConfig.baseUrl}/genealogy`;
 
   getNode(id: number): Observable<TreeNode> {
-    return this.http.get<ApiMember>(`${this.baseUrl}/node/${id}`).pipe(
-      map((res) => mapMember(res)),
+    return this.http.get<any>(`${this.baseUrl}/node/${id}`).pipe(
+      map((res) => {
+        const d = res?.data ?? res;
+        return mapMember(d?.node ?? d);
+      }),
+    );
+  }
+
+  search(query: string, limit = 15): Observable<SearchResult[]> {
+    return this.http.get<any>(`${this.baseUrl}/members/search`, {
+      params: { q: query, limit },
+    }).pipe(
+      map((res) => {
+        const d = res?.data ?? res;
+        const items = Array.isArray(d) ? d : d?.items ?? d?.results ?? [];
+        return items.map(mapSearchResult);
+      }),
     );
   }
 }

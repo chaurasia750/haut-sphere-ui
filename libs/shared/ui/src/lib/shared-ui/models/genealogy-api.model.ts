@@ -1,8 +1,10 @@
 export interface ApiMember {
   id: string;
-  memberCode: string;
+  registrationNumber?: string | null;
   fullName: string;
   parentId: string | null;
   hasChildren: boolean;
   childrenCount: number;
+  joiningDate?: string | null;
+  joinDate?: string | null;
 }
