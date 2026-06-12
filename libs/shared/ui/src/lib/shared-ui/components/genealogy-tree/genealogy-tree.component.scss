@@ -7,7 +7,7 @@
 }
 
 :host ::ng-deep .genealogy-tree .p-tree-node-content {
-  padding: 3px 0 !important;
+  padding: 4px 0 !important;
 }
 
 :host ::ng-deep .genealogy-tree .p-tree-node-toggler {
@@ -16,17 +16,17 @@
 
 :host ::ng-deep .genealogy-tree .p-tree-node-children {
   position: relative !important;
-  padding-left: 32px !important;
+  padding-left: 36px !important;
 }
 
 :host ::ng-deep .genealogy-tree .p-tree-node-children::before {
   content: '';
   position: absolute;
-  left: 15px;
+  left: 17px;
   top: 0;
   bottom: 0;
-  width: 2px;
-  background: linear-gradient(to bottom, #93c5fd, #bfdbfe);
+  width: 1.5px;
+  background: linear-gradient(to bottom, #fcd34d, #fbbf24);
   border-radius: 1px;
 }
 
@@ -37,11 +37,11 @@
 :host ::ng-deep .genealogy-tree .p-tree-node::before {
   content: '';
   position: absolute;
-  left: -17px;
-  top: 24px;
-  width: 17px;
-  height: 2px;
-  background: linear-gradient(to right, #93c5fd, #bfdbfe);
+  left: -19px;
+  top: 50%;
+  width: 19px;
+  height: 1.5px;
+  background: linear-gradient(to right, #fcd34d, #fbbf24);
 }
 
 :host ::ng-deep .genealogy-tree .p-tree-root-children > .p-tree-node::before {

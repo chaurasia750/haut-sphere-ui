@@ -1,29 +1,37 @@
-<div class="flex flex-col h-full w-full bg-gradient-to-br from-gray-50 to-blue-50">
-  <div class="flex items-center justify-between px-6 py-3 bg-white border-b border-gray-200 shadow-sm shrink-0">
+<div class="flex flex-col h-full w-full bg-white">
+  <div class="flex items-center justify-between px-6 py-3 bg-white border-b border-amber-200 shrink-0">
     <div class="flex items-center gap-3">
-      <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+      <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-sm">
         <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v16h16M4 20l6-6 4 4 6-6"/>
         </svg>
       </div>
       <div>
-        <h2 class="text-sm font-semibold text-gray-800">Sponsor Genealogy Tree</h2>
-        <p class="text-xs text-gray-400" *ngIf="totalMembers > 0">{{ totalMembers }} members</p>
+        <h2 class="text-sm font-semibold text-gray-800">Genealogy Tree</h2>
+        <p class="text-xs text-amber-400" *ngIf="totalMembers > 0">{{ totalMembers }} members</p>
       </div>
     </div>
-    <div *ngIf="loading" class="flex items-center gap-2 text-sm text-gray-400">
-      <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
-      </svg>
-      Loading...
+    <div class="flex items-center gap-3">
+      <div *ngIf="treeNodes().length" class="flex items-center gap-1.5 text-xs text-gray-400">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        Click member to view details
+      </div>
+      <div *ngIf="loading" class="flex items-center gap-2 text-sm text-gray-400">
+        <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+        </svg>
+        Loading...
+      </div>
     </div>
   </div>
 
   <div class="flex-1 overflow-auto p-6 lg:p-8">
     <div *ngIf="loading && !treeNodes().length" class="flex items-center justify-center h-64">
       <div class="text-center">
-        <svg class="w-10 h-10 mx-auto mb-3 text-blue-300 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-12 h-12 mx-auto mb-3 text-amber-300 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v16h16M4 20l6-6 4 4 6-6"/>
         </svg>
         <p class="text-gray-400 text-sm">Loading genealogy tree...</p>
@@ -31,13 +39,13 @@
     </div>
     <div *ngIf="!loading && error" class="flex items-center justify-center h-64">
       <div class="text-center">
-        <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-red-100 flex items-center justify-center">
-          <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="w-14 h-14 mx-auto mb-3 rounded-full bg-red-50 border border-red-200 flex items-center justify-center">
+          <svg class="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>
         </div>
         <p class="text-red-500 text-sm font-medium">{{ error }}</p>
-        <button (click)="loadRoot()" class="mt-3 text-sm text-blue-600 hover:text-blue-700 underline">Retry</button>
+        <button (click)="loadRoot()" class="mt-4 px-4 py-2 rounded-lg bg-amber-50 text-amber-600 text-sm font-medium hover:bg-amber-100 transition-colors border border-amber-200">Retry</button>
       </div>
     </div>
     <div *ngIf="treeNodes().length" class="max-w-5xl mx-auto">
@@ -48,46 +56,65 @@
         class="genealogy-tree"
       >
         <ng-template pTreeNodeTemplate let-node>
-          <div
-            class="flex items-center gap-3 px-4 py-3 rounded-xl border-2 cursor-pointer select-none transition-all duration-200 min-w-[200px]"
+          <div class="flex items-center gap-3 pe-4 py-2.5 rounded-xl cursor-pointer select-none transition-all duration-200 min-w-[240px] bg-white border shadow-sm"
             [class.border-amber-400]="selectedMember?.id === node.data.id"
+            [class.ring-2]="selectedMember?.id === node.data.id"
+            [class.ring-amber-100]="selectedMember?.id === node.data.id"
             [class.border-gray-200]="selectedMember?.id !== node.data.id"
             [class.shadow-md]="selectedMember?.id === node.data.id"
-            [class.shadow-sm]="selectedMember?.id !== node.data.id"
-            [class.bg-amber-50]="selectedMember?.id === node.data.id"
-            [class.bg-white]="selectedMember?.id !== node.data.id"
-            [class.hover:border-blue-400]="selectedMember?.id !== node.data.id"
-            [class.hover:shadow]="selectedMember?.id !== node.data.id"
+            [class.hover:border-amber-300]="selectedMember?.id !== node.data.id"
+            [class.hover:shadow-md]="selectedMember?.id !== node.data.id"
             (click)="onNodeClick($event, node)">
-            <div class="w-9 h-9 rounded-lg flex items-center justify-center text-white text-xs font-bold shrink-0"
-              [class.bg-gradient-to-br]="true"
-              [class.from-blue-500]="true"
-              [class.to-indigo-600]="true"
-              [class.from-amber-500]="selectedMember?.id === node.data.id"
-              [class.to-orange-600]="selectedMember?.id === node.data.id">
-              {{ node.data.name.charAt(0).toUpperCase() }}
+            <div class="relative shrink-0 ml-3">
+              <div class="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-sm"
+                [class.bg-gradient-to-br]="true"
+                [class.from-amber-400]="true"
+                [class.to-orange-500]="true">
+                {{ node.data.name.charAt(0).toUpperCase() }}
+              </div>
+              <div *ngIf="node.data.childrenCount > 0 && (!node.children || node.children.length === 0) && !node.loading"
+                class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 border-2 border-white rounded-full">
+              </div>
             </div>
             <div class="flex flex-col min-w-0 flex-1">
-              <span class="text-sm font-semibold text-gray-800 truncate">{{ node.data.name }}</span>
-              <span class="text-xs text-gray-400 truncate">{{ node.data.registrationNumber }} | {{ node.data.joiningDate }}</span>
-            </div>
-            <div class="flex items-center gap-2 shrink-0">
-              <span *ngIf="node.data.childrenCount > 0" 
-                class="text-[10px] font-medium text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
-                {{ node.children?.length || 0 }}/{{ node.data.childrenCount }}
+              <div class="flex items-center gap-2">
+                <span class="text-sm font-semibold text-gray-800 truncate">{{ node.data.name }}</span>
+                <span *ngIf="node.data.childrenCount > 0"
+                  class="text-[10px] font-medium text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-full leading-tight border border-amber-200">
+                  {{ node.children?.length || 0 }}/{{ node.data.childrenCount }}
+                </span>
+              </div>
+              <span class="text-[11px] text-gray-400 truncate mt-0.5">
+                <span class="inline-flex items-center gap-1">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0"/>
+                  </svg>
+                  {{ node.data.registrationNumber }}
+                </span>
+                <span class="mx-1 text-gray-300">|</span>
+                <span class="inline-flex items-center gap-1">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                  </svg>
+                  {{ node.data.joiningDate }}
+                </span>
               </span>
-              <div *ngIf="node.loading" class="w-4 h-4">
-                <svg class="w-4 h-4 text-blue-500 animate-spin" fill="none" viewBox="0 0 24 24">
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <div *ngIf="node.loading">
+                <svg class="w-4 h-4 text-amber-400 animate-spin" fill="none" viewBox="0 0 24 24">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
                 </svg>
               </div>
-              <svg *ngIf="!node.leaf && node.children && node.expanded" class="w-3.5 h-3.5 text-gray-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-              </svg>
-              <svg *ngIf="!node.leaf && !node.expanded" class="w-3.5 h-3.5 text-gray-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-              </svg>
+              <div *ngIf="!node.leaf && node.children && node.expanded"
+                class="w-5 h-5 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-500 text-xs font-bold leading-none select-none">
+                −
+              </div>
+              <div *ngIf="!node.leaf && !node.expanded"
+                class="w-5 h-5 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-500 text-xs font-bold leading-none select-none">
+                +
+              </div>
             </div>
           </div>
         </ng-template>
@@ -96,20 +123,35 @@
   </div>
 
   <div *ngIf="selectedMember"
-    class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-xl z-50 transition-transform duration-300">
+    class="fixed bottom-0 left-0 right-0 bg-white border-t border-amber-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-50">
     <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
       <div class="flex items-center gap-4">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-bold text-sm">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm shadow-sm">
           {{ selectedMember.name.charAt(0).toUpperCase() }}
         </div>
         <div>
           <div class="text-sm font-semibold text-gray-800">{{ selectedMember.name }}</div>
-          <div class="flex items-center gap-3 text-xs text-gray-400 mt-0.5">
-            <span>Reg: {{ selectedMember.registrationNumber }}</span>
-            <span class="w-1 h-1 rounded-full bg-gray-300"></span>
-            <span>Joined: {{ selectedMember.joiningDate }}</span>
-            <span class="w-1 h-1 rounded-full bg-gray-300"></span>
-            <span>{{ selectedMember.childrenCount }} child{{ selectedMember.childrenCount !== 1 ? 'ren' : '' }}</span>
+          <div class="flex items-center gap-2 text-xs text-gray-400 mt-0.5">
+            <span class="inline-flex items-center gap-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0"/>
+              </svg>
+              {{ selectedMember.registrationNumber }}
+            </span>
+            <span class="text-gray-300">|</span>
+            <span class="inline-flex items-center gap-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+              {{ selectedMember.joiningDate }}
+            </span>
+            <span class="text-gray-300">|</span>
+            <span class="inline-flex items-center gap-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </svg>
+              {{ selectedMember.childrenCount }} children
+            </span>
           </div>
         </div>
       </div>
