@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { EMPTY, Subject, catchError, takeUntil } from 'rxjs';
 import { Tree } from 'primeng/tree';
 import { TreeNode, PrimeTemplate } from 'primeng/api';
-import { GenealogyApiService } from '../../services/genealogy-api.service';
+import { GenealogyApiService, SearchResult } from '../../services/genealogy-api.service';
+import { GenealogySearchComponent } from '../genealogy-search/genealogy-search.component';
 
 interface PTreeNode extends TreeNode {
   data: {
@@ -21,7 +22,7 @@ interface PTreeNode extends TreeNode {
 @Component({
   selector: 'shared-genealogy-tree',
   standalone: true,
-  imports: [CommonModule, Tree, PrimeTemplate],
+  imports: [CommonModule, Tree, PrimeTemplate, GenealogySearchComponent],
   templateUrl: './genealogy-tree.component.html',
   styleUrls: ['./genealogy-tree.component.scss'],
 })
@@ -58,6 +59,25 @@ export class GenealogyTreeComponent implements OnInit, OnDestroy {
   onCardClick(event: MouseEvent, node: PTreeNode): void {
     event.stopPropagation();
     this.selectedMember.set(node.data);
+  }
+
+  readonly searchFn = (q: string) => this.api.search(q);
+
+  onSearchSelect(id: number): void {
+    this.loading = true;
+    this.api.getNode(id).pipe(
+      catchError(() => {
+        this.error = 'Member not found';
+        this.loading = false;
+        return [];
+      }),
+      takeUntil(this.destroy$),
+    ).subscribe((n) => {
+      const root = this.toPTreeNode(n);
+      this.treeNodes.set([root]);
+      this.totalMembers = 1;
+      this.loading = false;
+    });
   }
 
   onNodeExpand(event: any): void {
