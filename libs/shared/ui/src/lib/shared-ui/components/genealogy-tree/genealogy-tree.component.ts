@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, Input, inject, ChangeDetectorRef, signal 
 import { CommonModule } from '@angular/common';
 import { EMPTY, Subject, catchError, takeUntil } from 'rxjs';
 import { Tree } from 'primeng/tree';
-import { TreeNode } from 'primeng/api';
+import { TreeNode, PrimeTemplate } from 'primeng/api';
 import { GenealogyApiService } from '../../services/genealogy-api.service';
 
 interface PTreeNode extends TreeNode {
@@ -15,12 +15,13 @@ interface PTreeNode extends TreeNode {
   };
   children: PTreeNode[];
   loading?: boolean;
+  childrenFetched?: boolean;
 }
 
 @Component({
   selector: 'shared-genealogy-tree',
   standalone: true,
-  imports: [CommonModule, Tree],
+  imports: [CommonModule, Tree, PrimeTemplate],
   templateUrl: './genealogy-tree.component.html',
   styleUrls: ['./genealogy-tree.component.scss'],
 })
@@ -35,7 +36,7 @@ export class GenealogyTreeComponent implements OnInit, OnDestroy {
   error = '';
   totalMembers = 0;
   treeNodes = signal<PTreeNode[]>([]);
-  selectedMember: PTreeNode['data'] | null = null;
+  selectedMember = signal<PTreeNode['data'] | null>(null);
 
   ngOnInit(): void {
     this.loadRoot();
@@ -46,29 +47,17 @@ export class GenealogyTreeComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  closeDetail(): void {
-    this.selectedMember = null;
+  getInitials(name: string): string {
+    return name.split(' ').map(w => w.charAt(0).toUpperCase()).join('');
   }
 
-  onNodeClick(event: MouseEvent, node: PTreeNode): void {
+  closeDetail(): void {
+    this.selectedMember.set(null);
+  }
+
+  onCardClick(event: MouseEvent, node: PTreeNode): void {
     event.stopPropagation();
-    this.selectedMember = node.data;
-
-    if (node.leaf || node.loading) return;
-
-    if (node.expanded) {
-      node.expanded = false;
-      this.treeNodes.set([...this.treeNodes()]);
-      return;
-    }
-
-    if (node.children && node.children.length > 0) {
-      node.expanded = true;
-      this.treeNodes.set([...this.treeNodes()]);
-      return;
-    }
-
-    this.loadChildren(node);
+    this.selectedMember.set(node.data);
   }
 
   onNodeExpand(event: any): void {
@@ -77,15 +66,12 @@ export class GenealogyTreeComponent implements OnInit, OnDestroy {
     this.loadChildren(node);
   }
 
-  onNodeCollapse(_event: any): void {
-  }
-
   loadRoot(): void {
     this.loading = true;
     this.error = '';
     this.treeNodes.set([]);
     this.totalMembers = 0;
-    this.selectedMember = null;
+    this.selectedMember.set(null);
     this.cdr.markForCheck();
 
     this.api.getNode(this.rootMemberId).pipe(
@@ -103,57 +89,71 @@ export class GenealogyTreeComponent implements OnInit, OnDestroy {
     });
   }
 
-  private swapTree(): void {
-    const copy = [...this.treeNodes()];
-    this.treeNodes.set([]);
-    this.cdr.detectChanges();
-    this.treeNodes.set(copy);
-    this.cdr.detectChanges();
-  }
-
   private loadChildren(parent: PTreeNode): void {
     if (parent.loading) return;
     parent.loading = true;
-    this.cdr.detectChanges();
+    this.treeNodes.set([...this.treeNodes()]);
 
     const leftId = 2 * parent.data.id;
     const rightId = 2 * parent.data.id + 1;
     let count = 0;
 
     const done = () => {
-      count++;
-      if (count === 2) {
-        parent.loading = false;
-        parent.expanded = true;
-        this.totalMembers = this.countAll(this.treeNodes()[0]);
-        this.swapTree();
-      }
+      if (++count < 2) return;
+      this.totalMembers = this.countAll(this.treeNodes()[0]);
+      this.replaceTreeNode(parent, (n) => {
+        n.loading = false;
+        n.childrenFetched = true;
+        return n;
+      });
     };
 
     this.api.getNode(leftId).pipe(catchError(() => EMPTY), takeUntil(this.destroy$))
       .subscribe((n) => {
+        if (!parent.expanded) return;
         const child = this.toPTreeNode(n);
         child.parent = parent;
-        parent.children = [...(parent.children || []), child];
+        parent.children.push(child);
       })
       .add(done);
 
     this.api.getNode(rightId).pipe(catchError(() => EMPTY), takeUntil(this.destroy$))
       .subscribe((n) => {
+        if (!parent.expanded) return;
         const child = this.toPTreeNode(n);
         child.parent = parent;
-        parent.children = [...(parent.children || []), child];
+        parent.children.push(child);
       })
       .add(done);
+  }
+
+  private replaceTreeNode(target: PTreeNode, update: (n: PTreeNode) => void): void {
+    const clone = (n: PTreeNode): PTreeNode => {
+      const c = { ...n, children: n.children?.map(clone) ?? [] };
+      return c;
+    };
+    const walk = (nodes: PTreeNode[]): PTreeNode[] =>
+      nodes.map(n => {
+        if (n === target) {
+          const cloned = clone(n);
+          update(cloned);
+          return cloned;
+        }
+        if (n.children?.length) return { ...n, children: walk(n.children) };
+        return n;
+      });
+    this.treeNodes.set(walk(this.treeNodes()));
   }
 
   private toPTreeNode(n: { id: number; name: string; registrationNumber: string; joiningDate: string; hasChildren: boolean; childrenCount: number }): PTreeNode {
     return {
       label: n.name,
+      type: 'node',
       data: { id: n.id, name: n.name, registrationNumber: n.registrationNumber, joiningDate: n.joiningDate, childrenCount: n.childrenCount },
       leaf: !n.hasChildren,
       expanded: false,
       children: [],
+      childrenFetched: false,
     } as PTreeNode;
   }
 

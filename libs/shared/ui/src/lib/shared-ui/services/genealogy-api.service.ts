@@ -30,7 +30,7 @@ function mapMember(a: ApiMember): TreeNode {
   return {
     id: Number(a.id),
     name: a.fullName || '',
-    registrationNumber: a.registrationNumber || '',
+    registrationNumber: a.registrationNumber || a.regNo || '',
     joiningDate: getJoinDate(a),
     parentId: a.parentId ? Number(a.parentId) : null,
     hasChildren: a.hasChildren,
@@ -43,7 +43,7 @@ function mapSearchResult(a: ApiMember): SearchResult {
   return {
     id: Number(a.id),
     name: a.fullName || '',
-    registrationNumber: a.registrationNumber || '',
+    registrationNumber: a.registrationNumber || a.regNo || '',
     joiningDate: getJoinDate(a),
   };
 }

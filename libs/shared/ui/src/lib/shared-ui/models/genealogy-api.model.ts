@@ -1,5 +1,6 @@
 export interface ApiMember {
   id: string;
+  regNo?: string | null;
   registrationNumber?: string | null;
   fullName: string;
   parentId: string | null;

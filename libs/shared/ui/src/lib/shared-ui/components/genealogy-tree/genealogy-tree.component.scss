@@ -7,22 +7,62 @@
 }
 
 :host ::ng-deep .genealogy-tree .p-tree-node-content {
-  padding: 4px 0 !important;
+  padding: 6px 0 !important;
+  flex-wrap: nowrap !important;
+  gap: 8px !important;
 }
 
-:host ::ng-deep .genealogy-tree .p-tree-node-toggler {
-  display: none !important;
+:host ::ng-deep .genealogy-tree .p-tree-node-toggle-button {
+  width: 22px !important;
+  height: 22px !important;
+  border-radius: 9999px !important;
+  background: #fffbeb !important;
+  border: 1px solid #fde68a !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #f59e0b !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+  transition: all 0.15s ease !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+}
+
+:host ::ng-deep .genealogy-tree .p-tree-node-toggle-button:hover {
+  background: #fef3c7 !important;
+  border-color: #fcd34d !important;
+}
+
+:host ::ng-deep .genealogy-tree .p-tree-node-toggle-button svg {
+  width: 14px !important;
+  height: 14px !important;
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+
+:host ::ng-deep .genealogy-tree .p-tree-node-toggle-button .p-tree-node-toggle-icon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 14px !important;
+  height: 14px !important;
+}
+
+:host ::ng-deep .genealogy-tree .p-tree-node-label {
+  flex: 1 !important;
+  display: flex !important;
 }
 
 :host ::ng-deep .genealogy-tree .p-tree-node-children {
   position: relative !important;
-  padding-left: 36px !important;
+  padding-left: 42px !important;
 }
 
 :host ::ng-deep .genealogy-tree .p-tree-node-children::before {
   content: '';
   position: absolute;
-  left: 17px;
+  left: 20px;
   top: 0;
   bottom: 0;
   width: 1.5px;
@@ -37,9 +77,9 @@
 :host ::ng-deep .genealogy-tree .p-tree-node::before {
   content: '';
   position: absolute;
-  left: -19px;
+  left: -22px;
   top: 50%;
-  width: 19px;
+  width: 22px;
   height: 1.5px;
   background: linear-gradient(to right, #fcd34d, #fbbf24);
 }
