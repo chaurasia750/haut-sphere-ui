@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { AppLayoutConfig } from '@shared';
 import { DASHBOARD_ICON, INVENTORY_ICON, LEADS_ICON, TREE_ICON, USERS_ICON } from './menu-icons';
+import { AuthService } from '@libs/shared/auth';
 
 @Component({
   selector: 'app-admin-layout',
   standalone: false,
-  template: `<shared-app-layout [config]="layoutConfig"></shared-app-layout>`,
+  template: `<shared-app-layout [config]="layoutConfig" (signOut)="onSignOut()"></shared-app-layout>`,
 })
 export class AdminLayoutComponent {
   readonly layoutConfig: AppLayoutConfig = {
@@ -41,4 +42,10 @@ export class AdminLayoutComponent {
       { label: 'Users', route: '/admin/users', section: 'MANAGEMENT', icon: USERS_ICON },
     ],
   };
+
+  constructor(private readonly authService: AuthService) {}
+
+  onSignOut(): void {
+    this.authService.logout().subscribe();
+  }
 }

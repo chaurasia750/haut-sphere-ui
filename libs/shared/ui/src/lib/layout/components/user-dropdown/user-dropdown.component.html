@@ -21,7 +21,7 @@
       <div class="py-1">
         <a routerLink="/profile" class="block rounded-lg px-2 py-2 text-sm text-secondary-fg hover:bg-surface-hover hover:text-primary-fg transition-colors duration-150" (click)="isOpen = false">My Profile</a>
         <a routerLink="/profile" class="block rounded-lg px-2 py-2 text-sm text-secondary-fg hover:bg-surface-hover hover:text-primary-fg transition-colors duration-150" (click)="isOpen = false">Account Settings</a>
-        <a routerLink="/" class="block rounded-lg px-2 py-2 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors duration-150" (click)="isOpen = false">Sign Out</a>
+        <a routerLink="/" class="block rounded-lg px-2 py-2 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors duration-150" (click)="onSignOut()">Sign Out</a>
       </div>
     </div>
   }

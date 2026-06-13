@@ -21,6 +21,6 @@ export class LoginComponent {
   demoLogin(): void {
     // Store a demo token
     localStorage.setItem('auth_token', 'demo-token-12345');
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/member']);
   }
 }

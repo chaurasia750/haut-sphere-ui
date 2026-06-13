@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl(returnUrl);
       } else {
         const roleId = this.authStore.roleId();
-        const targetRoute = (roleId && roleRouteMap[roleId]) ?? '/dashboard';
+        const targetRoute = (roleId && roleRouteMap[roleId]) ?? '/member';
         this.router.navigate([targetRoute]);
       }
       return;
@@ -111,7 +111,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             return;
           }
 
-          const targetRoute = roleRouteMap[response.roleId] ?? '/dashboard';
+          const targetRoute = roleRouteMap[response.roleId] ?? '/member';
           this.router.navigate([targetRoute]);
         },
         error: (err) => {

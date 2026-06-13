@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Input } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
@@ -11,6 +11,7 @@ import { RouterModule } from '@angular/router';
 export class UserDropdownComponent {
   @Input() userName = 'Member User';
   @Input() userRole = 'Member';
+  @Output() signOut = new EventEmitter<void>();
 
   isOpen = false;
 
@@ -27,6 +28,11 @@ export class UserDropdownComponent {
 
   toggle() {
     this.isOpen = !this.isOpen;
+  }
+
+  onSignOut(): void {
+    this.isOpen = false;
+    this.signOut.emit();
   }
 
   @HostListener('document:click', ['$event'])

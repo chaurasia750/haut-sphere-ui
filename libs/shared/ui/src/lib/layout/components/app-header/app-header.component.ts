@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AppLayoutNotification } from '../../models/layout.models';
 import { SidebarService } from '../../services/sidebar.service';
@@ -95,7 +95,7 @@ import { UserDropdownComponent } from '../user-dropdown/user-dropdown.component'
         <app-theme-toggle-button />
         <app-notification-dropdown [notifications]="notifications" />
       </div>
-      <app-user-dropdown [userName]="userName" [userRole]="userRole" />
+      <app-user-dropdown [userName]="userName" [userRole]="userRole" (signOut)="signOut.emit()" />
     </div>
   </div>
 </header>`,
@@ -108,6 +108,7 @@ export class SharedAppHeaderComponent {
   @Input() userName = 'Member User';
   @Input() userRole = 'Member';
   @Input() notifications: AppLayoutNotification[] = [];
+  @Output() signOut = new EventEmitter<void>();
 
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 

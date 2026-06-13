@@ -39,12 +39,6 @@ export const appRoutes: Route[] = [
     data: { title: 'Access Denied' }
   },
   
-  // Dashboard
-  {
-    path: 'dashboard',
-    loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule),
-  },
-  
   // Module federation routes (protected)
   {
     path: 'admin',
@@ -53,7 +47,7 @@ export const appRoutes: Route[] = [
     loadChildren: async () => {
       const adminConfig = remoteConfig.find((c: any) => c.key === 'admin');
       const adminEntry = adminConfig?.entry ?? 'http://localhost:4101/remoteEntry.mjs';
-      if (!adminConfig) return [{ path: '', redirectTo: '/dashboard', pathMatch: 'full' }];
+      if (!adminConfig) return [{ path: '', redirectTo: '/member', pathMatch: 'full' }];
       try {
         const [
           ngCore, ngCorePrimitivesDi, ngCorePrimitivesSignals,
@@ -214,12 +208,12 @@ export const appRoutes: Route[] = [
     data: { roles: [RoleId.MANAGER] },
     loadChildren: async () => {
       const mgmtConfig = remoteConfig.find((c: any) => c.key === 'management');
-      if (!mgmtConfig) return [{ path: '', redirectTo: '/dashboard', pathMatch: 'full' }];
+      if (!mgmtConfig) return [{ path: '', redirectTo: '/member', pathMatch: 'full' }];
       try {
         const loader = inject(RemoteLoaderService);
         const module = await loader.load(mgmtConfig);
         const mgmtRoutes = module?.mgmtRoutes || module?.routes || module?.default?.mgmtRoutes || module?.default?.routes;
-        return mgmtRoutes || [{ path: '', redirectTo: '/dashboard', pathMatch: 'full' }];
+        return mgmtRoutes || [{ path: '', redirectTo: '/member', pathMatch: 'full' }];
       } catch (error: any) {
         console.error('[shell] Management remote load FAILED:', error?.message || error);
         return [{
@@ -231,15 +225,15 @@ export const appRoutes: Route[] = [
     },
   },
   
-  // Default redirect to local dashboard so shell remains usable if remotes are down
+  // Default redirect to member app
   {
     path: '',
-    redirectTo: '/dashboard',
+    redirectTo: '/member',
     pathMatch: 'full'
   },
   
-  // All unmatched routes → local dashboard
-  { path: '**', redirectTo: '/dashboard' }
+  // All unmatched routes → member app
+  { path: '**', redirectTo: '/member' }
 ];
 
 export const appConfig: ApplicationConfig = {

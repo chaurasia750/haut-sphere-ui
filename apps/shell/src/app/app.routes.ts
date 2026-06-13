@@ -3,7 +3,7 @@ import { RemoteContainerComponent } from './components/remote-container.componen
 import { remoteConfig } from '@shared/environments/remotes.dev';
 
 export const appRoutes: Route[] = [
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: '/member', pathMatch: 'full' },
   {
     path: 'admin',
     component: RemoteContainerComponent,
@@ -19,5 +19,5 @@ export const appRoutes: Route[] = [
     component: RemoteContainerComponent,
     data: { remoteConfig: remoteConfig.find((c: any) => c.key === 'management') }
   },
-  { path: '**', redirectTo: '/dashboard' }
+  { path: '**', redirectTo: '/member' }
 ];

@@ -61,7 +61,7 @@
         <app-theme-toggle-button />
         <app-notification-dropdown [notifications]="notifications" />
       </div>
-      <app-user-dropdown [userName]="userName" [userRole]="userRole" />
+      <app-user-dropdown [userName]="userName" [userRole]="userRole" (signOut)="signOut.emit()" />
     </div>
   </div>
 </header>

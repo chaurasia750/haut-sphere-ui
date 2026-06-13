@@ -17,6 +17,7 @@
       [userName]="config.user?.name || 'Member User'"
       [userRole]="config.user?.role || config.appName"
       [notifications]="config.notifications || []"
+      (signOut)="signOut.emit()"
     ></shared-app-header>
     <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
       <router-outlet></router-outlet>

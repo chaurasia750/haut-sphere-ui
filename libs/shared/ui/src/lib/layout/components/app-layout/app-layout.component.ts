@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AppLayoutConfig } from '../../models/layout.models';
 import { SidebarService } from '../../services/sidebar.service';
@@ -38,6 +38,7 @@ import { BackdropComponent } from '../backdrop/backdrop.component';
       [userName]="config.user?.name || 'Member User'"
       [userRole]="config.user?.role || config.appName"
       [notifications]="config.notifications || []"
+      (signOut)="signOut.emit()"
     ></shared-app-header>
     <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
       <router-outlet></router-outlet>
@@ -50,6 +51,7 @@ import { BackdropComponent } from '../backdrop/backdrop.component';
 })
 export class SharedAppLayoutComponent {
   @Input({ required: true }) config!: AppLayoutConfig;
+  @Output() signOut = new EventEmitter<void>();
 
   readonly isExpanded$;
   readonly isHovered$;
