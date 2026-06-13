@@ -127,13 +127,12 @@
           </div>
 
           <div>
-            <div class="mb-1 flex">
-              <span class="flex-1 pl-3 sm:pl-4 text-xs font-medium text-primary-fg">{{ 'signup.fields.sponsorId' | translate }} <span class="text-red-400">*</span></span>
-              <span class="shrink-0 pr-4 text-xs font-medium text-primary-fg">{{ 'signup.fields.position' | translate }} <span class="text-red-400">*</span></span>
+            <div class="mb-1">
+              <span class="pl-3 sm:pl-4 text-xs font-medium text-primary-fg">{{ 'signup.fields.sponsorId' | translate }} <span class="text-red-400">*</span></span>
             </div>
 
             <div class="flex flex-row rounded-xl border transition-colors"
-              [ngClass]="(isInvalid('sponsorId') || isInvalid('position'))
+              [ngClass]="isInvalid('sponsorId')
                 ? 'border-red-500 bg-red-500/5'
                 : 'border-default bg-surface focus-within:border-[#FFD000] focus-within:ring-2 focus-within:ring-[#FFD000]/20'"
             >
@@ -148,73 +147,30 @@
                   class="min-w-0 flex-1 border-0 bg-transparent py-3 pl-1 pr-2 text-sm text-primary-fg placeholder:text-muted-fg focus:outline-none"
                 />
               </div>
-
-              <div class="w-px self-stretch bg-default"></div>
-
-              <div class="relative shrink-0 w-28 sm:w-36" id="position-dropdown" (focusout)="closePositionDropdown($event)">
-                <button
-                  type="button"
-                  (click)="positionOpen = !positionOpen"
-                  class="flex w-full items-center justify-between gap-1 px-3 sm:px-4 py-3 text-sm focus:outline-none"
-                  [ngClass]="signupForm.get('position')?.value ? 'text-primary-fg' : 'text-primary-fg/50'"
-                >
-                  <span>{{ getPositionLabel(signupForm.get('position')?.value) }}</span>
-                  <svg class="h-4 w-4 shrink-0 text-muted-fg transition-transform duration-200"
-                    [ngClass]="positionOpen ? 'rotate-180' : ''"
-                    fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-                  </svg>
-                </button>
-                @if (positionOpen) {
-                  <div class="absolute right-0 top-full z-50 mt-1 w-28 sm:w-36 overflow-hidden rounded-xl border border-default bg-surface shadow-lg">
-                    <button type="button"
-                      class="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-primary-fg hover:bg-[#FFD000]/10 hover:text-[#FFD000] transition-colors"
-                      (click)="selectPosition('left')">
-                      <span class="h-2 w-2 rounded-full bg-[#FFD000] shrink-0"></span> {{ 'signup.position.left' | translate }}
-                    </button>
-                    <div class="mx-3 h-px bg-default"></div>
-                    <button type="button"
-                      class="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-primary-fg hover:bg-[#FFD000]/10 hover:text-[#FFD000] transition-colors"
-                      (click)="selectPosition('right')">
-                      <span class="h-2 w-2 rounded-full bg-[#FFD000] shrink-0"></span> {{ 'signup.position.right' | translate }}
-                    </button>
-                  </div>
-                }
-              </div>
             </div>
 
-            <div class="mt-1.5 flex gap-4">
-              <div class="flex-1">
-                @if (isSponsorLookupPending) {
-                  <p class="mb-1 flex items-center gap-1 text-xs text-gray-500">
-                    <svg class="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
-                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                    </svg>
-                    {{ 'signup.sponsor.verifying' | translate }}
-                  </p>
-                }
-                @if (sponsorLookupName) {
-                  <p class="mb-1 flex items-center gap-1 text-xs font-medium text-emerald-400">
-                    <svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-7.25 7.25a1 1 0 01-1.414 0l-3.75-3.75a1 1 0 111.414-1.414l3.043 3.043 6.543-6.543a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                    {{ sponsorLookupName }}
-                  </p>
-                }
-                @if (isInvalid('sponsorId')) {
-                  <p class="flex items-center gap-1 text-xs text-red-400">
-                    <svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
-                    {{ getError('sponsorId') }}
-                  </p>
-                }
-              </div>
-              <div class="w-36">
-                @if (isInvalid('position')) {
-                  <p class="flex items-center gap-1 text-xs text-red-400">
-                    <svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
-                    {{ getError('position') }}
-                  </p>
-                }
-              </div>
+            <div class="mt-1.5">
+              @if (isSponsorLookupPending) {
+                <p class="mb-1 flex items-center gap-1 text-xs text-gray-500">
+                  <svg class="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                  </svg>
+                  {{ 'signup.sponsor.verifying' | translate }}
+                </p>
+              }
+              @if (sponsorLookupName) {
+                <p class="mb-1 flex items-center gap-1 text-xs font-medium text-emerald-400">
+                  <svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-7.25 7.25a1 1 0 01-1.414 0l-3.75-3.75a1 1 0 111.414-1.414l3.043 3.043 6.543-6.543a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                  {{ sponsorLookupName }}
+                </p>
+              }
+              @if (isInvalid('sponsorId')) {
+                <p class="flex items-center gap-1 text-xs text-red-400">
+                  <svg class="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                  {{ getError('sponsorId') }}
+                </p>
+              }
             </div>
           </div>
 
