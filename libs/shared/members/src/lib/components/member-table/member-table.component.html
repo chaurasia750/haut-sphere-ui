@@ -17,7 +17,7 @@
             <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#FFC107]/20 text-[12px] font-bold text-[#111111]">
               {{ initials(member.name) }}
             </div>
-            <div class="flex-1 min-w-0">
+            <div class="flex-1 min-w-0 cursor-pointer" (click)="isAdmin() && rowView.emit(member)">
               <div class="text-sm font-semibold text-gray-900 truncate">{{ member.name }}</div>
               <div class="text-xs text-gray-400">{{ member.regNo }}</div>
             </div>
@@ -33,6 +33,27 @@
               </span>
             }
           </div>
+          @if (isAdmin()) {
+            <div class="flex gap-2 mt-2 border-t border-gray-50 pt-2">
+              @if (member.isAcountActive) {
+                <button (click)="action.emit({ member, action: 'deactivate' })" [disabled]="activatingId() === member.id"
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-red-600 bg-white border border-red-200 hover:bg-red-50 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                  <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                  Deactivate
+                </button>
+              } @else {
+                <button (click)="action.emit({ member, action: 'activate' })" [disabled]="activatingId() === member.id"
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                  @if (activatingId() === member.id) {
+                    <svg class="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                  } @else {
+                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                  }
+                  Activate
+                </button>
+              }
+            </div>
+          }
           <div class="grid grid-cols-2 gap-y-2 gap-x-4 text-sm">
             <div>
               <span class="text-xs text-gray-400">Joining Date</span>
@@ -69,13 +90,16 @@
             <th class="px-3 sm:px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Email</th>
             <th class="px-3 sm:px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Referred By</th>
             <th class="px-3 sm:px-4 py-3.5 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">Status</th>
+            @if (isAdmin()) {
+              <th class="px-3 sm:px-4 py-3.5 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">Action</th>
+            }
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-50">
           @for (member of members(); track member.id) {
             <tr class="transition-colors hover:bg-gray-50/60">
               <td class="px-3 sm:px-4 py-3">
-                <div class="flex items-center gap-2.5">
+                <div class="flex items-center gap-2.5 cursor-pointer" [class.cursor-pointer]="isAdmin()" (click)="isAdmin() && rowView.emit(member)">
                   <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#FFC107]/20 text-[11px] font-bold text-[#111111]">
                     {{ initials(member.name) }}
                   </div>
@@ -109,6 +133,27 @@
                   </span>
                 }
               </td>
+              @if (isAdmin()) {
+                <td class="px-3 sm:px-4 py-3 text-center">
+                  @if (member.isAcountActive) {
+                    <button (click)="action.emit({ member, action: 'deactivate' })" [disabled]="activatingId() === member.id"
+                      class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-red-600 bg-white border border-red-200 hover:bg-red-50 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                      <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                      Deactivate
+                    </button>
+                  } @else {
+                    <button (click)="action.emit({ member, action: 'activate' })" [disabled]="activatingId() === member.id"
+                      class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                      @if (activatingId() === member.id) {
+                        <svg class="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                      } @else {
+                        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                      }
+                      Activate
+                    </button>
+                  }
+                </td>
+              }
             </tr>
           }
         </tbody>

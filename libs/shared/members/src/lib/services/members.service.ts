@@ -2,7 +2,7 @@ import { inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { apiConfig } from '@shared/environments/api.dev';
-import { GetMembersRequest, MemberListResponse } from '../models/member-api.model';
+import { GetMembersRequest, MemberListResponse, MemberLoginDetails } from '../models/member-api.model';
 
 export const MEMBERS_API_BASE_URL = new InjectionToken<string>('MEMBERS_API_BASE_URL', {
   factory: () => `${apiConfig.baseUrl}/members`,
@@ -32,5 +32,17 @@ export class MembersService implements IMembersService {
       if (params.ColName) query['ColName'] = params.ColName;
     }
     return this.http.get<MemberListResponse>(`${this.baseUrl}/list`, { params: query });
+  }
+
+  activateMember(id: number): Observable<unknown> {
+    return this.http.put(`${this.baseUrl}/${id}/activate`, {});
+  }
+
+  deactivateMember(id: number): Observable<unknown> {
+    return this.http.put(`${this.baseUrl}/${id}/deactivate`, {});
+  }
+
+  getMemberLoginDetails(id: number): Observable<MemberLoginDetails> {
+    return this.http.get<MemberLoginDetails>(`${this.baseUrl}/${id}/login-details`);
   }
 }

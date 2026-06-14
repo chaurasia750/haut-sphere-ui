@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
-import { UiPaginationComponent, UiBreadcrumbComponent, BreadcrumbItem } from '@shared/ui/src';
+import { UiPaginationComponent, UiBreadcrumbComponent, BreadcrumbItem, ConfirmDialogComponent, SharedSidePanelComponent } from '@shared/ui/src';
 import { MembersService } from '../../services/members.service';
-import { GetMembersRequest } from '../../models/member-api.model';
+import { GetMembersRequest, MemberLoginDetails } from '../../models/member-api.model';
 import { Member } from '../../models/member.model';
 import { MemberFiltersComponent } from '../member-filters/member-filters.component';
 import { MemberTableComponent } from '../member-table/member-table.component';
@@ -17,11 +17,15 @@ import { MemberTableComponent } from '../member-table/member-table.component';
     UiBreadcrumbComponent,
     MemberFiltersComponent,
     MemberTableComponent,
+    ConfirmDialogComponent,
+    SharedSidePanelComponent,
   ],
   templateUrl: './member-list.component.html',
 })
 export class MemberListComponent implements OnInit {
   private readonly membersService = inject(MembersService);
+
+  readonly isAdmin = input(false);
 
   readonly breadcrumbItems: BreadcrumbItem[] = [
     { label: 'Members' },
@@ -34,6 +38,15 @@ export class MemberListComponent implements OnInit {
   readonly pageSize = signal(25);
   readonly totalCount = signal(0);
   readonly totalPages = signal(0);
+  readonly activatingId = signal<number | null>(null);
+  readonly confirmOpen = signal(false);
+  readonly pendingAction = signal<{ member: Member; action: 'activate' | 'deactivate' } | null>(null);
+
+  readonly panelOpen = signal(false);
+  readonly selectedMember = signal<Member | null>(null);
+  readonly loginDetails = signal<MemberLoginDetails | null>(null);
+  readonly loginLoading = signal(false);
+  readonly showPassword = signal<Record<number, boolean>>({});
 
   private keyword = '';
   private status: number | null = null;
@@ -93,5 +106,68 @@ export class MemberListComponent implements OnInit {
   onPageChange(page: number): void {
     this.pageIndex.set(page);
     this.loadMembers();
+  }
+
+  onMemberAction(data: { member: Member; action: 'activate' | 'deactivate' }): void {
+    this.pendingAction.set(data);
+    this.confirmOpen.set(true);
+  }
+
+  onConfirmAction(): void {
+    const data = this.pendingAction();
+    if (!data) return;
+
+    this.confirmOpen.set(false);
+    this.activatingId.set(data.member.id);
+
+    const request$ = data.action === 'activate'
+      ? this.membersService.activateMember(data.member.id)
+      : this.membersService.deactivateMember(data.member.id);
+
+    request$.subscribe({
+      next: () => {
+        this.activatingId.set(null);
+        this.pendingAction.set(null);
+        this.loadMembers();
+      },
+      error: () => {
+        this.activatingId.set(null);
+        this.pendingAction.set(null);
+      },
+    });
+  }
+
+  onCancelAction(): void {
+    this.confirmOpen.set(false);
+    this.pendingAction.set(null);
+  }
+
+  onViewMember(member: Member): void {
+    this.selectedMember.set(member);
+    this.panelOpen.set(true);
+    this.loginLoading.set(true);
+    this.loginDetails.set(null);
+
+    this.membersService.getMemberLoginDetails(member.id).subscribe({
+      next: (details) => {
+        this.loginDetails.set(details);
+        this.loginLoading.set(false);
+      },
+      error: () => {
+        this.loginDetails.set(null);
+        this.loginLoading.set(false);
+      },
+    });
+  }
+
+  onClosePanel(): void {
+    this.panelOpen.set(false);
+    this.selectedMember.set(null);
+    this.loginDetails.set(null);
+    this.showPassword.set({});
+  }
+
+  togglePassword(id: number): void {
+    this.showPassword.update(v => ({ ...v, [id]: !v[id] }));
   }
 }

@@ -19,3 +19,12 @@ export interface GetMembersRequest {
   SortingOrder?: number;
   ColName?: string;
 }
+
+export interface MemberLoginDetails {
+  id: number;
+  loginId: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+  isActive: boolean;
+}

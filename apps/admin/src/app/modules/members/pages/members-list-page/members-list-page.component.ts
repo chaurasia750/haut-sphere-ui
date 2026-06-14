@@ -5,6 +5,6 @@ import { MemberListComponent } from '@shared/members/src';
   selector: 'app-admin-members-list-page',
   standalone: true,
   imports: [MemberListComponent],
-  template: `<lib-member-list />`,
+  template: `<lib-member-list [isAdmin]="true" />`,
 })
 export class AdminMembersListPageComponent {}
