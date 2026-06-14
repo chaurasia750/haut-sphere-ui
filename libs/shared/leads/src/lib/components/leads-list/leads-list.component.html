@@ -1,7 +1,7 @@
 <div class="mb-6 flex items-center justify-between gap-4">
   <ui-breadcrumb pageTitle="Leads" [items]="breadcrumbItems"/>
-  <ui-button variant="yellow" (onClick)="addLead.emit()">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+  <ui-button variant="yellow" size="sm" (onClick)="addLead.emit()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
       <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
     </svg>
     Add Lead
@@ -11,14 +11,16 @@
 <div class="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
   <lib-leads-filters (filterChange)="onFilterChange($event)"/>
   @if (showBulkBar) {
-    <div class="flex items-center gap-3 border-b border-amber-200 bg-amber-50/80 px-5 py-2.5">
+    <div class="flex flex-wrap items-center gap-2 border-b border-amber-200 bg-amber-50/80 px-4 py-2.5">
       <span class="text-sm font-medium text-amber-800 whitespace-nowrap">{{ selectedIds.size }} lead(s) selected</span>
       <shared-user-select [(ngModel)]="selectedUserId" placeholderText="Assign to user..." theme="light"/>
-      <ui-button variant="yellow" size="sm" (onClick)="openConfirmModal()" [disabled]="!selectedUserId || bulkAssigning">Assign</ui-button>
-      <ui-button variant="outline" size="sm" (onClick)="clearSelection()">Cancel</ui-button>
-      @if (bulkAssigning) {
-        <span class="text-xs text-amber-600">Assigning...</span>
-      }
+      <div class="flex items-center gap-2">
+        <ui-button variant="yellow" size="sm" (onClick)="openConfirmModal()" [disabled]="!selectedUserId || bulkAssigning">Assign</ui-button>
+        <ui-button variant="outline" size="sm" (onClick)="clearSelection()">Cancel</ui-button>
+        @if (bulkAssigning) {
+          <span class="text-xs text-amber-600">Assigning...</span>
+        }
+      </div>
     </div>
   }
   <lib-leads-table [leads]="leads" [selectedIds]="selectedIds" [allSelected]="allSelected" (toggleAll)="onToggleAll()" (selectionChange)="onSelectionChange($event)" (editLead)="onEditLead($event)" (followUp)="onFollowUp($event)"/>

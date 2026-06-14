@@ -1,5 +1,67 @@
 <div>
-  <div>
+  <!-- Mobile cards -->
+  <div class="md:hidden">
+    @for (lead of leads; track lead.id) {
+      <div class="rounded-lg border border-gray-100 bg-white p-4 shadow-sm" style="margin-bottom: 1rem;">
+        <div class="flex items-center gap-3">
+          <input type="checkbox" [checked]="selectedIds.has(lead.id)" (change)="selectionChange.emit({leadId: lead.id, checked: $any($event.target).checked})"
+            class="h-4 w-4 shrink-0 cursor-pointer rounded border-gray-300 text-[#FFC107] focus:ring-[#FFC107]/50"/>
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#FFC107]/20 text-[12px] font-bold text-[#111111]">
+            {{ initials(lead.name) }}
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="text-sm font-semibold text-gray-900 truncate">{{ lead.name }}</div>
+            <div class="text-xs text-gray-400 truncate">{{ lead.leadForTitle }}</div>
+          </div>
+          <span class="shrink-0 inline-block rounded-md border px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide"
+            [ngClass]="statusBadge[lead.status] || statusBadge['new']">
+            {{ lead.status }}
+          </span>
+        </div>
+        <div class="grid grid-cols-2 gap-y-2 gap-x-4 text-sm mt-3">
+          <div>
+            <span class="text-xs text-gray-400">Mobile</span>
+            <div class="text-gray-700">{{ lead.mobile }}</div>
+          </div>
+          <div>
+            <span class="text-xs text-gray-400">Assigned To</span>
+            <div class="text-gray-700 truncate">{{ lead.assignedUser }}</div>
+          </div>
+          <div class="col-span-2">
+            <span class="text-xs text-gray-400">Follow-up</span>
+            <div class="text-gray-700">{{ lead.nextFollowupDate | date:'dd MMM yyyy, hh:mm a' }}</div>
+          </div>
+          <div>
+            <span class="text-xs text-gray-400">Exp. Amount</span>
+            <div class="text-gray-700 font-semibold">{{ formatCurrency(lead.expectedAmount) }}</div>
+          </div>
+          <div class="flex items-end justify-end gap-1.5">
+            <button (click)="followUp.emit(lead); $event.stopPropagation()" title="Follow-up"
+              class="group relative inline-flex items-center justify-center rounded-md border border-gray-200 bg-white p-1.5 text-xs text-gray-500 shadow-sm transition-colors hover:border-green-300 hover:bg-green-50 hover:text-green-600">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              <div class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-gray-900 px-2 py-1 text-[10px] font-medium text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">Schedule Follow-up</div>
+            </button>
+            <button (click)="editLead.emit(lead); $event.stopPropagation()" title="View Details"
+              class="group relative inline-flex items-center justify-center rounded-md border border-gray-200 bg-white p-1.5 text-xs text-gray-500 shadow-sm transition-colors hover:border-[#FFC107] hover:bg-[#FFC107]/5 hover:text-[#FFC107]">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+              <div class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-gray-900 px-2 py-1 text-[10px] font-medium text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">View Details</div>
+            </button>
+          </div>
+        </div>
+        </div>
+      }
+      @empty {
+        <div class="flex items-center justify-center py-10 text-sm text-gray-400">No leads found matching your filters.</div>
+      }
+    </div>
+
+  <!-- Desktop table -->
+  <div class="hidden md:block">
     <table class="w-full table-fixed">
       <thead>
         <tr class="border-b border-gray-100 bg-gray-50/80">
