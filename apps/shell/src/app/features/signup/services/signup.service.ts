@@ -10,6 +10,10 @@ export interface SponsorValidationResponse {
   regNo?: number | null;
 }
 
+export interface RegisterMemberResponse {
+  registrationNumber: string;
+}
+
 export interface RegisterMemberPayload {
   bussinessCategoryId: number;
   introRegNo: number;
@@ -51,7 +55,7 @@ export class SignupService {
       );
   }
 
-  registerMember(payload: RegisterMemberPayload): Observable<void> {
-    return this.http.post<void>(`${this.apiBaseUrl}/members/registration`, payload);
+  registerMember(payload: RegisterMemberPayload): Observable<RegisterMemberResponse> {
+    return this.http.post<RegisterMemberResponse>(`${this.apiBaseUrl}/members/registration`, payload);
   }
 }

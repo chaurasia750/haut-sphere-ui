@@ -91,11 +91,51 @@
       </div>
 
       <div class="bg-surface rounded-2xl shadow-xl border border-default px-6 py-7 sm:px-8 sm:py-8">
-        <div class="mb-6">
-          <h1 class="text-xl sm:text-2xl font-bold text-primary-fg">{{ 'signup.header.title' | translate }}</h1>
-          <p class="mt-1 text-sm text-primary-fg/80">{{ 'signup.header.subtitle' | translate }}</p>
-        </div>
 
+        @if (isSuccess) {
+          <div class="text-center py-4">
+            <div class="mx-auto flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-emerald-400/30 to-emerald-500/10 mb-5 ring-2 ring-emerald-500/30">
+              <svg class="w-10 h-10 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-primary-fg mb-1">{{ 'signup.success.title' | translate }}</h2>
+            <p class="text-sm text-primary-fg/70 mb-6">{{ 'signup.success.subtitle' | translate }}</p>
+
+            <div class="bg-gradient-to-br from-[#FFD000]/10 to-[#FFD000]/5 border border-[#FFD000]/20 rounded-2xl p-5 mb-5">
+              <p class="text-xs font-medium text-primary-fg/50 uppercase tracking-wider mb-1">{{ 'signup.success.membershipId' | translate }}</p>
+              <p class="text-2xl font-bold text-[#FFD000] tracking-wider">{{ registrationNumber }}</p>
+            </div>
+
+            <div class="bg-surface-hover border border-default rounded-2xl p-5 text-left space-y-4">
+              <p class="text-sm font-semibold text-primary-fg">{{ 'signup.success.nextSteps' | translate }}</p>
+              <div class="flex items-start gap-3">
+                <span class="flex items-center justify-center w-6 h-6 rounded-full bg-[#FFD000]/20 text-[#FFD000] text-xs font-bold shrink-0 mt-0.5">1</span>
+                <p class="text-sm text-primary-fg/80">{{ 'signup.success.step1' | translate }}</p>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="flex items-center justify-center w-6 h-6 rounded-full bg-[#FFD000]/20 text-[#FFD000] text-xs font-bold shrink-0 mt-0.5">2</span>
+                <p class="text-sm text-primary-fg/80">{{ 'signup.success.step2' | translate }}</p>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="flex items-center justify-center w-6 h-6 rounded-full bg-[#FFD000]/20 text-[#FFD000] text-xs font-bold shrink-0 mt-0.5">3</span>
+                <p class="text-sm text-primary-fg/80">{{ 'signup.success.step3' | translate }}</p>
+              </div>
+            </div>
+
+            <a routerLink="/login"
+               class="mt-6 inline-flex items-center justify-center gap-2 w-full rounded-xl bg-gradient-to-r from-[#FFD000] to-[#FFD000]/80 px-4 py-3 text-sm font-semibold text-black shadow-lg shadow-[#FFD000]/30 transition hover:shadow-[#FFD000]/40 hover:from-[#FFD000]/90 hover:to-[#FFD000]/70">
+              {{ 'signup.success.loginBtn' | translate }}
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </a>
+          </div>
+        } @else {
+          <div class="mb-6">
+            <h1 class="text-xl sm:text-2xl font-bold text-primary-fg">{{ 'signup.header.title' | translate }}</h1>
+            <p class="mt-1 text-sm text-primary-fg/80">{{ 'signup.header.subtitle' | translate }}</p>
+          </div>
         <form [formGroup]="signupForm" (ngSubmit)="submit()" class="space-y-4" novalidate>
 
           <div>
@@ -345,6 +385,7 @@
           {{ 'signup.signin.prompt' | translate }}
           <a routerLink="/login" class="font-semibold text-[#FFD000] hover:text-[#FFD000]/80">{{ 'signup.signin.link' | translate }}</a>
         </p>
+        }
       </div>
 
     </div>

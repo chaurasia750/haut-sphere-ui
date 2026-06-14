@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -13,7 +13,7 @@ import {
   SharedAddressFormComponent,
   SharedTitleSelectComponent,
 } from '@shared/ui/src';
-import { SignupService, RegisterMemberPayload } from '../../services/signup.service';
+import { SignupService, RegisterMemberPayload, RegisterMemberResponse } from '../../services/signup.service';
 
 import { apiConfig } from '@shared/environments/api.dev';
 
@@ -44,6 +44,8 @@ export class SignupComponent {
   sponsorLookupName = '';
   isSponsorLookupPending = false;
   isLoading = false;
+  isSuccess = false;
+  registrationNumber = '';
   sponsorRegNo: number | null = null;
 
   readonly signupForm = this.fb.group({
@@ -70,7 +72,8 @@ export class SignupComponent {
 
   constructor(
     private readonly fb: FormBuilder,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly cdr: ChangeDetectorRef,
   ) {
     this.setupSponsorValidation();
   }
@@ -274,11 +277,14 @@ export class SignupComponent {
         })
       )
       .subscribe({
-        next: () => {
-          this.router.navigate(['/login']);
+        next: (response: RegisterMemberResponse) => {
+          this.registrationNumber = response?.registrationNumber ?? '';
+          this.isSuccess = true;
+          this.cdr.detectChanges();
         },
         error: () => {
-          // Handle error - could show toast notification
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
       });
   }
