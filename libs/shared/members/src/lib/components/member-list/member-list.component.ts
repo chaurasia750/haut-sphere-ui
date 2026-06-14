@@ -26,6 +26,9 @@ export class MemberListComponent implements OnInit {
   private readonly membersService = inject(MembersService);
 
   readonly isAdmin = input(false);
+  readonly initialStatus = input<number | null>(null);
+  readonly showBreadcrumb = input(true);
+  readonly showFilter = input(true);
 
   readonly breadcrumbItems: BreadcrumbItem[] = [
     { label: 'Members' },
@@ -55,6 +58,10 @@ export class MemberListComponent implements OnInit {
   private searchSubscription?: Subscription;
 
   ngOnInit(): void {
+    const init = this.initialStatus();
+    if (init !== null) {
+      this.status = init;
+    }
     this.loadMembers();
 
     this.searchSubscription = this.searchSubject.pipe(
@@ -121,8 +128,8 @@ export class MemberListComponent implements OnInit {
     this.activatingId.set(data.member.id);
 
     const request$ = data.action === 'activate'
-      ? this.membersService.activateMember(data.member.id)
-      : this.membersService.deactivateMember(data.member.id);
+      ? this.membersService.activateMember(data.member.regNo)
+      : this.membersService.deactivateMember(data.member.regNo);
 
     request$.subscribe({
       next: () => {

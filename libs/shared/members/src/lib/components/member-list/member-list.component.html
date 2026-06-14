@@ -1,11 +1,16 @@
-<div class="mb-6">
-  <ui-breadcrumb pageTitle="Members" [items]="breadcrumbItems"/>
-</div>
+@if (showBreadcrumb()) {
+  <div class="mb-6">
+    <ui-breadcrumb pageTitle="Members" [items]="breadcrumbItems"/>
+  </div>
+}
 <div class="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
-  <lib-member-filters
-    (keywordChange)="onKeywordChange($event)"
-    (statusChange)="onStatusChange($event)"
-  />
+  @if (showFilter()) {
+    <lib-member-filters
+      [initialStatus]="initialStatus()"
+      (keywordChange)="onKeywordChange($event)"
+      (statusChange)="onStatusChange($event)"
+    />
+  }
 
   <lib-member-table
     [members]="members()"

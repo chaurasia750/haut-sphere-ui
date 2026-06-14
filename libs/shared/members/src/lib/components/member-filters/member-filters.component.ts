@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, output } from '@angular/core';
+import { Component, input, output, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -33,12 +33,20 @@ import { FormsModule } from '@angular/forms';
     </div>
   `,
 })
-export class MemberFiltersComponent {
+export class MemberFiltersComponent implements OnInit {
   readonly keywordChange = output<string>();
   readonly statusChange = output<number | null>();
+  readonly initialStatus = input<number | null>(null);
 
   keyword = '';
   status: number | null = null;
+
+  ngOnInit(): void {
+    const init = this.initialStatus();
+    if (init !== null) {
+      this.status = init;
+    }
+  }
 
   onKeywordChange(value: string): void {
     this.keyword = value;

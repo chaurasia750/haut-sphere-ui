@@ -34,12 +34,12 @@ export class MembersService implements IMembersService {
     return this.http.get<MemberListResponse>(`${this.baseUrl}/list`, { params: query });
   }
 
-  activateMember(id: number): Observable<unknown> {
-    return this.http.put(`${this.baseUrl}/${id}/activate`, {});
+  activateMember(userName: string): Observable<unknown> {
+    return this.http.put(`${apiConfig.baseUrl}/users/${userName}/status?active=true`, {});
   }
 
-  deactivateMember(id: number): Observable<unknown> {
-    return this.http.put(`${this.baseUrl}/${id}/deactivate`, {});
+  deactivateMember(userName: string): Observable<unknown> {
+    return this.http.put(`${apiConfig.baseUrl}/users/${userName}/status?active=false`, {});
   }
 
   getMemberLoginDetails(id: number): Observable<MemberLoginDetails> {
