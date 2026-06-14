@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AppLayoutConfig } from '@shared';
-import { DASHBOARD_ICON, INVENTORY_ICON, LEADS_ICON, TREE_ICON, USERS_ICON } from './menu-icons';
+import { DASHBOARD_ICON, INVENTORY_ICON, LEADS_ICON, MEMBERS_ICON, TREE_ICON, USERS_ICON } from './menu-icons';
 import { AuthService } from '@libs/shared/auth';
 
 @Component({
@@ -38,6 +38,9 @@ export class AdminLayoutComponent {
         { name: 'Genealogy', path: '/admin/tree/genealogy' },
         { name: 'Matching Tree', path: '/admin/tree/matching-tree' },
         { name: 'Matrix Tree', path: '/admin/tree/matrix-tree' },
+      ]},
+      { label: 'Members', section: 'MANAGEMENT', icon: MEMBERS_ICON, subItems: [
+        { name: 'List', path: '/admin/members/list' },
       ]},
       { label: 'Users', route: '/admin/users', section: 'MANAGEMENT', icon: USERS_ICON },
     ],

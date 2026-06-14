@@ -1,0 +1,22 @@
+<div class="mb-6">
+  <ui-breadcrumb pageTitle="Members" [items]="breadcrumbItems"/>
+</div>
+<div class="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+  <lib-member-filters
+    (keywordChange)="onKeywordChange($event)"
+    (statusChange)="onStatusChange($event)"
+  />
+
+  <lib-member-table
+    [members]="members()"
+    [loading]="loading()"
+  />
+
+  <ui-pagination
+    [pageIndex]="pageIndex()"
+    [pageSize]="pageSize()"
+    [totalCount]="totalCount()"
+    [totalPages]="totalPages()"
+    (pageChange)="onPageChange($event)"
+  />
+</div>

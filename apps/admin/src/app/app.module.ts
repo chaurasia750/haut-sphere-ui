@@ -7,6 +7,7 @@ import { createSharedTranslateLoader } from '@shared';
 import { AUTH_API_BASE_URL } from '@libs/shared/auth';
 import { INVENTORY_API_BASE_URL } from '@shared/inventory/src';
 import { LEAD_API_BASE_URL } from '@shared/leads/src';
+import { MEMBERS_API_BASE_URL } from '@shared/members/src';
 import { apiConfig } from '@shared/environments/api.dev';
 
 import { AppComponent } from './app.component';
@@ -42,6 +43,10 @@ import { AppRoutingModule } from './app-routing.module';
     {
       provide: LEAD_API_BASE_URL,
       useValue: `${apiConfig.baseUrl}/leads`,
+    },
+    {
+      provide: MEMBERS_API_BASE_URL,
+      useValue: `${apiConfig.baseUrl}/members`,
     },
   ],
   exports: [AppComponent],

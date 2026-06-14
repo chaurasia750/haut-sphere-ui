@@ -41,6 +41,13 @@ const routes: Routes = [
             (m) => m.InventoryModule
           ),
       },
+      {
+        path: 'members',
+        loadChildren: () =>
+          import('./modules/members/members.module').then(
+            (m) => m.MembersModule
+          ),
+      },
     ],
   },
 ];

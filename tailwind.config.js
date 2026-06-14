@@ -5,6 +5,7 @@ module.exports = {
     './apps/*/src/**/*.{html,ts,scss}',
     './libs/*/src/**/*.{html,ts,scss}',
     './libs/shared/ui/src/**/*.{html,ts,scss}',
+    './libs/shared/members/src/**/*.{html,ts,scss}',
     './libs/shared/i18n/src/**/*.{html,ts,scss}',
   ],
   theme: {

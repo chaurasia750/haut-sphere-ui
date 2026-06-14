@@ -43,6 +43,7 @@ import { NotFoundComponent } from './features/other-page/not-found/not-found.com
 import { AppLayoutComponent } from './shared/layout/app-layout/app-layout.component';
 import { MemberInventoryListPageComponent } from './features/inventory/pages/inventory-list/inventory-list-page.component';
 import { MemberInventoryDetailsPageComponent } from './features/inventory/pages/inventory-details/inventory-details-page.component';
+import { MemberMembersListPageComponent } from './features/members/pages/members-list-page/members-list-page.component';
 
 const routes: Routes = [
   {
@@ -74,6 +75,7 @@ const routes: Routes = [
       { path: 'transaction-history', component: TransactionHistoryComponent },
       { path: 'payout-request', component: PayoutRequestComponent },
       { path: 'bank-details', component: BankDetailsComponent },
+      { path: 'members/list', component: MemberMembersListPageComponent },
       { path: 'inbox', component: InboxComponent },
       { path: 'compose-mail', component: ComposeMailComponent },
       { path: 'sent-mail', component: SentMailComponent },

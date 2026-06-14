@@ -47,7 +47,8 @@ import { UserDropdownComponent } from '../user-dropdown/user-dropdown.component'
           </svg>
         }
       </button>
-      <a routerLink="/" class="xl:hidden">
+      <a routerLink="/" class="xl:hidden flex items-center gap-3 pl-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="36" height="36" fill="#FFD000"><polygon points="32,376 210,82 248,82 72,376"/><polygon points="250,82 338,229 294,229 210,82"/><polygon points="230,275 360,275 374,315 216,315"/><polygon points="194,338 404,338 422,376 176,376"/></svg>
         <h1 class="text-accent text-[25px] font-semibold">{{ brandName }}</h1>
       </a>
       <button
