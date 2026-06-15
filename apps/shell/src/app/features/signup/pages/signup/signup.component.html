@@ -92,8 +92,7 @@
 
       <div class="bg-surface rounded-2xl shadow-xl border border-default px-6 py-7 sm:px-8 sm:py-8">
 
-        @if (isSuccess) {
-          <div class="text-center py-4">
+        <div class="text-center py-4" [class.hidden]="!isSuccess">
             <div class="mx-auto flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-emerald-400/30 to-emerald-500/10 mb-5 ring-2 ring-emerald-500/30">
               <svg class="w-10 h-10 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
@@ -131,7 +130,7 @@
               </svg>
             </a>
           </div>
-        } @else {
+        <div [class.hidden]="isSuccess">
           <div class="mb-6">
             <h1 class="text-xl sm:text-2xl font-bold text-primary-fg">{{ 'signup.header.title' | translate }}</h1>
             <p class="mt-1 text-sm text-primary-fg/80">{{ 'signup.header.subtitle' | translate }}</p>
@@ -385,7 +384,7 @@
           {{ 'signup.signin.prompt' | translate }}
           <a routerLink="/login" class="font-semibold text-[#FFD000] hover:text-[#FFD000]/80">{{ 'signup.signin.link' | translate }}</a>
         </p>
-        }
+        </div>
       </div>
 
     </div>

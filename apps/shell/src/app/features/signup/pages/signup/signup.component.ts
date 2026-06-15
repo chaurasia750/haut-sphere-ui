@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -73,7 +73,6 @@ export class SignupComponent {
   constructor(
     private readonly fb: FormBuilder,
     private readonly router: Router,
-    private readonly cdr: ChangeDetectorRef,
   ) {
     this.setupSponsorValidation();
   }
@@ -280,11 +279,9 @@ export class SignupComponent {
         next: (response: RegisterMemberResponse) => {
           this.registrationNumber = response?.registrationNumber ?? '';
           this.isSuccess = true;
-          this.cdr.detectChanges();
         },
         error: () => {
           this.isLoading = false;
-          this.cdr.detectChanges();
         },
       });
   }
