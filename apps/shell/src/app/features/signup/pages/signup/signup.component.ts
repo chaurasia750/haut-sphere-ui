@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -73,6 +73,7 @@ export class SignupComponent {
   constructor(
     private readonly fb: FormBuilder,
     private readonly router: Router,
+    private readonly cdr: ChangeDetectorRef,
   ) {
     this.setupSponsorValidation();
   }
@@ -173,7 +174,7 @@ export class SignupComponent {
             .validateSponsor(fullSponsorId)
             .pipe(
               tap((response) => {
-                this.sponsorRegNo = response?.regNo ?? null;
+                this.sponsorRegNo = response?.intoRegNo ?? null;
                 this.sponsorLookupName = [response?.title, response?.fName, response?.lName]
                   .filter((part): part is string => !!part)
                   .join(' ')
@@ -243,7 +244,7 @@ export class SignupComponent {
 
     const payload: RegisterMemberPayload = {
       bussinessCategoryId: this.getBusinessCategoryId(formValue.businessCategory ?? ''),
-      introRegNo: Number(formValue.sponsorId),
+      introRegNo: this.sponsorRegNo ?? Number(formValue.sponsorId),
       personInfo: {
         title: formValue.title ?? '',
         firstName: formValue.firstName ?? '',
@@ -270,18 +271,16 @@ export class SignupComponent {
 
     this.signupService
       .registerMember(payload)
-      .pipe(
-        finalize(() => {
-          this.isLoading = false;
-        })
-      )
       .subscribe({
         next: (response: RegisterMemberResponse) => {
           this.registrationNumber = response?.registrationNumber ?? '';
           this.isSuccess = true;
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: () => {
           this.isLoading = false;
+          this.cdr.detectChanges();
         },
       });
   }

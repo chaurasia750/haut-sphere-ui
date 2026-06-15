@@ -4,10 +4,11 @@ import { map, Observable } from 'rxjs';
 import { apiConfig } from '@shared/environments/api.dev';
 
 export interface SponsorValidationResponse {
-  title?: string | null;
-  fName?: string | null;
-  lName?: string | null;
-  regNo?: number | null;
+  intoRegNo: number;
+  title: string | null;
+  fName: string | null;
+  lName: string | null;
+  franchiseeId: number | null;
 }
 
 export interface RegisterMemberResponse {
