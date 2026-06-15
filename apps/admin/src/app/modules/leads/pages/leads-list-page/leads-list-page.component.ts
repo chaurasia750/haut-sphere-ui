@@ -6,7 +6,7 @@ import { LeadsListComponent } from '@shared/leads/src';
   selector: 'app-admin-leads-list-page',
   standalone: true,
   imports: [LeadsListComponent],
-  template: `<lib-leads-list (addLead)="onAddLead()" (viewLead)="onViewLead($event)" />`,
+  template: `<lib-leads-list (addLead)="onAddLead()" (viewLead)="onViewLead($event)" (closing)="onClosing($event)" />`,
 })
 export class AdminLeadsListPageComponent {
   private readonly router = inject(Router);
@@ -18,5 +18,9 @@ export class AdminLeadsListPageComponent {
 
   onViewLead(id: number): void {
     this.router.navigate(['../', id], { relativeTo: this.route });
+  }
+
+  onClosing(id: number): void {
+    this.router.navigate(['../', id, 'closing'], { relativeTo: this.route });
   }
 }

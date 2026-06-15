@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { Lead } from '../../models/lead.model';
 
 @Component({
@@ -16,6 +16,9 @@ export class LeadsTableComponent {
   @Output() toggleAll = new EventEmitter<void>();
   @Output() editLead = new EventEmitter<Lead>();
   @Output() followUp = new EventEmitter<Lead>();
+  @Output() closing = new EventEmitter<Lead>();
+
+  openMenuId: number | null = null;
 
   readonly statusBadge: Record<string, string> = {
     new: 'bg-blue-50 text-blue-600 border-blue-200',
@@ -25,6 +28,16 @@ export class LeadsTableComponent {
     converted: 'bg-green-50 text-green-600 border-green-200',
     lost: 'bg-pink-50 text-pink-500 border-pink-200',
   };
+
+  toggleMenu(leadId: number, event: MouseEvent): void {
+    event.stopPropagation();
+    this.openMenuId = this.openMenuId === leadId ? null : leadId;
+  }
+
+  @HostListener('document:click')
+  onDocumentClick(): void {
+    this.openMenuId = null;
+  }
 
   formatCurrency(val: number): string {
     if (val >= 100000) return '₹' + (val / 100000).toFixed(1) + 'L';

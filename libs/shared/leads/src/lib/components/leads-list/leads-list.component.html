@@ -23,7 +23,7 @@
       </div>
     </div>
   }
-  <lib-leads-table [leads]="leads" [selectedIds]="selectedIds" [allSelected]="allSelected" (toggleAll)="onToggleAll()" (selectionChange)="onSelectionChange($event)" (editLead)="onEditLead($event)" (followUp)="onFollowUp($event)"/>
+  <lib-leads-table [leads]="leads" [selectedIds]="selectedIds" [allSelected]="allSelected" (toggleAll)="onToggleAll()" (selectionChange)="onSelectionChange($event)" (editLead)="onEditLead($event)" (followUp)="onFollowUp($event)" (closing)="onClosing($event)"/>
   <ui-pagination [pageIndex]="pageIndex" [pageSize]="pageSize" [totalCount]="totalCount" [totalPages]="totalPages" (pageChange)="onPageChange($event)"/>
 </div>
 

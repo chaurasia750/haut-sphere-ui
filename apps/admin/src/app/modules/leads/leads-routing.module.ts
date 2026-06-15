@@ -5,6 +5,7 @@ import { AdminLeadsListPageComponent } from './pages/leads-list-page/leads-list-
 import { AdminLeadsAddPageComponent } from './pages/leads-add-page/leads-add-page.component';
 import { AdminLeadsDetailPageComponent } from './pages/leads-detail-page/leads-detail-page.component';
 import { AdminLeadsEditPageComponent } from './pages/leads-edit-page/leads-edit-page.component';
+import { AdminLeadsClosingPageComponent } from './pages/leads-closing-page/leads-closing-page.component';
 
 const routes: Routes = [
   {
@@ -26,6 +27,10 @@ const routes: Routes = [
   {
     path: ':id/edit',
     component: AdminLeadsEditPageComponent,
+  },
+  {
+    path: ':id/closing',
+    component: AdminLeadsClosingPageComponent,
   },
 ];
 

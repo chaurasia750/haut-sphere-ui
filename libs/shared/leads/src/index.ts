@@ -21,3 +21,6 @@ export * from './lib/components/shared-lead-status-select/shared-lead-status-sel
 export * from './lib/components/shared-lead-source-select/shared-lead-source-select.component';
 export * from './lib/components/leads-detail/leads-detail.component';
 export * from './lib/components/leads-followup/leads-followup.component';
+export * from './lib/models/lead-closing.model';
+export * from './lib/services/lead-closing.service';
+export * from './lib/components/leads-closing/leads-closing.component';

@@ -6,6 +6,7 @@ import { MemberLeadsDashboardPageComponent } from './features/leads/pages/leads-
 import { MemberLeadsListPageComponent } from './features/leads/pages/leads-list/leads-list-page.component';
 import { MemberLeadsAddPageComponent } from './features/leads/pages/leads-add/leads-add-page.component';
 import { MemberLeadsDetailPageComponent } from './features/leads/pages/leads-detail/leads-detail-page.component';
+import { MemberLeadsClosingPageComponent } from './features/leads/pages/leads-closing/leads-closing-page.component';
 import { ViewProfileComponent } from './features/profile-manager/view-profile/view-profile.component';
 import { EditProfileComponent } from './features/profile-manager/edit-profile/edit-profile.component';
 import { WelcomeLetterComponent } from './features/profile-manager/welcome-letter/welcome-letter.component';
@@ -55,6 +56,7 @@ const routes: Routes = [
       { path: 'leads-list', component: MemberLeadsListPageComponent },
       { path: 'leads-add', component: MemberLeadsAddPageComponent },
       { path: 'leads-detail/:id', component: MemberLeadsDetailPageComponent },
+      { path: 'leads-closing/:id', component: MemberLeadsClosingPageComponent },
       { path: 'inventory/list', component: MemberInventoryListPageComponent },
       { path: 'inventory/:id', component: MemberInventoryDetailsPageComponent },
       { path: 'referral-link', component: ReferralLinkComponent },

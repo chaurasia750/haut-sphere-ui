@@ -22,6 +22,7 @@ import { SharedUserSelectComponent } from '../shared-user-select/shared-user-sel
 export class LeadsListComponent implements OnInit {
   @Output() addLead = new EventEmitter<void>();
   @Output() viewLead = new EventEmitter<number>();
+  @Output() closing = new EventEmitter<number>();
 
   readonly breadcrumbItems: BreadcrumbItem[] = [
     { label: 'CRM' },
@@ -120,6 +121,10 @@ export class LeadsListComponent implements OnInit {
 
   onFollowUp(lead: Lead): void {
     this.followUpLead = lead as unknown as LeadDetail;
+  }
+
+  onClosing(lead: Lead): void {
+    this.closing.emit(lead.id);
   }
 
   onSelectionChange(event: { leadId: number; checked: boolean }): void {

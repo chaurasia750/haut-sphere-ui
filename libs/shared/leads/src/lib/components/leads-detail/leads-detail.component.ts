@@ -62,6 +62,14 @@ export class LeadsDetailComponent {
     this.router.navigate(['/' + this.appPrefix + '/leads', this.leadId, 'edit']);
   }
 
+  onClosing(): void {
+    if (this.appPrefix === 'admin') {
+      this.router.navigate(['/' + this.appPrefix + '/leads', this.leadId, 'closing']);
+    } else {
+      this.router.navigate(['/leads-closing', this.leadId]);
+    }
+  }
+
   onBack(): void {
     this.router.navigate(['/' + this.appPrefix + '/leads/list']);
   }
