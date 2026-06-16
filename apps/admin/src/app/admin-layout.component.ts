@@ -36,8 +36,8 @@ export class AdminLayoutComponent {
       ]},
       { label: 'Network Manager', section: 'NETWORK', icon: TREE_ICON, subItems: [
         { name: 'Genealogy', path: '/admin/tree/genealogy' },
-        { name: 'Matching Tree', path: '/admin/tree/matching-tree' },
-        { name: 'Matrix Tree', path: '/admin/tree/matrix-tree' },
+        // { name: 'Matching Tree', path: '/admin/tree/matching-tree' },
+        // { name: 'Matrix Tree', path: '/admin/tree/matrix-tree' },
       ]},
       { label: 'Members', section: 'MANAGEMENT', icon: MEMBERS_ICON, subItems: [
         { name: 'List', path: '/admin/members/list' },
