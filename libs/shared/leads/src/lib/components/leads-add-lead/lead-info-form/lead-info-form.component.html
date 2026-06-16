@@ -184,21 +184,23 @@
       </div>
     </div>
 
-    <div class="relative">
-      <select id="assignedUser" formControlName="assignedUser"
-        class="peer block w-full appearance-none rounded-xl border px-4 pb-2.5 pt-5 pr-10 text-sm transition-colors focus:outline-none focus:ring-2 cursor-pointer"
-        [ngClass]="isInvalid('assignedUser') ? 'border-red-500 bg-red-500/5 focus:border-red-500 focus:ring-red-500/20 text-red-500' : 'border-default bg-surface text-primary-fg focus:border-[#FFD000] focus:ring-[#FFD000]/20'"
-      >
-        <option value="" disabled>Select a user</option>
-        @for (u of users(); track $index) {
-          <option [ngValue]="u.id">{{ u.fullName }}</option>
-        }
-      </select>
-      <label for="assignedUser" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50">
-        Assign User <span class="text-red-400">*</span>
-      </label>
-      <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary-fg/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-    </div>
+    @if (showAssignUser()) {
+      <div class="relative">
+        <select id="assignedUser" formControlName="assignedUser"
+          class="peer block w-full appearance-none rounded-xl border px-4 pb-2.5 pt-5 pr-10 text-sm transition-colors focus:outline-none focus:ring-2 cursor-pointer"
+          [ngClass]="isInvalid('assignedUser') ? 'border-red-500 bg-red-500/5 focus:border-red-500 focus:ring-red-500/20 text-red-500' : 'border-default bg-surface text-primary-fg focus:border-[#FFD000] focus:ring-[#FFD000]/20'"
+        >
+          <option value="" disabled>Select a user</option>
+          @for (u of users(); track $index) {
+            <option [ngValue]="u.id">{{ u.fullName }}</option>
+          }
+        </select>
+        <label for="assignedUser" class="pointer-events-none absolute left-4 top-1 z-10 origin-[0] scale-75 text-xs text-primary-fg/50">
+          Assign User <span class="text-red-400">*</span>
+        </label>
+        <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary-fg/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </div>
+    }
 
     <div>
       <lib-amount-slider formControlName="expectedAmount"/>

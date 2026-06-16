@@ -14,10 +14,12 @@ export class LeadHeaderComponent {
   @Output() addLead = new EventEmitter<void>();
   @Input() appPrefix = '';
 
+  get moduleName(): string { return this.appPrefix === 'member' ? 'Customers' : 'Leads'; }
+
   get breadcrumbItems(): BreadcrumbItem[] {
     return [
       { label: 'CRM' },
-      { label: 'Leads', link: `/${this.appPrefix}/leads` },
+      { label: this.moduleName, link: `/${this.appPrefix === 'member' ? 'customers-dashboard' : 'leads'}` },
       { label: 'Dashboard' },
     ];
   }

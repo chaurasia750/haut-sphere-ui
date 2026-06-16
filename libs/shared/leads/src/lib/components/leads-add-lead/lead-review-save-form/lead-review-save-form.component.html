@@ -52,7 +52,9 @@
             <span class="text-sm font-bold text-primary-fg">{{ form().get('probabilityPercentage')?.value }}%</span>
           </div>
         </div>
-        <div class="flex justify-between"><span class="text-xs text-primary-fg/50">Assigned To</span><span class="text-right text-sm font-semibold text-primary-fg">{{ getUserName(form().get('assignedUser')?.value) }}</span></div>
+        @if (showAssignUser()) {
+          <div class="flex justify-between"><span class="text-xs text-primary-fg/50">Assigned To</span><span class="text-right text-sm font-semibold text-primary-fg">{{ getUserName(form().get('assignedUser')?.value) }}</span></div>
+        }
         <div class="flex justify-between">
           <span class="text-xs text-primary-fg/50">Status</span>
           <span class="inline-flex items-center gap-1.5 text-sm font-semibold">

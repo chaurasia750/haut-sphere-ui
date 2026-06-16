@@ -6,21 +6,21 @@ import { LeadsListComponent } from '@shared/leads/src';
   selector: 'app-member-leads-list',
   standalone: true,
   imports: [LeadsListComponent],
-  template: `<lib-leads-list (addLead)="onAddLead()" (viewLead)="onViewLead($event)" (closing)="onClosing($event)" />`,
+  template: `<lib-leads-list appPrefix="member" addButtonText="Add Customer" (addLead)="onAddLead()" (viewLead)="onViewLead($event)" (closing)="onClosing($event)" />`,
 })
 export class MemberLeadsListPageComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
   onAddLead(): void {
-    this.router.navigate(['../leads-add'], { relativeTo: this.route });
+    this.router.navigate(['../customers-add'], { relativeTo: this.route });
   }
 
   onViewLead(id: number): void {
-    this.router.navigate(['../leads-detail', id], { relativeTo: this.route });
+    this.router.navigate(['../customers-detail', id], { relativeTo: this.route });
   }
 
   onClosing(id: number): void {
-    this.router.navigate(['../leads-closing', id], { relativeTo: this.route });
+    this.router.navigate(['../customers-closing', id], { relativeTo: this.route });
   }
 }

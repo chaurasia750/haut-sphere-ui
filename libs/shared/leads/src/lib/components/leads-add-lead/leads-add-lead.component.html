@@ -1,5 +1,5 @@
 <div class="mx-auto max-w-4xl">
-  <ui-breadcrumb class="mb-6" [pageTitle]="isEditMode() ? 'Edit Lead' : 'Add New Lead'" [items]="breadcrumbItems"/>
+  <ui-breadcrumb class="mb-6" [pageTitle]="isEditMode() ? (appPrefix === 'member' ? 'Edit Customer' : 'Edit Lead') : addLabel" [items]="breadcrumbItems"/>
 
   <div class="mb-6">
     <lib-lead-stepper [steps]="steps" [currentStep]="currentStep()" />
@@ -21,7 +21,8 @@
         <lib-lead-info-form [form]="form"
                             [leadSources]="leadSources()"
                             [leadStatuses]="leadStatuses()"
-                            [users]="users()" />
+                            [users]="users()"
+                            [showAssignUser]="appPrefix !== 'member'" />
       </div>
       <div class="border-t border-gray-100"></div>
 
@@ -78,7 +79,8 @@
                                     [priorities]="priorities"
                                     [users]="users()"
                                     [leadSources]="leadSources()"
-                                    [leadStatuses]="leadStatuses()" />
+                                    [leadStatuses]="leadStatuses()"
+                                    [showAssignUser]="appPrefix !== 'member'" />
       </div>
     }
 
@@ -122,7 +124,7 @@
               Saving...
             } @else {
               <svg class="h-4.5 w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-              {{ isEditMode() ? 'Update Lead' : 'Save Lead' }}
+              {{ isEditMode() ? (appPrefix === 'member' ? 'Update Customer' : 'Update Lead') : (appPrefix === 'member' ? 'Save Customer' : 'Save Lead') }}
             }
           </button>
         }

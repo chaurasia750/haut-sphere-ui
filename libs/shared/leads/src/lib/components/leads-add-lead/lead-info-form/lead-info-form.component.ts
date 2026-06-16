@@ -17,6 +17,7 @@ export class LeadInfoFormComponent {
   readonly leadSources = input<LeadLookupItem[]>([]);
   readonly leadStatuses = input<LeadLookupItem[]>([]);
   readonly users = input<User[]>([]);
+  readonly showAssignUser = input(true);
 
   isInvalid(controlName: string): boolean {
     const control = this.form().get(controlName);

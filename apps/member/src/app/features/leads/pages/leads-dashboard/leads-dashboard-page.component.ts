@@ -12,6 +12,6 @@ export class MemberLeadsDashboardPageComponent {
   constructor(private readonly router: Router) {}
 
   onViewList(): void {
-    this.router.navigate(['/member/leads-list']);
+    this.router.navigate(['/member/customers-list']);
   }
 }

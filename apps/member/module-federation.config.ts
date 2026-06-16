@@ -28,6 +28,13 @@ const config = {
     if (packageName === '@angular/platform-browser-dynamic') return false;
     if (packageName === '@shared') return false;
     if (explicitShared[packageName]) return explicitShared[packageName];
+
+    // Share all @shared/* subpaths as singletons so shared library components
+    // don't get duplicated across shell and remote, causing NG0912 component ID collisions.
+    if (packageName.startsWith('@shared/')) {
+      return { singleton: true, strictVersion: false, eager: true };
+    }
+
     return defaultSharedConfig;
   },
   // Completely disable DTS generation to avoid 'ws' import in browser

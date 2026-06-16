@@ -17,6 +17,7 @@ export class LeadReviewSaveFormComponent {
   readonly users = input<User[]>([]);
   readonly leadSources = input<LeadLookupItem[]>([]);
   readonly leadStatuses = input<LeadLookupItem[]>([]);
+  readonly showAssignUser = input(true);
 
   getUserName(id: number | null): string {
     if (!id) return '—';

@@ -46,11 +46,18 @@ export class LeadsAddLeadComponent implements OnInit {
   @Input() appPrefix = '';
   @Input() initialPropertyId: number | undefined;
 
+  get addLabel(): string {
+    return this.appPrefix === 'member' ? 'Add Customer' : 'Add Lead';
+  }
+
+  get moduleName(): string { return this.appPrefix === 'member' ? 'Customers' : 'Leads'; }
+  get listRoute(): string { return this.appPrefix === 'member' ? `/${this.appPrefix}/customers-list` : `/${this.appPrefix}/leads/list`; }
+
   get breadcrumbItems(): BreadcrumbItem[] {
     return [
-      { label: 'Home', link: `/${this.appPrefix}/leads` },
-      { label: 'Leads', link: `/${this.appPrefix}/leads/list` },
-      { label: this.leadId ? 'Edit Lead' : 'Add Lead' },
+      { label: 'Home', link: `/${this.appPrefix === 'member' ? 'customers-dashboard' : 'leads'}` },
+      { label: this.moduleName, link: this.listRoute },
+      { label: this.leadId ? (this.appPrefix === 'member' ? 'Edit Customer' : 'Edit Lead') : this.addLabel },
     ];
   }
 
@@ -200,7 +207,7 @@ export class LeadsAddLeadComponent implements OnInit {
     leadSource: ['', Validators.required],
     leadStatus: ['', Validators.required],
     gender: ['', Validators.required],
-    assignedUser: ['', Validators.required],
+    assignedUser: ['', this.appPrefix === 'member' ? [] : [Validators.required]],
     inventoryTypeId: ['', Validators.required],
     inventoryPropertyId: [''],
     expectedAmount: ['', [Validators.required, Validators.min(0)]],
@@ -220,10 +227,16 @@ export class LeadsAddLeadComponent implements OnInit {
     tags: [[]],
   }, { validators: this.dateValidator });
 
-  private readonly stepFields: Record<number, string[]> = {
-     1: ['title', 'firstName', 'lastName', 'mobileNumber', 'email', 'leadSource', 'leadStatus', 'gender', 'assignedUser', 'expectedAmount', 'inventoryTypeId', 'addressLine1', 'postalCode', 'city', 'country', 'state'],
-    2: ['notes', 'followUpDate', 'followUpTime', 'priority', 'tags'],
-  };
+  private get stepFields(): Record<number, string[]> {
+    const step1 = ['title', 'firstName', 'lastName', 'mobileNumber', 'email', 'leadSource', 'leadStatus', 'gender', 'expectedAmount', 'inventoryTypeId', 'addressLine1', 'postalCode', 'city', 'country', 'state'];
+    if (this.appPrefix !== 'member') {
+      step1.splice(step1.indexOf('expectedAmount'), 0, 'assignedUser');
+    }
+    return {
+      1: step1,
+      2: ['notes', 'followUpDate', 'followUpTime', 'priority', 'tags'],
+    };
+  }
 
   isLastStep(): boolean {
     return this.currentStep() === this.totalSteps;

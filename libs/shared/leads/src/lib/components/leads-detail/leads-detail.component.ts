@@ -34,11 +34,14 @@ export class LeadsDetailComponent {
 
   readonly vm$: Observable<DetailState> = this.state.asObservable();
 
+  get moduleName(): string { return this.appPrefix === 'member' ? 'Customers' : 'Leads'; }
+  get listRoute(): string { return this.appPrefix === 'member' ? `/${this.appPrefix}/customers-list` : `/${this.appPrefix}/leads/list`; }
+
   get breadcrumbItems(): BreadcrumbItem[] {
     return [
       { label: 'CRM' },
-      { label: 'Leads', link: `/${this.appPrefix}/leads/list` },
-      { label: 'Lead Details' },
+      { label: this.moduleName, link: this.listRoute },
+      { label: this.appPrefix === 'member' ? 'Customer Details' : 'Lead Details' },
     ];
   }
 
@@ -59,19 +62,25 @@ export class LeadsDetailComponent {
   }
 
   onEdit(): void {
-    this.router.navigate(['/' + this.appPrefix + '/leads', this.leadId, 'edit']);
+    if (this.appPrefix === 'member') {
+      this.router.navigate(['/' + this.appPrefix + '/customers-detail', this.leadId]);
+    } else {
+      this.router.navigate(['/' + this.appPrefix + '/leads', this.leadId, 'edit']);
+    }
   }
 
   onClosing(): void {
     if (this.appPrefix === 'admin') {
       this.router.navigate(['/' + this.appPrefix + '/leads', this.leadId, 'closing']);
+    } else if (this.appPrefix === 'member') {
+      this.router.navigate(['/' + this.appPrefix + '/customers-closing', this.leadId]);
     } else {
       this.router.navigate(['/leads-closing', this.leadId]);
     }
   }
 
   onBack(): void {
-    this.router.navigate(['/' + this.appPrefix + '/leads/list']);
+    this.router.navigate([this.listRoute]);
   }
 
   formatAddress(lead: LeadDetail): string {

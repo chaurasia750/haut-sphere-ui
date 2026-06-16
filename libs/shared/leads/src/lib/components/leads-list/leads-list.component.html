@@ -1,10 +1,10 @@
 <div class="mb-6 flex items-center justify-between gap-4">
-  <ui-breadcrumb pageTitle="Leads" [items]="breadcrumbItems"/>
+  <ui-breadcrumb [pageTitle]="moduleName" [items]="breadcrumbItems"/>
   <ui-button variant="yellow" size="sm" (onClick)="addLead.emit()">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
       <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
     </svg>
-    Add Lead
+    {{ addButtonText }}
   </ui-button>
 </div>
 
@@ -12,7 +12,7 @@
   <lib-leads-filters (filterChange)="onFilterChange($event)"/>
   @if (showBulkBar) {
     <div class="flex flex-wrap items-center gap-2 border-b border-amber-200 bg-amber-50/80 px-4 py-2.5">
-      <span class="text-sm font-medium text-amber-800 whitespace-nowrap">{{ selectedIds.size }} lead(s) selected</span>
+      <span class="text-sm font-medium text-amber-800 whitespace-nowrap">{{ selectedIds.size }} {{ moduleItemName }}(s) selected</span>
       <shared-user-select [(ngModel)]="selectedUserId" placeholderText="Assign to user..." theme="light"/>
       <div class="flex items-center gap-2">
         <ui-button variant="yellow" size="sm" (onClick)="openConfirmModal()" [disabled]="!selectedUserId || bulkAssigning">Assign</ui-button>
@@ -33,7 +33,7 @@
 
 <shared-confirm-dialog [isOpen]="showConfirmModal" title="Confirm Bulk Assignment" [confirmLoading]="bulkAssigning" (confirm)="confirmAssign()" (cancel)="cancelAssign()">
   <p class="mt-1 text-sm text-gray-500">
-    Assign <strong>{{ selectedLeads.length }}</strong> lead(s) to
+    Assign <strong>{{ selectedLeads.length }}</strong> {{ moduleItemName }}(s) to
     <strong>{{ pendingUser?.fullName || 'selected user' }}</strong>
   </p>
 

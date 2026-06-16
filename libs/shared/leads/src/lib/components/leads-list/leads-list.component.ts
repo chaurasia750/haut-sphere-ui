@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LeadsService } from '../../services/leads.service';
 import { USERS_SERVICE } from '../../services/users.service';
@@ -20,14 +20,21 @@ import { SharedUserSelectComponent } from '../shared-user-select/shared-user-sel
   templateUrl: './leads-list.component.html',
 })
 export class LeadsListComponent implements OnInit {
+  @Input() appPrefix = '';
+  @Input() addButtonText = 'Add Lead';
   @Output() addLead = new EventEmitter<void>();
   @Output() viewLead = new EventEmitter<number>();
   @Output() closing = new EventEmitter<number>();
 
-  readonly breadcrumbItems: BreadcrumbItem[] = [
-    { label: 'CRM' },
-    { label: 'All Leads' },
-  ];
+  get moduleName(): string { return this.appPrefix === 'member' ? 'Customers' : 'Leads'; }
+  get moduleItemName(): string { return this.appPrefix === 'member' ? 'customer' : 'lead'; }
+
+  get breadcrumbItems(): BreadcrumbItem[] {
+    return [
+      { label: 'CRM' },
+      { label: 'All ' + this.moduleName },
+    ];
+  }
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly leadsService = inject(LeadsService);
   private readonly usersService = inject(USERS_SERVICE);
