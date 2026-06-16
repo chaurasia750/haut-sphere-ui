@@ -6,7 +6,7 @@ import { LeadsListComponent } from '@shared/leads/src';
   selector: 'app-member-leads-list',
   standalone: true,
   imports: [LeadsListComponent],
-  template: `<lib-leads-list appPrefix="member" addButtonText="Add Customer" (addLead)="onAddLead()" (viewLead)="onViewLead($event)" (closing)="onClosing($event)" />`,
+  template: `<lib-leads-list appPrefix="member" addButtonText="Add Customer" [showAssignUser]="false" (addLead)="onAddLead()" (viewLead)="onViewLead($event)" (closing)="onClosing($event)" />`,
 })
 export class MemberLeadsListPageComponent {
   private readonly router = inject(Router);

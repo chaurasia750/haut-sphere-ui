@@ -10,7 +10,7 @@
 
 <div class="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
   <lib-leads-filters (filterChange)="onFilterChange($event)"/>
-  @if (showBulkBar) {
+  @if (showAssignUser && showBulkBar) {
     <div class="flex flex-wrap items-center gap-2 border-b border-amber-200 bg-amber-50/80 px-4 py-2.5">
       <span class="text-sm font-medium text-amber-800 whitespace-nowrap">{{ selectedIds.size }} {{ moduleItemName }}(s) selected</span>
       <shared-user-select [(ngModel)]="selectedUserId" placeholderText="Assign to user..." theme="light"/>
@@ -23,7 +23,7 @@
       </div>
     </div>
   }
-  <lib-leads-table [leads]="leads" [selectedIds]="selectedIds" [allSelected]="allSelected" (toggleAll)="onToggleAll()" (selectionChange)="onSelectionChange($event)" (editLead)="onEditLead($event)" (followUp)="onFollowUp($event)" (closing)="onClosing($event)"/>
+  <lib-leads-table [showAssignUser]="showAssignUser" [leads]="leads" [selectedIds]="selectedIds" [allSelected]="allSelected" (toggleAll)="onToggleAll()" (selectionChange)="onSelectionChange($event)" (editLead)="onEditLead($event)" (followUp)="onFollowUp($event)" (closing)="onClosing($event)"/>
   <ui-pagination [pageIndex]="pageIndex" [pageSize]="pageSize" [totalCount]="totalCount" [totalPages]="totalPages" (pageChange)="onPageChange($event)"/>
 </div>
 

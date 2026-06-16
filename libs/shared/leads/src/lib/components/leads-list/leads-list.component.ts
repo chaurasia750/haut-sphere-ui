@@ -22,6 +22,7 @@ import { SharedUserSelectComponent } from '../shared-user-select/shared-user-sel
 export class LeadsListComponent implements OnInit {
   @Input() appPrefix = '';
   @Input() addButtonText = 'Add Lead';
+  @Input() showAssignUser = true;
   @Output() addLead = new EventEmitter<void>();
   @Output() viewLead = new EventEmitter<number>();
   @Output() closing = new EventEmitter<number>();
