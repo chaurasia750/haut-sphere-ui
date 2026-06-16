@@ -163,7 +163,7 @@ export class LeadsAddLeadComponent implements OnInit {
       email: lead.contact.email,
       leadSource: lead.contact.sourceId ?? 0,
       leadStatus: lead.status.id,
-      assignedUser: lead.assignedUser.id,
+      assignedUser: lead.assignedUser?.id ?? '',
       expectedAmount: lead.expectedAmount,
       probabilityPercentage: lead.closingProbability,
       description: lead.description,

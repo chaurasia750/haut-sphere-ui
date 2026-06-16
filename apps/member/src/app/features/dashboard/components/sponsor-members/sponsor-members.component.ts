@@ -1,48 +1,53 @@
-import { Component } from '@angular/core';
-
-interface Product {
-  id: number;
-  userName: string;
-  name: string;
-  date: string;
-}
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MembersService } from '@shared/members/src';
+import { UiPaginationComponent } from '@shared/ui/src';
 
 @Component({
   selector: 'app-sponsor-members',
-  imports: [],
+  imports: [CommonModule, UiPaginationComponent],
   templateUrl: './sponsor-members.component.html',
 })
-export class SponsorMembersComponent {
-  tableData: Product[] = [
-    {
-      id: 1,
-      userName: "BIT000001",
-      name: "Mr. HRISHIKESH TENI",
-      date: "21-09-2025",
-    },
-    {
-      id: 2,
-      userName: "BIT000002",
-      name: "MR. RAJENDRA BHAVSAR",
-      date: "21-09-2025",
-    },
-    {
-      id: 3,
-      userName: "BIT000003",
-      name: "MR. DARSHAN BHAVSAR",
-      date: "21-09-2025",
-    },
-    {
-      id: 4,
-      userName: "BIT000030",
-      name: "MR. BHARATI SHINDE",
-      date: "26-09-2025",
-    },
-    {
-      id: 5,
-      userName: "BIT000036",
-      name: "MR. AB SINGH",
-      date: "04-10-2025",
-    },
-  ];
+export class SponsorMembersComponent implements OnInit {
+  members: any[] = [];
+  currentPage = 1;
+  readonly itemsPerPage = 5;
+  loading = true;
+  errorMessage = '';
+  private readonly membersService = inject(MembersService);
+  private readonly cdr = inject(ChangeDetectorRef);
+
+  get currentItems(): any[] {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.members.slice(start, start + this.itemsPerPage);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.members.length / this.itemsPerPage);
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+  }
+
+  ngOnInit(): void {
+    this.loadData();
+  }
+
+  private loadData(): void {
+    this.membersService.getMembers({ PageIndex: 1, PageSize: 10 }).subscribe({
+      next: (res: any) => {
+        const unwrapped = res?.data ?? res;
+        this.members = unwrapped?.items ?? (Array.isArray(unwrapped) ? unwrapped : []);
+        this.currentPage = 1;
+        this.loading = false;
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        this.errorMessage = `Failed to load: ${err.status ?? 'network error'}`;
+        this.loading = false;
+        this.cdr.markForCheck();
+      },
+    });
+  }
 }

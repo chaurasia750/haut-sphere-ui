@@ -11,6 +11,10 @@
     </div>
   </div>
 
+  @if (errorMessage) {
+    <div class="text-red-500 text-sm mb-2">{{ errorMessage }}</div>
+  }
+
   <div class="max-w-full overflow-x-auto">
     <table class="w-full text-left">
       <thead class="border-y border-gray-100 dark:border-gray-800">
@@ -38,23 +42,31 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
-        @for (product of tableData; track $index) {
+        @for (member of currentItems; track member.id) {
         <tr>
         <td class="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-            {{ $index + 1 }}
+            {{ (currentPage - 1) * itemsPerPage + $index + 1 }}
           </td>
           <td class="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-            {{ product.userName }}
+            {{ member.regNo }}
           </td>
           <td class="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-            {{ product.name }}
+            {{ member.name }}
           </td>
           <td class="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-            {{ product.date }}
+            {{ member.joiningDate | date:'dd/MM/yyyy' }}
           </td>
         </tr>
         }
       </tbody>
     </table>
   </div>
+
+  <ui-pagination
+    [pageIndex]="currentPage"
+    [pageSize]="itemsPerPage"
+    [totalCount]="members.length"
+    [totalPages]="totalPages"
+    (pageChange)="onPageChange($event)"
+  />
 </div>

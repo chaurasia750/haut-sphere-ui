@@ -141,8 +141,8 @@ export interface LeadDetail {
   modifiedAt: string | null;
   contact: LeadDetailContact;
   status: LeadDetailStatus;
-  assignedUser: LeadDetailUser;
-  createdBy: LeadDetailUser;
+  assignedUser: LeadDetailUser | null;
+  createdBy: LeadDetailUser | null;
   leadFor: any | null;
   tags: LeadDetailTag[];
   activities: LeadDetailActivity[];
