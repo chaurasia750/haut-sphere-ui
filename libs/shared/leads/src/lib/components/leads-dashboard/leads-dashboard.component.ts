@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { LeadsService } from '../../services/leads.service';
 import { KpiCard, StatusBreakdown, MonthlyTrend } from '../../models/lead.model';
 import { LeadHeaderComponent } from '../lead-header/lead-header.component';
@@ -19,6 +19,7 @@ import { SharedDateRangePickerComponent } from '@shared/ui/src';
 })
 export class LeadsDashboardComponent implements OnInit {
   @Input() appPrefix = '';
+  @Output() addLead = new EventEmitter<void>();
   kpiCards: KpiCard[] = [];
   statusBreakdown: StatusBreakdown[] = [];
   monthlyTrends: MonthlyTrend[] = [];
@@ -41,7 +42,7 @@ export class LeadsDashboardComponent implements OnInit {
   }
 
   onAddLead(): void {
-    console.log('Add New Lead clicked');
+    this.addLead.emit();
   }
 
   onDateRangeChange(range: { start: Date | null; end: Date | null }): void {

@@ -6,12 +6,16 @@ import { LeadsDashboardComponent } from '@shared/leads/src';
   selector: 'app-member-leads-dashboard',
   standalone: true,
   imports: [LeadsDashboardComponent],
-  template: `<lib-leads-dashboard appPrefix="member" (viewList)="onViewList()"/>`,
+  template: `<lib-leads-dashboard appPrefix="member" (addLead)="onAddLead()" (viewList)="onViewList()"/>`,
 })
 export class MemberLeadsDashboardPageComponent {
   constructor(private readonly router: Router) {}
 
   onViewList(): void {
     this.router.navigate(['/member/customers-list']);
+  }
+
+  onAddLead(): void {
+    this.router.navigate(['/member/customers-add']);
   }
 }

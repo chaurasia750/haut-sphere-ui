@@ -95,6 +95,11 @@ export class LeadsAddLeadComponent implements OnInit {
   ngOnInit(): void {
     this.isEditMode.set(!!this.leadId);
 
+    if (this.appPrefix === 'member') {
+      this.form.get('assignedUser')?.clearValidators();
+      this.form.get('assignedUser')?.updateValueAndValidity();
+    }
+
     if (this.leadId) {
       this.breadcrumbItems[2].label = 'Edit Lead';
     }
@@ -358,7 +363,7 @@ export class LeadsAddLeadComponent implements OnInit {
     (obs as any).subscribe({
       next: () => {
         this.submitting.set(false);
-        this.router.navigate(['/' + this.appPrefix + '/leads/list']);
+        this.router.navigate([this.listRoute]);
       },
       error: (err: any) => {
         this.submitting.set(false);
@@ -368,6 +373,6 @@ export class LeadsAddLeadComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['/' + this.appPrefix + '/leads/list']);
+    this.router.navigate([this.listRoute]);
   }
 }

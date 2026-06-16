@@ -29,15 +29,4 @@ export class AppLayoutComponent {
     this.isMobileOpen$ = this.sidebarService.isMobileOpen$;
   }
 
-  get containerClasses() {
-    return [
-      'flex-1',
-      'transition-all',
-      'duration-300',
-      'ease-in-out',
-      (this.isExpanded$ || this.isHovered$) ? 'xl:ml-[260px]' : 'xl:ml-[68px]',
-      this.isMobileOpen$ ? 'ml-0' : ''
-    ];
-  }
-
 }
