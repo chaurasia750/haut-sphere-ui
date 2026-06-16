@@ -23,6 +23,7 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
     this.service.search(q).pipe(
       map(r => r.results.map(m => ({
         id: m.id,
+        memberId: String(m.id),
         name: m.name,
         registrationNumber: m.registrationNumber ?? String(m.id),
         joiningDate: (m as any).joiningDate ?? (m as any).joinDate ?? '',
@@ -927,8 +928,8 @@ export class MlmTreeVisComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get isAtRoot(): boolean { return this.currentRoot === 1; }
 
-  onSearchSelect(id: number) {
-    this.selectRoot(id);
+  onSearchSelect(result: SearchResult) {
+    this.selectRoot(result.id);
   }
 
   selectRoot(id: number) {

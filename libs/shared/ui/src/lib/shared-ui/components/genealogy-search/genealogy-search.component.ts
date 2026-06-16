@@ -41,10 +41,10 @@ import { SearchResult } from '../../services/genealogy-api.service';
 
       @if (open() && query().trim() && results().length) {
         <div class="absolute left-0 right-0 top-full mt-1 bg-white border border-gray-200 rounded-xl shadow-xl z-[9999] overflow-hidden">
-          @for (r of results(); track r.id) {
+          @for (r of results(); track r.memberId) {
             <button
               class="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-blue-50 transition-colors cursor-pointer border-b border-gray-100 last:border-b-0"
-              (click)="select(r.id); $event.stopPropagation()"
+              (click)="select(r); $event.stopPropagation()"
             >
               <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
                 {{ r.name.charAt(0).toUpperCase() }}
@@ -82,7 +82,7 @@ import { SearchResult } from '../../services/genealogy-api.service';
 export class GenealogySearchComponent implements OnInit, OnDestroy {
   readonly searchFn = input.required<(query: string) => Observable<SearchResult[]>>();
   readonly placeholder = input('Search members...');
-  readonly onSelect = output<number>();
+  readonly onSelect = output<SearchResult>();
 
   private readonly destroy$ = new Subject<void>();
   private readonly search$ = new Subject<string>();
@@ -131,12 +131,11 @@ export class GenealogySearchComponent implements OnInit, OnDestroy {
     }
   }
 
-  select(id: number): void {
-    const selected = this.results().find(r => r.id === id);
-    this.query.set(selected ? `${selected.name} (${selected.registrationNumber})` : '');
+  select(result: SearchResult): void {
+    this.query.set(`${result.name} (${result.registrationNumber})`);
     this.open.set(false);
     this.results.set([]);
-    this.onSelect.emit(id);
+    this.onSelect.emit(result);
   }
 
   @HostListener('document:click', ['$event'])

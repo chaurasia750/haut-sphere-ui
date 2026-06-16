@@ -47,12 +47,12 @@ export const appRoutes: Route[] = [
     loadChildren: async () => {
       const adminConfig = remoteConfig.find((c: any) => c.key === 'admin');
       const adminEntry = adminConfig?.entry ?? 'http://localhost:4101/remoteEntry.mjs';
-      if (!adminConfig) return [{ path: '', redirectTo: '/member', pathMatch: 'full' }];
+      if (!adminConfig) return [{ path: '', redirectTo: '/login', pathMatch: 'full' }];
       try {
         const [
           ngCore, ngCorePrimitivesDi, ngCorePrimitivesSignals,
           ngCommon, ngCommonHttp, ngRouter, ngForms, ngPlatformBrowser,
-          rxjs, rxjsOperators, sharedI18n,
+          rxjs, rxjsOperators, sharedI18n, sharedAuth,
         ] = await Promise.all([
           import('@angular/core'),
           import('@angular/core/primitives/di'),
@@ -65,6 +65,7 @@ export const appRoutes: Route[] = [
           import('rxjs'),
           import('rxjs/operators'),
           import('@shared/i18n'),
+          import('@libs/shared/auth'),
         ]);
 
         const w = window as any;
@@ -87,6 +88,7 @@ export const appRoutes: Route[] = [
         registerShare('rxjs', rxjs, '7.8.2');
         registerShare('rxjs/operators', rxjsOperators, '7.8.2');
         registerShare('@shared/i18n', sharedI18n, '0.0.0');
+        registerShare('@libs/shared/auth', sharedAuth, '1.0.0');
 
         if (typeof w.__webpack_init_sharing__ !== 'function') {
           w.__webpack_init_sharing__ = async () => undefined;
@@ -130,6 +132,7 @@ export const appRoutes: Route[] = [
           rxjs,
           rxjsOperators,
           sharedI18n,
+          sharedAuth,
         ] = await Promise.all([
           import('@angular/core'),
           import('@angular/core/primitives/di'),
@@ -142,6 +145,7 @@ export const appRoutes: Route[] = [
           import('rxjs'),
           import('rxjs/operators'),
           import('@shared/i18n'),
+          import('@libs/shared/auth'),
         ]);
 
         const w = window as any;
@@ -169,6 +173,7 @@ export const appRoutes: Route[] = [
         registerShare('rxjs', rxjs, '7.8.2');
         registerShare('rxjs/operators', rxjsOperators, '7.8.2');
         registerShare('@shared/i18n', sharedI18n, '0.0.0');
+        registerShare('@libs/shared/auth', sharedAuth, '1.0.0');
 
         if (typeof w.__webpack_init_sharing__ !== 'function') {
           w.__webpack_init_sharing__ = async () => undefined;
@@ -225,15 +230,15 @@ export const appRoutes: Route[] = [
     },
   },
   
-  // Default redirect to member app
+  // Default redirect to login (LoginComponent redirects authenticated users to their role route)
   {
     path: '',
-    redirectTo: '/member',
+    redirectTo: '/login',
     pathMatch: 'full'
   },
   
-  // All unmatched routes → member app
-  { path: '**', redirectTo: '/member' }
+  // All unmatched routes → login
+  { path: '**', redirectTo: '/login' }
 ];
 
 export const appConfig: ApplicationConfig = {

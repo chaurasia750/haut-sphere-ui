@@ -148,10 +148,17 @@ export class AuthStore {
   }
 
   private clearAllCookiesAndStorage(): void {
-    // Keep client cleanup limited to storage.
+    // Remove only binsera.auth.* keys instead of wiping all localStorage.
     // Auth cookies are HttpOnly and must be cleared by backend Set-Cookie on /auth/logout.
-    try { localStorage.clear(); } catch { /* ignore */ }
-    try { sessionStorage.clear(); } catch { /* ignore */ }
+    try {
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && !key.startsWith('binsera.auth.')) continue;
+        if (key) keysToRemove.push(key);
+      }
+      keysToRemove.forEach(key => localStorage.removeItem(key));
+    } catch { /* ignore */ }
   }
 
   setUnauthenticated(message: string | null = null): void {

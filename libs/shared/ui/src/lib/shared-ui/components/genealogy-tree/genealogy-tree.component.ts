@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Input, inject, ChangeDetectorRef, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EMPTY, Subject, catchError, takeUntil } from 'rxjs';
+import { Subject, catchError, takeUntil } from 'rxjs';
 import { Tree } from 'primeng/tree';
 import { TreeNode, PrimeTemplate } from 'primeng/api';
 import { GenealogyApiService, SearchResult } from '../../services/genealogy-api.service';
@@ -8,7 +8,7 @@ import { GenealogySearchComponent } from '../genealogy-search/genealogy-search.c
 
 interface PTreeNode extends TreeNode {
   data: {
-    id: number;
+    memberId: string;
     name: string;
     registrationNumber: string;
     joiningDate: string;
@@ -27,7 +27,7 @@ interface PTreeNode extends TreeNode {
   styleUrls: ['./genealogy-tree.component.scss'],
 })
 export class GenealogyTreeComponent implements OnInit, OnDestroy {
-  @Input({ required: true }) rootMemberId!: number;
+  @Input({ required: true }) rootMemberId!: string;
 
   private readonly api = inject(GenealogyApiService);
   private readonly cdr = inject(ChangeDetectorRef);
@@ -63,9 +63,9 @@ export class GenealogyTreeComponent implements OnInit, OnDestroy {
 
   readonly searchFn = (q: string) => this.api.search(q);
 
-  onSearchSelect(id: number): void {
+  onSearchSelect(result: SearchResult): void {
     this.loading = true;
-    this.api.getNode(id).pipe(
+    this.api.getNode(result.memberId).pipe(
       catchError(() => {
         this.error = 'Member not found';
         this.loading = false;
@@ -81,9 +81,7 @@ export class GenealogyTreeComponent implements OnInit, OnDestroy {
   }
 
   onNodeExpand(event: any): void {
-    const node = event.node as PTreeNode;
-    if (!node || (node.children && node.children.length > 0)) return;
-    this.loadChildren(node);
+    this.loadChildren(event.node as PTreeNode);
   }
 
   loadRoot(): void {
@@ -110,69 +108,39 @@ export class GenealogyTreeComponent implements OnInit, OnDestroy {
   }
 
   private loadChildren(parent: PTreeNode): void {
-    if (parent.loading) return;
+    if (parent.loading || parent.children) return;
     parent.loading = true;
     this.treeNodes.set([...this.treeNodes()]);
 
-    const leftId = 2 * parent.data.id;
-    const rightId = 2 * parent.data.id + 1;
-    let count = 0;
-
-    const done = () => {
-      if (++count < 2) return;
+    this.api.expandNode(parent.data.memberId).pipe(
+      catchError(() => {
+        parent.loading = false;
+        this.treeNodes.set([...this.treeNodes()]);
+        this.cdr.markForCheck();
+        return [];
+      }),
+      takeUntil(this.destroy$),
+    ).subscribe((children) => {
+      parent.loading = false;
+      parent.children = children.length ? children.map((n) => {
+        const child = this.toPTreeNode(n);
+        child.parent = parent;
+        return child;
+      }) : [];
       this.totalMembers = this.countAll(this.treeNodes()[0]);
-      this.replaceTreeNode(parent, (n) => {
-        n.loading = false;
-        n.childrenFetched = true;
-        return n;
-      });
-    };
-
-    this.api.getNode(leftId).pipe(catchError(() => EMPTY), takeUntil(this.destroy$))
-      .subscribe((n) => {
-        if (!parent.expanded) return;
-        const child = this.toPTreeNode(n);
-        child.parent = parent;
-        parent.children.push(child);
-      })
-      .add(done);
-
-    this.api.getNode(rightId).pipe(catchError(() => EMPTY), takeUntil(this.destroy$))
-      .subscribe((n) => {
-        if (!parent.expanded) return;
-        const child = this.toPTreeNode(n);
-        child.parent = parent;
-        parent.children.push(child);
-      })
-      .add(done);
+      this.treeNodes.set([...this.treeNodes()]);
+      this.cdr.markForCheck();
+    });
   }
 
-  private replaceTreeNode(target: PTreeNode, update: (n: PTreeNode) => void): void {
-    const clone = (n: PTreeNode): PTreeNode => {
-      const c = { ...n, children: n.children?.map(clone) ?? [] };
-      return c;
-    };
-    const walk = (nodes: PTreeNode[]): PTreeNode[] =>
-      nodes.map(n => {
-        if (n === target) {
-          const cloned = clone(n);
-          update(cloned);
-          return cloned;
-        }
-        if (n.children?.length) return { ...n, children: walk(n.children) };
-        return n;
-      });
-    this.treeNodes.set(walk(this.treeNodes()));
-  }
-
-  private toPTreeNode(n: { id: number; name: string; registrationNumber: string; joiningDate: string; hasChildren: boolean; childrenCount: number }): PTreeNode {
+  private toPTreeNode(n: { memberId: string; name: string; registrationNumber: string; joiningDate: string; hasChildren: boolean; childrenCount: number }): PTreeNode {
     return {
+      key: n.memberId,
       label: n.name,
       type: 'node',
-      data: { id: n.id, name: n.name, registrationNumber: n.registrationNumber, joiningDate: n.joiningDate, childrenCount: n.childrenCount },
+      data: { memberId: n.memberId, name: n.name, registrationNumber: n.registrationNumber, joiningDate: n.joiningDate, childrenCount: n.childrenCount },
       leaf: !n.hasChildren,
       expanded: false,
-      children: [],
       childrenFetched: false,
     } as PTreeNode;
   }

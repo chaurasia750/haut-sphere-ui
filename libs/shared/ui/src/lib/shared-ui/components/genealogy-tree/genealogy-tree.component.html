@@ -65,11 +65,11 @@
         >
           <ng-template pTemplate="node" let-node>
             <div class="flex items-center gap-2.5 px-3 py-2 rounded-lg cursor-pointer select-none transition-all duration-150 min-w-[180px] bg-white border border-gray-200 shadow-sm hover:shadow-md hover:border-brand-400 hover:bg-brand-50/50 active:bg-brand-100/50"
-              [class.border-brand-600!]="selectedMember()?.id === node.data.id"
-              [class.ring-1]="selectedMember()?.id === node.data.id"
-              [class.ring-brand-300]="selectedMember()?.id === node.data.id"
-              [class.shadow-md]="selectedMember()?.id === node.data.id"
-              [class.bg-brand-50/70]="selectedMember()?.id === node.data.id"
+              [class.border-brand-600!]="selectedMember()?.memberId === node.data.memberId"
+              [class.ring-1]="selectedMember()?.memberId === node.data.memberId"
+              [class.ring-brand-300]="selectedMember()?.memberId === node.data.memberId"
+              [class.shadow-md]="selectedMember()?.memberId === node.data.memberId"
+              [class.bg-brand-50/70]="selectedMember()?.memberId === node.data.memberId"
               (click)="onCardClick($event, node)">
               <div class="relative shrink-0">
                 <div class="w-8 h-8 rounded-md flex items-center justify-center text-white text-xs font-bold shadow-sm"
