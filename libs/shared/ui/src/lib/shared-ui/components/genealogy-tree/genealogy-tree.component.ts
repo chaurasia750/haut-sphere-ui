@@ -108,27 +108,29 @@ export class GenealogyTreeComponent implements OnInit, OnDestroy {
   }
 
   private loadChildren(parent: PTreeNode): void {
-    if (parent.loading || parent.children) return;
-    parent.loading = true;
-    this.treeNodes.set([...this.treeNodes()]);
+    if (parent.children?.length) return;
+
+    this.treeNodes.update(nodes => {
+      const walk = (list: PTreeNode[]): PTreeNode[] =>
+        list.map(n => {
+          if (n === parent || n.key === parent.key) return { ...n, loading: true, children: [] };
+          if (n.children?.length) return { ...n, children: walk(n.children) };
+          return n;
+        });
+      return walk(nodes);
+    });
 
     this.api.expandNode(parent.data.memberId).pipe(
       catchError(() => {
-        parent.loading = false;
-        this.treeNodes.set([...this.treeNodes()]);
+        this.setChildren(parent, [], true);
         this.cdr.markForCheck();
         return [];
       }),
       takeUntil(this.destroy$),
     ).subscribe((children) => {
-      parent.loading = false;
-      parent.children = children.length ? children.map((n) => {
-        const child = this.toPTreeNode(n);
-        child.parent = parent;
-        return child;
-      }) : [];
+      const childNodes = children.map((n) => this.toPTreeNode(n));
+      this.setChildren(parent, childNodes, true);
       this.totalMembers = this.countAll(this.treeNodes()[0]);
-      this.treeNodes.set([...this.treeNodes()]);
       this.cdr.markForCheck();
     });
   }
@@ -141,8 +143,24 @@ export class GenealogyTreeComponent implements OnInit, OnDestroy {
       data: { memberId: n.memberId, name: n.name, registrationNumber: n.registrationNumber, joiningDate: n.joiningDate, childrenCount: n.childrenCount },
       leaf: !n.hasChildren,
       expanded: false,
-      childrenFetched: false,
+      children: [],
     } as PTreeNode;
+  }
+
+  private setChildren(target: PTreeNode, children: PTreeNode[], fetched = false): void {
+    this.treeNodes.update(nodes => {
+      const walk = (list: PTreeNode[]): PTreeNode[] =>
+        list.map(n => {
+          if (n === target || n.key === target.key) {
+            const node = { ...n, children, loading: false };
+            if (fetched && !children.length) node.leaf = true;
+            return node;
+          }
+          if (n.children?.length) return { ...n, children: walk(n.children) };
+          return n;
+        });
+      return walk(nodes);
+    });
   }
 
   private countAll(node: PTreeNode): number {
