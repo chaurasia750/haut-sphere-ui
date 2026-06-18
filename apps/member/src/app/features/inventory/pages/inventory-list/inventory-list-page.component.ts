@@ -15,6 +15,6 @@ export class MemberInventoryListPageComponent {
   private readonly router = inject(Router);
 
   onViewDetails(id: number): void {
-    this.router.navigate(['/member/inventory', id]);
+    this.router.navigate(['/member/project', id]);
   }
 }

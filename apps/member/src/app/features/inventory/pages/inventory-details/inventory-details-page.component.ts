@@ -28,6 +28,6 @@ export class MemberInventoryDetailsPageComponent {
   }
 
   goBack(): void {
-    this.router.navigate(['/member/inventory/list']);
+    this.router.navigate(['/member/project/list']);
   }
 }

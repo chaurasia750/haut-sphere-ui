@@ -40,7 +40,7 @@ export class SponsorRegistrationComponent {
   sponsorLookupName = '';
   isSponsorLookupPending = false;
   isLoading = false;
-  isSuccess = true;
+  isSuccess = false;
   registrationNumber = '';
   sponsorRegNo: number | null = null;
 
