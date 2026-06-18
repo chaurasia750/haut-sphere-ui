@@ -96,7 +96,7 @@ import { UserDropdownComponent } from '../user-dropdown/user-dropdown.component'
         <app-theme-toggle-button />
         <app-notification-dropdown [notifications]="notifications" />
       </div>
-      <app-user-dropdown [userName]="userName" [userRole]="userRole" (signOut)="signOut.emit()" />
+      <app-user-dropdown [userName]="userName" [userRole]="userRole" [userLoginId]="userLoginId" (signOut)="signOut.emit()" />
     </div>
   </div>
 </header>`,
@@ -108,6 +108,7 @@ export class SharedAppHeaderComponent {
   @Input() brandName = 'BitScholar';
   @Input() userName = 'Member User';
   @Input() userRole = 'Member';
+  @Input() userLoginId?: string;
   @Input() notifications: AppLayoutNotification[] = [];
   @Output() signOut = new EventEmitter<void>();
 

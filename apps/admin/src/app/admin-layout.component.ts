@@ -17,6 +17,7 @@ export class AdminLayoutComponent {
     user: {
       name: 'Admin User',
       role: 'Administrator',
+      loginId: 'admin@anonindia.com',
     },
     notifications: [
       { id: 1, title: 'New member registration pending approval', time: '5m ago', read: false },

@@ -37,6 +37,7 @@ import { BackdropComponent } from '../backdrop/backdrop.component';
       [brandName]="config.brandName || config.appName"
       [userName]="config.user?.name || 'Member User'"
       [userRole]="config.user?.role || config.appName"
+      [userLoginId]="config.user?.loginId"
       [notifications]="config.notifications || []"
       (signOut)="signOut.emit()"
     ></shared-app-header>

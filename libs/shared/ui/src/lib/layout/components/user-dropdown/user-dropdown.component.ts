@@ -11,6 +11,7 @@ import { RouterModule } from '@angular/router';
 export class UserDropdownComponent {
   @Input() userName = 'Member User';
   @Input() userRole = 'Member';
+  @Input() userLoginId?: string;
   @Output() signOut = new EventEmitter<void>();
 
   isOpen = false;
@@ -24,6 +25,10 @@ export class UserDropdownComponent {
       .slice(0, 2)
       .map((part) => part[0]?.toUpperCase())
       .join('');
+  }
+
+  get displayLoginId(): string {
+    return this.userLoginId?.trim() || this.userRole;
   }
 
   toggle() {

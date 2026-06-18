@@ -9,6 +9,7 @@ export interface AppLayoutMenuItem {
 export interface AppLayoutUser {
   name: string;
   role: string;
+  loginId?: string;
 }
 
 export interface AppLayoutNotification {
