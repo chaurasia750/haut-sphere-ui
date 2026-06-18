@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { SharedAddressFormComponent, SharedTitleSelectComponent, AadhaarInputDirective, PanCardDirective, PhoneFormatDirective } from '@shared/ui/src';
 import { catchError, debounceTime, distinctUntilChanged, finalize, of, switchMap, tap } from 'rxjs';
 import { apiConfig } from '@shared/environments/api.dev';
+import { FALLBACK_EN } from '@shared/i18n';
 import { MembersService, RegisterMemberPayload, RegisterMemberResponse } from '../../services/members.service';
 
 @Component({
@@ -39,7 +40,7 @@ export class SponsorRegistrationComponent {
   sponsorLookupName = '';
   isSponsorLookupPending = false;
   isLoading = false;
-  isSuccess = false;
+  isSuccess = true;
   registrationNumber = '';
   sponsorRegNo: number | null = null;
 
@@ -85,6 +86,16 @@ export class SponsorRegistrationComponent {
   isInvalid(controlName: string): boolean {
     const control: AbstractControl | null = this.signupForm.get(controlName);
     return !!(control?.touched && control?.invalid);
+  }
+
+  tr(key: string): string {
+    const parts = key.split('.');
+    let obj: any = FALLBACK_EN;
+    for (const part of parts) {
+      if (obj == null || typeof obj !== 'object') return key;
+      obj = obj[part];
+    }
+    return typeof obj === 'string' ? obj : key;
   }
 
   getError(controlName: string): string {
