@@ -16,6 +16,13 @@ export interface MemberProfileAddress {
   districtId: number | null;
 }
 
+export interface SponsorDetails {
+  title: string | null;
+  fName: string | null;
+  lName: string | null;
+  loginId: string | null;
+}
+
 export interface UpdateProfilePayload {
   title: string;
   firstName: string;
@@ -51,6 +58,7 @@ export interface MemberProfile {
   panCard: string | null;
   introRegNo: string | null;
   introSide: string | null;
+  sponsorDetails: SponsorDetails | null;
   address: MemberProfileAddress | null;
 }
 
@@ -76,6 +84,14 @@ export class MemberProfileService {
     const root = this.asObject(response);
     const payload = this.asObject(root.data ?? root.profile ?? root.memberProfile ?? root.member ?? root);
     const address = this.asObject(payload.address ?? payload.memberAddress ?? null);
+    const sponsorRaw = this.asObject(payload.sponsorDetails ?? null);
+
+    const sponsorDetails = this.isEmptyObject(sponsorRaw) ? null : {
+      title: this.toString(sponsorRaw.title),
+      fName: this.toString(sponsorRaw.fName ?? sponsorRaw.firstName ?? sponsorRaw.first_name),
+      lName: this.toString(sponsorRaw.lName ?? sponsorRaw.lastName ?? sponsorRaw.last_name),
+      loginId: this.toString(sponsorRaw.loginId ?? sponsorRaw.login_id ?? sponsorRaw.username),
+    };
 
     return {
       id: this.toNumber(payload.id) ?? 0,
@@ -98,6 +114,7 @@ export class MemberProfileService {
       panCard: this.toString(payload.memPan ?? payload.panCard ?? payload.pan),
       introRegNo: this.toString(payload.introRegNo ?? payload.intro_reg_no),
       introSide: this.toString(payload.introSide ?? payload.intro_side),
+      sponsorDetails,
       address: this.isEmptyObject(address)
         ? null
         : {
