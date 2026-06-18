@@ -68,14 +68,16 @@
       "link": "Sign in here"
     },
     "success": {
-      "title": "Welcome to Anon India!",
-      "subtitle": "Your account has been created successfully.",
+      "title": "Registration Submitted Successfully",
+      "welcome": "Welcome to Anon India!",
+      "subtitle": "Your membership application has been received successfully.",
       "membershipId": "Membership ID",
-      "nextSteps": "Next Steps",
-      "step1": "Your details are under review by the verification team.",
-      "step2": "Keep your Membership ID safe \u2014 you\u2019ll need it for all future transactions.",
-      "step3": "Reach out to Anon India support to complete your onboarding.",
-      "loginBtn": "Go to Login"
+      "verificationTitle": "Verification Pending",
+      "verificationDesc": "Your account is currently under review by the administration team. Once your registration is verified and approved, your account will be activated and login access will be enabled.",
+      "assistanceTitle": "Need Assistance?",
+      "assistanceDesc": "For onboarding guidance and further information, please connect with your sponsor or contact the administration team.",
+      "safeMsg": "Please keep your Membership ID safe for future reference and communication.",
+      "thankYou": "Thank you for joining Anon India. We look forward to welcoming you as an approved member."
     }
   },
   "login": {

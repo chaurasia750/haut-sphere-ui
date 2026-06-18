@@ -48,6 +48,13 @@ const routes: Routes = [
             (m) => m.MembersModule
           ),
       },
+      {
+        path: 'sponsor-new',
+        loadComponent: () =>
+          import('./features/sponsor-new/sponsor-new.component').then(
+            (m) => m.AdminSponsorNewComponent
+          ),
+      },
     ],
   },
 ];

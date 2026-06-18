@@ -1,7 +1,8 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule, inject } from '@angular/core';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { createSharedTranslateLoader } from '@shared/i18n';
+import { createSharedTranslateLoader, SharedTranslationService } from '@shared/i18n';
+import { firstValueFrom } from 'rxjs';
 import { AUTH_API_BASE_URL } from '@libs/shared/auth';
 import { apiConfig } from '@shared/environments/api.dev';
 
@@ -23,6 +24,14 @@ import { AppRoutingModule } from './app-routing.module';
     AppRoutingModule,
   ],
   providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => {
+        const service = inject(SharedTranslationService);
+        return () => firstValueFrom(service.init('en'));
+      },
+      multi: true,
+    },
     provideHttpClient(withInterceptorsFromDi()),
     {
       provide: AUTH_API_BASE_URL,

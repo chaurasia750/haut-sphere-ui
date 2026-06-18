@@ -1,9 +1,10 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { SharedLayoutModule } from '@shared';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { createSharedTranslateLoader } from '@shared';
+import { createSharedTranslateLoader, SharedTranslationService } from '@shared/i18n';
+import { firstValueFrom } from 'rxjs';
 import { AUTH_API_BASE_URL } from '@libs/shared/auth';
 import { INVENTORY_API_BASE_URL } from '@shared/inventory/src';
 import { LEAD_API_BASE_URL } from '@shared/leads/src';
@@ -32,6 +33,14 @@ import { AppRoutingModule } from './app-routing.module';
     AppRoutingModule,
   ],
   providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => {
+        const service = inject(SharedTranslationService);
+        return () => firstValueFrom(service.init('en'));
+      },
+      multi: true,
+    },
     {
       provide: AUTH_API_BASE_URL,
       useValue: `${apiConfig.baseUrl}/auth`,

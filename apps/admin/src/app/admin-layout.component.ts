@@ -42,6 +42,7 @@ export class AdminLayoutComponent {
       ]},
       { label: 'Members', section: 'MANAGEMENT', icon: MEMBERS_ICON, subItems: [
         { name: 'List', path: '/admin/members/list' },
+        { name: 'Sponsor New', path: '/admin/sponsor-new' },
       ]},
       { label: 'Users', route: '/admin/users', section: 'MANAGEMENT', icon: USERS_ICON },
     ],

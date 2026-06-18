@@ -16,10 +16,51 @@ export interface IMembersService {
   getMembers(params?: GetMembersRequest): Observable<MemberListResponse>;
 }
 
+export interface SponsorValidationResponse {
+  intoRegNo: number;
+  title: string | null;
+  fName: string | null;
+  lName: string | null;
+  franchiseeId: number | null;
+}
+
+export interface RegisterMemberResponse {
+  registrationNumber: string;
+}
+
+export interface RegisterMemberPayload {
+  bussinessCategoryId: number;
+  introRegNo: number;
+  personInfo: {
+    title: string;
+    firstName: string;
+    lastName: string;
+    gender: number;
+    primaryContactNumber: string;
+    aadhaarNo: string;
+    panCard: string;
+    emailId: string;
+  };
+  address: {
+    houseNo: string;
+    street: string;
+    city: string;
+    state: string;
+    countryId: number;
+    stateId: number;
+    cityId: number;
+    zipCode: string;
+    distId: number;
+  };
+  introSide: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class MembersService implements IMembersService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = inject(MEMBERS_API_BASE_URL);
+
+  private readonly rootApi = apiConfig.baseUrl;
 
   getMembers(params?: GetMembersRequest): Observable<MemberListResponse> {
     const query: Record<string, string | number> = {};
@@ -44,5 +85,15 @@ export class MembersService implements IMembersService {
 
   getMemberLoginDetails(id: number): Observable<MemberLoginDetails> {
     return this.http.get<MemberLoginDetails>(`${this.baseUrl}/${id}/login-details`);
+  }
+
+  validateSponsor(sponsorId: string): Observable<SponsorValidationResponse> {
+    return this.http.get<SponsorValidationResponse>(
+      `${this.rootApi}/registration-validation/sponser?sponsonrId=${encodeURIComponent(sponsorId)}`
+    );
+  }
+
+  registerMember(payload: RegisterMemberPayload): Observable<RegisterMemberResponse> {
+    return this.http.post<RegisterMemberResponse>(`${this.rootApi}/members/registration`, payload);
   }
 }
