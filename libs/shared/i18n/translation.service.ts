@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { Observable, of } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, map, switchMap, take } from 'rxjs/operators';
+import { FALLBACK_EN } from './fallback-translations';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,10 @@ export class SharedTranslationService {
   init(defaultLang = 'en'): Observable<any> {
     this.translate.setDefaultLang(defaultLang);
     return this.translate.use(defaultLang).pipe(
-      catchError(() => of(null))
+      catchError(() => {
+        this.translate.setTranslation(defaultLang, FALLBACK_EN, true);
+        return this.translate.use(defaultLang);
+      })
     );
   }
 

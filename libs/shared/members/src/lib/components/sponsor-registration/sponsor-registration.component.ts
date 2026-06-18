@@ -3,7 +3,6 @@ import { ChangeDetectorRef, Component, DestroyRef, EventEmitter, inject, Input, 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 import { SharedAddressFormComponent, SharedTitleSelectComponent, AadhaarInputDirective, PanCardDirective, PhoneFormatDirective } from '@shared/ui/src';
 import { catchError, debounceTime, distinctUntilChanged, finalize, of, switchMap, tap } from 'rxjs';
 import { apiConfig } from '@shared/environments/api.dev';
@@ -16,7 +15,6 @@ import { MembersService, RegisterMemberPayload, RegisterMemberResponse } from '.
     CommonModule,
     ReactiveFormsModule,
     RouterModule,
-    TranslateModule,
     SharedAddressFormComponent,
     SharedTitleSelectComponent,
     AadhaarInputDirective,

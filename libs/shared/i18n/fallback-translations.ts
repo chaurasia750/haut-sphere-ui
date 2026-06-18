@@ -1,0 +1,80 @@
+export const FALLBACK_EN: Record<string, any> = {
+  signup: {
+    hero: {
+      badge: 'Partner Portal',
+      title: 'Welcome to ANON INDIA Partner Portal',
+      description: 'Sign in to manage your real estate, construction, and interior decor projects, leads, and commissions.',
+    },
+    form: {
+      heading: 'Create Your Account',
+      haveAccount: 'Already have an account?',
+      link: 'Sign in here',
+    },
+    success: {
+      title: 'Registration Submitted Successfully',
+      welcome: 'Welcome to Anon India!',
+      subtitle: 'Your membership application has been received successfully.',
+      membershipId: 'Membership ID',
+      verificationTitle: 'Verification Pending',
+      verificationDesc: 'Your account is currently under review by the administration team. Once your registration is verified and approved, your account will be activated and login access will be enabled.',
+      assistanceTitle: 'Need Assistance?',
+      assistanceDesc: 'For onboarding guidance and further information, please connect with your sponsor or contact the administration team.',
+      safeMsg: 'Please keep your Membership ID safe for future reference and communication.',
+      thankYou: 'Thank you for joining Anon India. We look forward to welcoming you as an approved member.',
+    },
+  },
+  login: {
+    hero: {
+      badge: 'Partner Portal',
+      title: 'Welcome to ANON INDIA Partner Portal',
+      description: 'Sign in to manage your real estate, construction, and interior decor projects, leads, and commissions.',
+    },
+    form: {
+      heading: 'Sign In',
+      noAccount: "Don't have an account?",
+      link: 'Create one',
+      email: 'Email',
+      emailPlaceholder: 'Enter your email',
+      password: 'Password',
+      passwordPlaceholder: 'Enter your password',
+      submit: 'Sign In',
+      loading: 'Signing in...',
+      forgotPassword: 'Forgot Password?',
+    },
+    validation: {
+      emailRequired: 'Email is required.',
+      emailInvalid: 'Please enter a valid email.',
+      passwordRequired: 'Password is required.',
+    },
+    error: {
+      invalidCredentials: 'Invalid email or password.',
+    },
+  },
+  forgotPassword: {
+    title: 'Forgot Password',
+    description: 'Enter your registered email address and we will send you a link to reset your password.',
+    email: 'Email',
+    emailPlaceholder: 'Enter your registered email',
+    submit: 'Send Reset Link',
+    loading: 'Sending...',
+    success: 'If an account exists with this email, a password reset link has been sent.',
+  },
+  resetPassword: {
+    title: 'Reset Password',
+    description: 'Enter your new password below.',
+    newPassword: 'New Password',
+    confirmPassword: 'Confirm Password',
+    submit: 'Reset Password',
+    loading: 'Resetting...',
+    success: 'Your password has been reset successfully.',
+    validation: {
+      passwordRequired: 'Password is required.',
+      passwordMinLength: 'Password must be at least 6 characters.',
+      confirmRequired: 'Please confirm your password.',
+      mismatch: 'Passwords do not match.',
+    },
+  },
+  app: {
+    title: 'Anon India',
+  },
+};
