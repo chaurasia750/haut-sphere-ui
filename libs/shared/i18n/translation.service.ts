@@ -14,8 +14,7 @@ export class SharedTranslationService {
   init(defaultLang = 'en'): Observable<any> {
     this.translate.setDefaultLang(defaultLang);
     return this.translate.use(defaultLang).pipe(
-      catchError(() => of(null)),
-      switchMap(() => {
+      catchError(() => {
         this.translate.setTranslation(defaultLang, FALLBACK_EN, false);
         return this.translate.use(defaultLang);
       })

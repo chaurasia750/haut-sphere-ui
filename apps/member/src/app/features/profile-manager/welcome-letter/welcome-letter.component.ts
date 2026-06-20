@@ -93,15 +93,43 @@ export class WelcomeLetterComponent implements OnInit {
 
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfW = pdf.internal.pageSize.getWidth();
-      const pdfH = pdf.internal.pageSize.getHeight();
+      const pdfW = pdf.internal.pageSize.getWidth(); // 210mm
+      const pdfH = pdf.internal.pageSize.getHeight(); // 297mm
 
       const imgW = canvas.width;
       const imgH = canvas.height;
-      const finalW = pdfW;
-      const finalH = (imgH / imgW) * pdfW;
 
-      pdf.addImage(imgData, 'PNG', 0, 0, finalW, finalH);
+      const ratio = pdfW / imgW;
+      const totalHmm = imgH * ratio;
+
+      if (totalHmm <= pdfH) {
+        // fits in one page
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfW, totalHmm);
+      } else {
+        // split across multiple A4 pages
+        const pageHpx = pdfH / ratio; // pixel height of one A4 page
+        let srcY = 0;
+        let page = 0;
+
+        while (srcY < imgH) {
+          const cropH = Math.min(pageHpx, imgH - srcY);
+          const pageCanvas = document.createElement('canvas');
+          pageCanvas.width = imgW;
+          pageCanvas.height = cropH;
+          const ctx = pageCanvas.getContext('2d')!;
+          ctx.drawImage(canvas, 0, srcY, imgW, cropH, 0, 0, imgW, cropH);
+
+          const pageImgData = pageCanvas.toDataURL('image/png');
+          const pageHmm = cropH * ratio;
+
+          if (page > 0) pdf.addPage();
+          pdf.addImage(pageImgData, 'PNG', 0, 0, pdfW, pageHmm);
+
+          srcY += pageHpx;
+          page++;
+        }
+      }
+
       pdf.save(`Welcome_Letter_${this.memberId.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`);
     } catch {
       window.print();

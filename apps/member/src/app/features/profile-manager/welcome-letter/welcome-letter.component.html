@@ -30,131 +30,131 @@
     </div>
 
     <!-- SHEET -->
-    <div #letterSheet class="bg-white" style="font-family:Georgia,'Times New Roman',serif;color:#000;font-size:12pt;line-height:1.55">
+    <div #letterSheet class="bg-white mx-auto" style="max-width:794px;font-family:Georgia,'Times New Roman',serif;color:#000;font-size:11pt;line-height:1.45">
 
       <div class="relative overflow-hidden">
         <!-- watermark -->
         <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0" style="font-size:80pt;font-weight:700;color:rgba(0,0,0,.015);letter-spacing:6px">ANON INDIA</div>
 
-        <div class="relative z-10" style="padding:22mm 25mm 18mm">
+        <div class="relative z-10" style="padding:15mm 20mm 12mm">
 
           <!-- LETTERHEAD -->
           <table style="width:100%;border-collapse:collapse;margin-bottom:5mm">
             <tr>
-              <td style="width:55px;vertical-align:middle">
-                <img src="/assets/logo.jpeg" alt="Anon India" style="width:48px;height:48px;border-radius:50%;object-fit:contain" />
+              <td style="width:45px;vertical-align:middle">
+                <img src="/assets/logo.jpeg" alt="Anon India" style="width:40px;height:40px;border-radius:50%;object-fit:contain" />
               </td>
-              <td style="vertical-align:middle;padding-left:6px">
-                <div style="font-size:16pt;font-weight:700;color:#1f3354;letter-spacing:0.3px">Anon India</div>
-                <div style="font-size:8pt;color:#555;margin-top:1px">Building Trust &bull; Creating Opportunities &bull; Growing Together</div>
+              <td style="vertical-align:middle;padding-left:5px">
+                <div style="font-size:14pt;font-weight:700;color:#1f3354;letter-spacing:0.3px">Anon India</div>
+                <div style="font-size:7.5pt;color:#555;margin-top:0">Building Trust &bull; Creating Opportunities &bull; Growing Together</div>
               </td>
-              <td style="text-align:right;vertical-align:middle;font-size:8.5pt;color:#555;line-height:1.4">
-                <strong style="color:#1f3354;font-size:9pt">Membership ID</strong><br>
-                <span style="color:#1f3354;font-weight:700;font-size:10pt">{{ memberId }}</span>
+              <td style="text-align:right;vertical-align:middle;font-size:8pt;color:#555;line-height:1.35">
+                <strong style="color:#1f3354;font-size:8.5pt">Membership ID</strong><br>
+                <span style="color:#1f3354;font-weight:700;font-size:9pt">{{ memberId }}</span>
               </td>
             </tr>
           </table>
 
           <div style="border-top:2px solid #1f3354;margin-bottom:1px"></div>
-          <div style="border-top:1px solid #b8924a;margin-bottom:5mm"></div>
+          <div style="border-top:1px solid #b8924a;margin-bottom:3.5mm"></div>
 
           <!-- REF & DATE -->
-          <div style="font-size:9.5pt;color:#444;margin-bottom:5mm">
+          <div style="font-size:9pt;color:#444;margin-bottom:3.5mm">
             <strong>Ref:</strong> {{ refNo }} &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Date:</strong> {{ activationDate | date:'dd MMMM yyyy' }}
           </div>
 
           <!-- TO -->
-          <div style="margin-bottom:4mm;font-size:11pt">
+          <div style="margin-bottom:3mm;font-size:10pt">
             <strong>To,</strong><br>
             {{ fullName }}<br>
-            <span style="font-size:9.5pt;color:#555">{{ memberId }}</span>
+            <span style="font-size:9pt;color:#555">{{ memberId }}</span>
           </div>
 
           <!-- SUBJECT -->
-          <div style="margin-bottom:5mm;font-size:11pt">
+          <div style="margin-bottom:3.5mm;font-size:10pt">
             <strong>Subject:</strong> Welcome to Anon India &mdash; Membership Activation Confirmation
           </div>
 
           <!-- BODY -->
-          <div style="margin-bottom:5mm;text-align:justify;font-size:11pt">
-            <p style="margin:0 0 2.5mm">Dear <strong>{{ fullName }}</strong>,</p>
+          <div style="margin-bottom:3.5mm;text-align:justify;font-size:10pt">
+            <p style="margin:0 0 2mm">Dear <strong>{{ fullName }}</strong>,</p>
 
-            <p style="margin:0 0 2.5mm">It is with great pleasure that we welcome you to <strong>Anon India</strong>. Your membership has been successfully verified and activated, and you are now an official member of our growing community.</p>
+            <p style="margin:0 0 2mm">It is with great pleasure that we welcome you to <strong>Anon India</strong>. Your membership has been successfully verified and activated, and you are now an official member of our growing community.</p>
 
-            <p style="margin:0 0 2.5mm">Your Membership ID serves as your unique identity within the Anon India network. Please quote this ID in all future correspondence with us. It will be required for member services, program participation, and all organizational activities.</p>
+            <p style="margin:0 0 2mm">Your Membership ID serves as your unique identity within the Anon India network. Please quote this ID in all future correspondence with us. It will be required for member services, program participation, and all organizational activities.</p>
 
-            <p style="margin:0 0 2.5mm">As a member, we encourage you to stay connected with your sponsor and to actively engage with the resources, training, and opportunities available to you. Your sponsor will guide you through the initial steps and help you make the most of your membership.</p>
+            <p style="margin:0 0 2mm">As a member, we encourage you to stay connected with your sponsor and to actively engage with the resources, training, and opportunities available to you. Your sponsor will guide you through the initial steps and help you make the most of your membership.</p>
 
             <p style="margin:0">We look forward to a long and mutually rewarding association with you.</p>
           </div>
 
           <!-- MEMBERSHIP DETAILS TABLE -->
-          <div style="margin-bottom:5mm">
-            <div style="font-size:11pt;font-weight:700;color:#1f3354;margin-bottom:2mm;border-bottom:1px solid #1f3354;padding-bottom:1mm">MEMBERSHIP DETAILS</div>
+          <div style="margin-bottom:3.5mm">
+            <div style="font-size:10pt;font-weight:700;color:#1f3354;margin-bottom:1.5mm;border-bottom:1px solid #1f3354;padding-bottom:0.8mm">MEMBERSHIP DETAILS</div>
 
-            <table style="width:100%;border-collapse:collapse;font-size:10.5pt">
+            <table style="width:100%;border-collapse:collapse;font-size:9.5pt">
               <tr style="border-bottom:1px solid #ddd">
-                <td style="padding:1.5mm 3mm 1.5mm 0;width:150px;font-weight:600;vertical-align:top">Full Name</td>
-                <td style="padding:1.5mm 0">{{ fullName }}</td>
+                <td style="padding:1mm 3mm 1mm 0;width:140px;font-weight:600;vertical-align:top">Full Name</td>
+                <td style="padding:1mm 0">{{ fullName }}</td>
               </tr>
               <tr style="border-bottom:1px solid #ddd">
-                <td style="padding:1.5mm 3mm 1.5mm 0;width:150px;font-weight:600;vertical-align:top">Membership ID</td>
-                <td style="padding:1.5mm 0;font-weight:700;color:#1f3354">{{ memberId }}</td>
+                <td style="padding:1mm 3mm 1mm 0;width:140px;font-weight:600;vertical-align:top">Membership ID</td>
+                <td style="padding:1mm 0;font-weight:700;color:#1f3354">{{ memberId }}</td>
               </tr>
               <tr style="border-bottom:1px solid #ddd">
-                <td style="padding:1.5mm 3mm 1.5mm 0;width:150px;font-weight:600;vertical-align:top">Sponsor ID</td>
-                <td style="padding:1.5mm 0">{{ sponsorDisplay }}</td>
+                <td style="padding:1mm 3mm 1mm 0;width:140px;font-weight:600;vertical-align:top">Sponsor ID</td>
+                <td style="padding:1mm 0">{{ sponsorDisplay }}</td>
               </tr>
               <tr style="border-bottom:1px solid #ddd">
-                <td style="padding:1.5mm 3mm 1.5mm 0;width:150px;font-weight:600;vertical-align:top">Activation Date</td>
-                <td style="padding:1.5mm 0">{{ activationDate | date:'dd MMMM yyyy' }}</td>
+                <td style="padding:1mm 3mm 1mm 0;width:140px;font-weight:600;vertical-align:top">Activation Date</td>
+                <td style="padding:1mm 0">{{ activationDate | date:'dd MMMM yyyy' }}</td>
               </tr>
               <tr style="border-bottom:1px solid #ddd">
-                <td style="padding:1.5mm 3mm 1.5mm 0;width:150px;font-weight:600;vertical-align:top">Membership Status</td>
-                <td style="padding:1.5mm 0;font-weight:700;color:#0f8f4d">Active</td>
+                <td style="padding:1mm 3mm 1mm 0;width:140px;font-weight:600;vertical-align:top">Membership Status</td>
+                <td style="padding:1mm 0;font-weight:700;color:#0f8f4d">Active</td>
               </tr>
               <tr>
-                <td style="padding:1.5mm 3mm 1.5mm 0;width:150px;font-weight:600;vertical-align:top">Date of Issue</td>
-                <td style="padding:1.5mm 0">{{ activationDate | date:'dd MMMM yyyy' }}</td>
+                <td style="padding:1mm 3mm 1mm 0;width:140px;font-weight:600;vertical-align:top">Date of Issue</td>
+                <td style="padding:1mm 0">{{ activationDate | date:'dd MMMM yyyy' }}</td>
               </tr>
             </table>
           </div>
 
           <!-- SPONSOR -->
-          <div style="margin-bottom:5mm;font-size:10.5pt;text-align:justify">
-            <div style="font-size:11pt;font-weight:700;color:#1f3354;margin-bottom:2mm;border-bottom:1px solid #1f3354;padding-bottom:1mm">SPONSOR INFORMATION</div>
+          <div style="margin-bottom:3.5mm;font-size:10pt;text-align:justify">
+            <div style="font-size:10pt;font-weight:700;color:#1f3354;margin-bottom:1.5mm;border-bottom:1px solid #1f3354;padding-bottom:0.8mm">SPONSOR INFORMATION</div>
             <p style="margin:0">You have been enrolled under the sponsorship of <strong>{{ sponsorDisplay }}</strong>. Please reach out to your sponsor for guidance on programs, services, and opportunities available within the organization.</p>
           </div>
 
           <!-- TERMS -->
-          <div style="margin-bottom:5mm;font-size:10.5pt;text-align:justify">
-            <div style="font-size:11pt;font-weight:700;color:#1f3354;margin-bottom:2mm;border-bottom:1px solid #1f3354;padding-bottom:1mm">TERMS &amp; CONDITIONS</div>
-            <p style="margin:0 0 1.5mm">1. Membership is non-transferable and shall be used solely by the registered individual.</p>
-            <p style="margin:0 0 1.5mm">2. The member agrees to abide by the rules, policies, and code of conduct of Anon India.</p>
-            <p style="margin:0 0 1.5mm">3. Anon India reserves the right to modify or revoke membership in accordance with its policies.</p>
+          <div style="margin-bottom:3.5mm;font-size:10pt;text-align:justify">
+            <div style="font-size:10pt;font-weight:700;color:#1f3354;margin-bottom:1.5mm;border-bottom:1px solid #1f3354;padding-bottom:0.8mm">TERMS &amp; CONDITIONS</div>
+            <p style="margin:0 0 1mm">1. Membership is non-transferable and shall be used solely by the registered individual.</p>
+            <p style="margin:0 0 1mm">2. The member agrees to abide by the rules, policies, and code of conduct of Anon India.</p>
+            <p style="margin:0 0 1mm">3. Anon India reserves the right to modify or revoke membership in accordance with its policies.</p>
             <p style="margin:0">4. The member is responsible for maintaining the confidentiality of their Membership ID.</p>
           </div>
 
           <!-- SIGNATURE -->
-          <div style="margin-top:8mm;display:flex;justify-content:space-between;font-size:10.5pt">
+          <div style="margin-top:5mm;display:flex;justify-content:space-between;font-size:10pt">
             <div>
-              <div style="margin-bottom:4mm">Yours faithfully,</div>
-              <div style="margin-top:8mm;border-top:1px solid #000;padding-top:1mm;width:180px">
+              <div style="margin-bottom:3mm">Yours faithfully,</div>
+              <div style="margin-top:5mm;border-top:1px solid #000;padding-top:0.8mm;width:160px">
                 <strong style="color:#1f3354">Authorized Signatory</strong>
-                <div style="font-size:9pt;color:#555">Membership Services</div>
-                <div style="font-size:9pt;color:#555">Anon India</div>
+                <div style="font-size:8.5pt;color:#555">Membership Services</div>
+                <div style="font-size:8.5pt;color:#555">Anon India</div>
               </div>
             </div>
             <div style="text-align:right">
-              <div style="margin-top:8mm;border-top:1px solid #000;padding-top:1mm;width:160px;margin-left:auto">
+              <div style="margin-top:5mm;border-top:1px solid #000;padding-top:0.8mm;width:140px;margin-left:auto">
                 <strong style="color:#1f3354">{{ activationDate | date:'dd MMMM yyyy' }}</strong>
-                <div style="font-size:9pt;color:#555">Date</div>
+                <div style="font-size:8.5pt;color:#555">Date</div>
               </div>
             </div>
           </div>
 
           <!-- FOOTER -->
-          <div style="margin-top:6mm;padding-top:2mm;border-top:1px solid #ccc;font-size:8pt;color:#777;text-align:center">
+          <div style="margin-top:4mm;padding-top:1.5mm;border-top:1px solid #ccc;font-size:7.5pt;color:#777;text-align:center">
             This is a system-generated document and does not require a physical signature.<br>
             Anon India &bull; <span style="color:#1f3354">www.anonindia.com</span>
           </div>
